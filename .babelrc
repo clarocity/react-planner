@@ -1,7 +1,8 @@
 {
   "plugins": [
     "transform-object-rest-spread",
-    "import-glob"
+    "import-glob",
+    "transform-runtime"
   ],
   "env": {
     "commonjs": {
