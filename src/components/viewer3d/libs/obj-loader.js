@@ -2,10 +2,9 @@
  * @author mrdoob / http://mrdoob.com/
  */
 
-let THREE = window.THREE || require('three');
-let OBJLoader;
+import * as THREE from 'three';
 
-OBJLoader = function (manager) {
+export default function OBJLoader (manager) {
 
   this.manager = ( manager !== undefined ) ? manager : THREE.DefaultLoadingManager;
 
@@ -36,7 +35,7 @@ OBJLoader = function (manager) {
     material_use_pattern: /^usemtl /
   };
 
-};
+}
 
 OBJLoader.prototype = {
 
@@ -714,5 +713,3 @@ OBJLoader.prototype = {
   }
 
 };
-
-module.exports = OBJLoader;

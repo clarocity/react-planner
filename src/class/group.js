@@ -214,7 +214,6 @@ class Group{
       let lines = groupLayerElements.get('lines');
       let holes = groupLayerElements.get('holes');
       let items = groupLayerElements.get('items');
-      let areas = groupLayerElements.get('areas');
 
       if( lines ) {
         lines.forEach( lineID => {
@@ -225,8 +224,6 @@ class Group{
 
       if( holes ) holes.forEach( holeID => { state = Hole.remove( state, groupLayerID, holeID ).updatedState; });
       if( items ) items.forEach( itemID => { state = Item.remove( state, groupLayerID, itemID ).updatedState; });
-      //( actually ) no effect by area's destruction
-      if( false && areas ) areas.forEach( areaID => { state = Area.remove( state, groupLayerID, areaID ).updatedState; });
     });
 
     state = state.deleteIn([ 'scene', 'groups', groupID ]);

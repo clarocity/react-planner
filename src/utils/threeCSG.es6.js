@@ -57,7 +57,7 @@ export default  class ThreeBSP {
                 vertex = new Vertex(vertex.x, vertex.y, vertex.z, face.vertexNormals[2], uvs);
                 vertex.applyMatrix4(this.matrix);
                 polygon.vertices.push(vertex);
-            } else if (typeof THREE.Face4) {
+            } else if (face instanceof THREE.Face4) {
                 vertex = geometry.vertices[face.a];
                 uvs = faceVertexUvs ? new THREE.Vector2(faceVertexUvs[0].x, faceVertexUvs[0].y) : null;
                 vertex = new Vertex(vertex.x, vertex.y, vertex.z, face.vertexNormals[0], uvs);

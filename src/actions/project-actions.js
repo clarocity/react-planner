@@ -168,7 +168,7 @@ export function initCatalog(catalog) {
   };
 }
 
-export function updateMouseCoord(coords = {x, y}) {
+export function updateMouseCoord(coords = {x:0, y:0}) {
   return {
     type: UPDATE_MOUSE_COORDS,
     coords

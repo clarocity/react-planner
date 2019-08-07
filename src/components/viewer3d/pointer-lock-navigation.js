@@ -1,4 +1,5 @@
 import PointerLockControls from './libs/pointer-lock-controls';
+import * as THREE from 'three';
 
 export function initPointerLock(camera, rendererElement) {
 

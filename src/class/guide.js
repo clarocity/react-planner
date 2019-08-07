@@ -13,7 +13,7 @@ class HorizontalGuide {
 
     return { updatedState: state };
   }
-};
+}
 
 class VerticalGuide {
   static create(state, coordinate) {
@@ -28,10 +28,9 @@ class VerticalGuide {
 
     return { updatedState: state };
   }
-};
+}
 
-class CircularGuide {
-};
+class CircularGuide {}
 
 export {
   HorizontalGuide,

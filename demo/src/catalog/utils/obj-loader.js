@@ -1,9 +1,10 @@
 /**
  * @author mrdoob / http://mrdoob.com/
  */
-var THREE = window.THREE || require('three');
-let OBJLoader;
-OBJLoader = (function () {
+
+import THREE from 'three';
+
+const OBJLoader = (function () {
   // o object_name | g group_name
   var object_pattern = /^[og]\s*(.+)?/;
   // mtllib file_reference
@@ -484,4 +485,5 @@ OBJLoader = (function () {
   };
   return OBJLoader;
 })();
-module.exports = OBJLoader;
+
+export default OBJLoader;

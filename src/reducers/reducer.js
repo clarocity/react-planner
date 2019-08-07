@@ -41,4 +41,4 @@ export default function appReducer(state, action) {
   if( VERTEX_ACTIONS[action.type] ) return ReactPlannerVerticesReducer(...arguments);
 
   return state || initialState;
-};
+}

@@ -4,14 +4,11 @@
  * @author angelxuanchang
  */
 
-let THREE = window.THREE || require('three');
-let MTLLoader;
+import * as THREE from 'three';
 
-MTLLoader = function( manager ) {
-
+export default function MTLLoader ( manager ) {
 	this.manager = ( manager !== undefined ) ? manager : THREE.DefaultLoadingManager;
-
-};
+}
 
 Object.assign( MTLLoader.prototype, THREE.EventDispatcher.prototype, {
 
@@ -479,11 +476,9 @@ MTLLoader.MaterialCreator.prototype = {
 	getTextureParams: function( value, matParams ) {
 
 		let texParams = {
-
 			scale: new THREE.Vector2( 1, 1 ),
 			offset: new THREE.Vector2( 0, 0 ),
-
-		 };
+		};
 
 		let items = value.split(/\s+/);
 		let pos;
@@ -539,5 +534,3 @@ MTLLoader.MaterialCreator.prototype = {
 	}
 
 };
-
-module.exports = MTLLoader;

@@ -144,7 +144,7 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
   let promises = [];
 
   switch (modifiedPath[3]) {
-    case 'vertices':
+    case 'vertices': {
       if (modifiedPath[5] !== 'selected') {
         let vertex = layer.getIn(['vertices', modifiedPath[4]]);
 
@@ -163,7 +163,8 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
         }
       }
       break;
-    case 'holes':
+    }
+    case 'holes': {
       let newHoleData = layer.getIn(['holes', modifiedPath[4]]);
 
       if (catalog.getElement(newHoleData.type).updateRender3D) {
@@ -201,7 +202,8 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
         }
       }
       break;
-    case 'lines':
+    }
+    case 'lines': {
       let line = layer.getIn(['lines', modifiedPath[4]]);
 
       if (catalog.getElement(line.type).updateRender3D) {
@@ -225,7 +227,8 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
         promises.push(addLine(sceneData, planData, layer, modifiedPath[4], catalog, actions.linesActions));
       }
       break;
-    case 'areas':
+    }
+    case 'areas': {
       let area = layer.getIn(['areas', modifiedPath[4]]);
 
       if (catalog.getElement(area.type).updateRender3D) {
@@ -251,7 +254,8 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
         promises.push(addArea(sceneData, planData, layer, modifiedPath[4], catalog, actions.areaActions));
       }
       break;
-    case 'items':
+    }
+    case 'items': {
       let item = layer.getIn(['items', modifiedPath[4]]);
 
       if (catalog.getElement(item.type).updateRender3D) {
@@ -275,7 +279,7 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
         promises.push(addItem(sceneData, planData, layer, modifiedPath[4], catalog, actions.itemsActions));
       }
       break;
-
+    }
     case 'visible':
       if (!layer.visible) {
         let layerGraph = planData.sceneGraph.layers[layer.id];
@@ -292,7 +296,7 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
       break;
 
     case 'opacity':
-    case 'altitude':
+    case 'altitude': {
       let layerGraph = planData.sceneGraph.layers[layer.id];
       for (let lineID in layerGraph.lines) removeLine(planData, layer.id, lineID);
       for (let areaID in layerGraph.areas) removeArea(planData, layer.id, areaID);
@@ -300,7 +304,7 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
       for (let holeID in layerGraph.holes) removeHole(planData, layer.id, holeID);
 
       promises = promises.concat(createLayerObjects(layer, planData, sceneData, actions, catalog));
-
+    }
   }
   Promise.all(promises).then(values => updateBoundingBox(planData));
 }
@@ -309,7 +313,7 @@ function removeObject(modifiedPath, layer, planData, actions, sceneData, oldScen
 
   let promises = [];
   switch (modifiedPath[3]) {
-    case 'lines':
+    case 'lines': {
       // Here I remove the line with all its holes
       let lineID = modifiedPath[4];
       oldSceneData.getIn(['layers', layer.id, 'lines', lineID, 'holes']).forEach(holeID => {
@@ -324,6 +328,7 @@ function removeObject(modifiedPath, layer, planData, actions, sceneData, oldScen
         });
       }
       break;
+    }
     case 'areas':
       if (modifiedPath.length === 5) {
         // I am removing an entire area

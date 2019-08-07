@@ -188,11 +188,6 @@ class Hole {
         state = Hole.select(stateH, layerID, hole.id).updatedState;
       }
     }
-    //i've lost the snap while trying to drop the hole
-    else if (false && selectedHole)  //think if enable
-    {
-      state = Hole.remove(state, layerID, selectedHole).updatedState;
-    }
 
     return {updatedState: state};
   }

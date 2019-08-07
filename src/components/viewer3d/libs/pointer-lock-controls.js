@@ -2,10 +2,9 @@
  * @author mrdoob / http://mrdoob.com/
  */
 
-let THREE = window.THREE || require('three');
-let PointerLockControls;
+import * as THREE from 'three';
 
-module.exports = PointerLockControls = function ( camera ) {
+export default function PointerLockControls ( camera ) {
 
   let scope = this;
 
@@ -71,4 +70,4 @@ module.exports = PointerLockControls = function ( camera ) {
 
   }();
 
-};
+}
