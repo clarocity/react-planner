@@ -17,7 +17,8 @@
     "update-version-file": "const-version ./package.json ./src/version.js",
     "version": "npm run update-version-file && npm run build && npm run add-build-to-vcs",
     "postpublish": "npm run website-update",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ./"
   },
   "repository": {
     "type": "git",
