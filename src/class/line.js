@@ -287,7 +287,7 @@ class Line{
     let layerID = state.getIn(['drawingSupport', 'layerID']);
     let lineID = state.getIn(['scene', 'layers', layerID, 'selected', 'lines']).first();
 
-    let { updatedState: stateLV, vertex } = Line.replaceVertex( state, layerID, lineID, 1, x, y );
+    let { updatedState: stateLV } = Line.replaceVertex( state, layerID, lineID, 1, x, y );
     state = stateLV;
 
     state = this.select( state, layerID, lineID ).updatedState;

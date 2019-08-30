@@ -9,7 +9,7 @@ import {
 } from './export';
 import { Map, List } from 'immutable';
 import { Group as GroupModel } from '../models';
-import { IDBroker, MathUtils, GeometryUtils } from '../utils/export';
+import { IDBroker, GeometryUtils } from '../utils/export';
 
 class Group{
 
@@ -101,14 +101,6 @@ class Group{
 
   static reloadBaricenter( state, groupID ) {
     let layerList = state.getIn([ 'scene', 'groups', groupID, 'elements' ]);
-
-    let { a, b, c, d, e, f, SVGHeight } = state.get('viewer2D').toJS();
-
-    let m1 = [
-      [ a, b, c ],
-      [ d, e, f ],
-      [ 0, 0, 1 ]
-    ];
 
     let xBar = 0;
     let yBar = 0;
@@ -298,9 +290,9 @@ class Group{
 
     layerList.entrySeq().forEach( ([groupLayerID, groupLayerElements]) => {
       let lines = groupLayerElements.get('lines');
-      let holes = groupLayerElements.get('holes');
+      // let holes = groupLayerElements.get('holes');
       let items = groupLayerElements.get('items');
-      let areas = groupLayerElements.get('areas');
+      // let areas = groupLayerElements.get('areas');
 
       //move vertices instead lines avoiding multiple vertex translation
       if( lines ) {

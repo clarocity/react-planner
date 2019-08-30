@@ -216,10 +216,10 @@ const OBJLoader = (function () {
         this.object.geometry.type = 'Line';
         var vLen = this.vertices.length;
         var uvLen = this.uvs.length;
-        for (var vi = 0, l = vertices.length; vi < l; vi++) {
+        for (let vi = 0, l = vertices.length; vi < l; vi++) {
           this.addVertexLine(this.parseVertexIndex(vertices[vi], vLen));
         }
-        for (var uvi = 0, l = uvs.length; uvi < l; uvi++) {
+        for (let uvi = 0, l = uvs.length; uvi < l; uvi++) {
           this.addUVLine(this.parseUVIndex(uvs[uvi], uvLen));
         }
       }
@@ -306,7 +306,7 @@ const OBJLoader = (function () {
               break;
           }
         } else if (lineFirstChar === 'f') {
-          var lineData = line.substr(1).trim();
+          let lineData = line.substr(1).trim();
           var vertexData = lineData.split(/\s+/);
           var faceVertices = [];
           // Parse the face vertex data into an easy to work with format
@@ -319,7 +319,7 @@ const OBJLoader = (function () {
           }
           // Draw an edge between the first vertex and all subsequent vertices to form an n-gon
           var v1 = faceVertices[0];
-          for (var j = 1, jl = faceVertices.length - 1; j < jl; j++) {
+          for (let j = 1, jl = faceVertices.length - 1; j < jl; j++) {
             var v2 = faceVertices[j];
             var v3 = faceVertices[j + 1];
             state.addFace(
@@ -342,7 +342,7 @@ const OBJLoader = (function () {
           }
           state.addLineGeometry(lineVertices, lineUVs);
         } else if (lineFirstChar === 'p') {
-          var lineData = line.substr(1).trim();
+          let lineData = line.substr(1).trim();
           var pointData = lineData.split(" ");
           state.addPointGeometry(pointData);
         } else if ((result = object_pattern.exec(line)) !== null) {
@@ -397,7 +397,7 @@ const OBJLoader = (function () {
       state.finalize();
       var container = new THREE.Group();
       container.materialLibraries = [].concat(state.materialLibraries);
-      for (var i = 0, l = state.objects.length; i < l; i++) {
+      for (let i = 0, l = state.objects.length; i < l; i++) {
         var object = state.objects[i];
         var geometry = object.geometry;
         var materials = object.materials;
@@ -424,7 +424,7 @@ const OBJLoader = (function () {
         var createdMaterials = [];
         for (var mi = 0, miLen = materials.length; mi < miLen; mi++) {
           var sourceMaterial = materials[mi];
-          var material = undefined;
+          let material = undefined;
           if (this.materials !== null) {
             material = this.materials.create(sourceMaterial.name);
             // mtl etc. loaders probably can't create line materials correctly, copy properties to a line material.
@@ -456,8 +456,8 @@ const OBJLoader = (function () {
         // Create mesh
         var mesh;
         if (createdMaterials.length > 1) {
-          for (var mi = 0, miLen = materials.length; mi < miLen; mi++) {
-            var sourceMaterial = materials[mi];
+          for (let mi = 0, miLen = materials.length; mi < miLen; mi++) {
+            let sourceMaterial = materials[mi];
             buffergeometry.addGroup(sourceMaterial.groupStart, sourceMaterial.groupCount, mi);
           }
           if (isLine) {

@@ -191,7 +191,7 @@ export default class Catalog {
    *  @param {string} label Label of category
    *  @return {?boolean}
   */
-  validateCategory(name, label) {
+  validateCategory(name /*, label */) {
     if (!name) {
       throw new Error('Category has undefined name');
     }

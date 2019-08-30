@@ -479,7 +479,7 @@ export default function OrbitControls (object, domElement) {
 
   }
 
-  function handleMouseUp(event) {}
+  function handleMouseUp(/* event */) {}
 
   function handleMouseWheel(event) {
 
@@ -596,7 +596,7 @@ export default function OrbitControls (object, domElement) {
     scope.update();
   }
 
-  function handleTouchEnd(event) {}
+  function handleTouchEnd(/* event */) {}
 
   //
   // event handlers - FSM: listen for events and reset state

@@ -17,7 +17,7 @@ export function browserDownload(json) {
 }
 
 export function browserUpload() {
-  return new Promise(function (resolve, reject) {
+  return new Promise(function (resolve) {
 
     let fileInput = document.createElement('input');
     fileInput.type = 'file';

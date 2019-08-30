@@ -5,7 +5,7 @@ export function loadObjWithMaterial(mtlFile, objFile, imgPath) {
   let mtlLoader = new MTLLoader();
   mtlLoader.setTexturePath(imgPath);
   let url = mtlFile;
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
 
     mtlLoader.load(url, materials => {
       materials.preload();

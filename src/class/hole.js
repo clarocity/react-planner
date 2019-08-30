@@ -233,8 +233,8 @@ class Hole {
 
     let layerID = draggingSupport.get('layerID');
     let holeID = draggingSupport.get('holeID');
-    let startPointX = draggingSupport.get('startPointX');
-    let startPointY = draggingSupport.get('startPointY');
+    // let startPointX = draggingSupport.get('startPointX');
+    // let startPointY = draggingSupport.get('startPointY');
 
     let layer = state.getIn(['scene', 'layers', layerID]);
     let hole = layer.getIn(['holes', holeID]);

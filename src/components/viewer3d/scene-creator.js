@@ -34,7 +34,7 @@ export function parseData(sceneData, actions, catalog) {
     }
   });
 
-  Promise.all(promises).then(value => updateBoundingBox(planData));
+  Promise.all(promises).then(() => updateBoundingBox(planData));
 
   return planData;
 }
@@ -306,7 +306,7 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
       promises = promises.concat(createLayerObjects(layer, planData, sceneData, actions, catalog));
     }
   }
-  Promise.all(promises).then(values => updateBoundingBox(planData));
+  Promise.all(promises).then(() => updateBoundingBox(planData));
 }
 
 function removeObject(modifiedPath, layer, planData, actions, sceneData, oldSceneData, catalog) {
@@ -343,7 +343,7 @@ function removeObject(modifiedPath, layer, planData, actions, sceneData, oldScen
       break;
   }
 
-  Promise.all(promises).then(values => updateBoundingBox(planData));
+  Promise.all(promises).then(() => updateBoundingBox(planData));
 }
 
 function removeLayer(layerId, planData) {
@@ -818,7 +818,7 @@ function minimizeRemoveDiffsWhenSwitchingLayers(diffArray, sceneData, oldSceneDa
  * @param oldSceneData
  * @returns {Array}
  */
-function minimizeChangePropertiesAfterSelectionsDiffs(diffArray, sceneData, oldSceneData) {
+function minimizeChangePropertiesAfterSelectionsDiffs(diffArray /*, sceneData, oldSceneData */) {
   let idsFound = {};
   diffArray.forEach( ({path}) => {
     if (path[5] === 'selected') {
@@ -841,7 +841,7 @@ function minimizeChangePropertiesAfterSelectionsDiffs(diffArray, sceneData, oldS
  * @param oldSceneData
  * @returns {Array}
  */
-function minimizeChangePropertiesDiffs(diffArray, sceneData, oldSceneData) {
+function minimizeChangePropertiesDiffs(diffArray /*, sceneData, oldSceneData */) {
   let idsFound = {};
   return diffArray.filter( ({path}) => {
     if (path[5] === 'properties') {

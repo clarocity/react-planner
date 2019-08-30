@@ -384,13 +384,13 @@ MTLLoader.MaterialCreator.prototype = {
 
           break;
 
-        case 'map_kd':
+        case 'map_kd': {
 
           // Diffuse texture map
 
           if ( params.map ) break; // Keep the first encountered texture
 
-          var texParams = this.getTextureParams( value, params );
+          const texParams = this.getTextureParams( value, params );
 
           params.map = this.loadTexture( resolveURL( this.baseUrl, texParams.url ) );
           params.map.repeat.copy( texParams.scale );
@@ -400,7 +400,7 @@ MTLLoader.MaterialCreator.prototype = {
           params.map.wrapT = this.wrap;
 
           break;
-
+        }
         case 'map_ks':
 
           // Specular map
@@ -445,13 +445,13 @@ MTLLoader.MaterialCreator.prototype = {
           break;
 
         case 'map_bump':
-        case 'bump':
+        case 'bump': {
 
           // Bump texture map
 
           if ( params.bumpMap ) break; // Keep the first encountered texture
 
-          var texParams = this.getTextureParams( value, params );
+          const texParams = this.getTextureParams( value, params );
 
           params.bumpMap = this.loadTexture( resolveURL( this.baseUrl, texParams.url ) );
           params.bumpMap.repeat.copy( texParams.scale );
@@ -461,7 +461,7 @@ MTLLoader.MaterialCreator.prototype = {
           params.bumpMap.wrapT = this.wrap;
 
           break;
-
+        }
         default:
           break;
 

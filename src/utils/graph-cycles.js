@@ -70,7 +70,6 @@ function compute_incidences (V, EV) {
 
 function get_starting_edge (incidences, ev_mapping) {
   let e
-  let position
   let direction
   for (e = 0; e < ev_mapping.length; e += 1) {
     if (ev_mapping[e].color < 2) {
@@ -121,7 +120,6 @@ function find_cycles (V, EV) {
   let E_cycle
   let dir_E_cycle
   let next
-  let counter = 0
   let start = get_starting_edge(incidences, ev_mapping)
 
   while (start !== undefined) {
@@ -139,13 +137,6 @@ function find_cycles (V, EV) {
     E_cycles.push(E_cycle)
     V_cycles.push(V_cycle)
     dir_E_cycles.push(dir_E_cycle)
-
-    //console.log('############## CYCLE ', ++counter)
-    //console.log('EDGES:', E_cycle)
-    //console.log('VERTICES:', V_cycle)
-    //console.log('START', 'edge:', start.edge, 'position:', start.position)
-    //console.log('COUNTER:', ev_mapping.map(e => e.color), ev_mapping.map(e => e.color).reduce((a, b) => a + b));
-    //console.log('\n')
 
     start = get_starting_edge(incidences, ev_mapping)
   }

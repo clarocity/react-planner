@@ -43,7 +43,7 @@ class LineSnap extends Record({
       distance: Geometry.distancePointFromLine(this.a, this.b, this.c, x, y)
     };
   }
-  isNear(x,y,distance){ return true; }
+  isNear(/* x,y,distance */){ return true; }
 }
 
 class LineSegmentSnap extends Record({
@@ -58,7 +58,7 @@ class LineSegmentSnap extends Record({
       distance: Geometry.distancePointFromLineSegment(this.x1, this.y1, this.x2, this.y2, x, y)
     };
   }
-  isNear(x,y,distance){ return true; }
+  isNear(/* x,y,distance */){ return true; }
 }
 
 class GridSnap extends Record({
@@ -116,7 +116,7 @@ export function addLineSnap(snapElements, a, b, c, radius, priority, related) {
     c === lineSnap.c);
     if (alreadyPresent) return snapElements;
 
-    let intersections = snapElements
+    snapElements
       .valueSeq()
       .filter(snap => snap.type === 'line')
       .map(snap => Geometry.twoLinesIntersection(snap.a, snap.b, snap.c, a, b, c))

@@ -13,8 +13,7 @@ export default  class ThreeBSP {
         var i, _length_i,
             face, vertex, faceVertexUvs, uvs,
             polygon,
-            polygons = [],
-            tree;
+            polygons = [];
 
         this.Polygon = Polygon;
         this.Vertex = Vertex;
@@ -219,7 +218,7 @@ export default  class ThreeBSP {
     }
 }
 class Polygon {
-    constructor(vertices, normal, w) {
+    constructor(vertices /*, normal, w */) {
         if (!( vertices instanceof Array )) {
             vertices = [];
         }

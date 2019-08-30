@@ -1,3 +1,4 @@
+/* eslint no-unused-vars:0 */
 import PointerLockControls from './libs/pointer-lock-controls';
 import * as THREE from 'three';
 
@@ -5,11 +6,11 @@ export function initPointerLock(camera, rendererElement) {
 
   let havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
-  let pointerlockchange = event => {
+  let pointerlockchange = () => {
     controls.enabled = !controls.enabled;
   };
 
-  let requestPointerLockEvent = event => {
+  let requestPointerLockEvent = () => {
     document.body.requestPointerLock = document.body.requestPointerLock ||
       document.body.mozRequestPointerLock ||
       document.body.webkitRequestPointerLock;

@@ -2,7 +2,6 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
 import * as Three from 'three';
 import { parseData, updateScene } from './scene-creator';
 import { disposeScene } from './three-memory-cleaner';

@@ -7,8 +7,7 @@ import {
   SnapUtils
 } from '../utils/export';
 import {
-  MODE_DRAGGING_VERTEX,
-  MODE_IDLE
+  MODE_DRAGGING_VERTEX
 } from '../constants';
 import { Layer, Line, Group } from '../class/export';
 
@@ -91,7 +90,7 @@ class Vertex{
     return { updatedState: state };
   }
 
-  static beginDraggingVertex(state, layerID, vertexID, x, y) {
+  static beginDraggingVertex(state, layerID, vertexID /*, x, y */) {
 
     let snapElements = SnapSceneUtils.sceneSnapElements(state.scene, new List(), state.snapMask);
 
@@ -127,7 +126,7 @@ class Vertex{
     return { updatedState: state };
   }
 
-  static endDraggingVertex(state, x, y) {
+  static endDraggingVertex(state /*, x, y */) {
     let { draggingSupport } = state;
     let layerID = draggingSupport.get('layerID');
     let vertexID = draggingSupport.get('vertexID');
@@ -150,7 +149,7 @@ class Vertex{
 
           let orderedVertices = GeometryUtils.orderVertices([oldVertex, vertex]);
 
-          let holes = reducedState
+          reducedState
             .getIn(['scene', 'layers', layerID, 'lines', lineID, 'holes'])
             .forEach(holeID => {
               let hole = reducedState.getIn(['scene', 'layers', layerID, 'holes', holeID]);

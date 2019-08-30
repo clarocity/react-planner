@@ -144,7 +144,7 @@ class Item{
     return { updatedState: state };
   }
 
-  static beginRotatingItem(state, layerID, itemID, x, y) {
+  static beginRotatingItem(state, layerID, itemID /*, x, y */) {
     state = state.merge({
       mode: MODE_ROTATING_ITEM,
       rotatingSupport: Map({

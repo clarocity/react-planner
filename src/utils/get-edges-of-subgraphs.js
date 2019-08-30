@@ -5,7 +5,6 @@ function getEdgesOfSubgraphs(subgraphs, graph) {
     subgraphs.forEach(component => {
         edges.push([]);
         let vertices = getVerticesFromBiconnectedComponent(component);
-        let inserted = [];
         vertices.forEach(vertex => {
             let adjacents = graph.adj[vertex];
             adjacents.forEach(adj => {
