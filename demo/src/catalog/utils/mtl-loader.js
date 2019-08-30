@@ -4,7 +4,7 @@
  * @author angelxuanchang
  */
 
-import THREE from 'three';
+import * as THREE from 'three';
 
 export default function MTLLoader ( manager ) {
   this.manager = ( manager !== undefined ) ? manager : THREE.DefaultLoadingManager;
