@@ -301,7 +301,7 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     camera.updateProjectionMatrix();
 
-    if (nextProps.scene !== this.props.state.scene) {
+    if (nextProps.state.scene !== this.props.state.scene) {
       let changedValues = diff(this.props.state.scene, nextProps.state.scene);
       updateScene(planData, nextProps.state.scene, this.props.state.scene, changedValues.toJS(), actions, this.context.catalog);
     }
