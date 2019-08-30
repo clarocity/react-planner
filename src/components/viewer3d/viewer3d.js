@@ -19,6 +19,7 @@ export default class Scene3DViewer extends React.Component {
     this.width = props.width;
     this.height = props.height;
     this.renderingID = 0;
+    this.canvasWrapper = React.createRef();
 
     this.renderer = window.__threeRenderer || new Three.WebGLRenderer({ preserveDrawingBuffer: true });
     window.__threeRenderer = this.renderer;
@@ -36,7 +37,6 @@ export default class Scene3DViewer extends React.Component {
 
     let { state } = this.props;
     let data = state.scene;
-    let canvasWrapper = ReactDOM.findDOMNode(this.refs.canvasWrapper);
 
     let scene3D = new Three.Scene();
 
@@ -111,7 +111,7 @@ export default class Scene3DViewer extends React.Component {
     this.renderer.domElement.style.display = 'block';
 
     // add the output of the renderer to the html element
-    canvasWrapper.appendChild(this.renderer.domElement);
+    this.canvasWrapper.current.appendChild(this.renderer.domElement);
 
     // create orbit controls
     let orbitController = new OrbitControls(camera, this.renderer.domElement);
@@ -190,7 +190,7 @@ export default class Scene3DViewer extends React.Component {
   }
 
   render() {
-    return React.createElement('div', { ref: 'canvasWrapper' });
+    return <div ref={this.canvasWrapper} />
   }
 }
 

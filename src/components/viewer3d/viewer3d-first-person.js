@@ -20,6 +20,7 @@ export default class Viewer3DFirstPerson extends React.Component {
     this.height = props.height;
     this.stopRendering = false;
     this.renderer = window.__threeRenderer || new Three.WebGLRenderer({preserveDrawingBuffer: true});
+    this.canvasWrapper = React.createRef();
     window.__threeRenderer = this.renderer;
   }
 
@@ -47,7 +48,6 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     let {state} = this.props;
     let data = state.scene;
-    let canvasWrapper = ReactDOM.findDOMNode(this.refs.canvasWrapper);
 
     let scene3D = new Three.Scene();
 
@@ -201,7 +201,7 @@ export default class Viewer3DFirstPerson extends React.Component {
     this.renderer.domElement.style.display = 'block';
 
     // add the output of the renderer to the html element
-    canvasWrapper.appendChild(this.renderer.domElement);
+    this.canvasWrapper.current.appendChild(this.renderer.domElement);
     this.renderer.autoClear = false;
 
     let render = () => {
@@ -315,9 +315,7 @@ export default class Viewer3DFirstPerson extends React.Component {
   }
 
   render() {
-    return React.createElement("div", {
-      ref: "canvasWrapper"
-    });
+    return <div ref={this.canvasWrapper} />
   }
 }
 
