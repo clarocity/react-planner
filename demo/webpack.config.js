@@ -26,7 +26,7 @@ module.exports = (env, self) => {
     performance: {
       hints: isProduction ? 'warning' : false
     },
-    devtool: isProduction ? 'source-map' : 'eval',
+    devtool: isProduction ? 'inline-source-map' : 'eval',
     devServer: {
       port: port,
       contentBase: path.join(__dirname, './dist'),
