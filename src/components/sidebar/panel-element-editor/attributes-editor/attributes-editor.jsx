@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import ItemAttributesEditor from './item-attributes-editor';
 import LineAttributesEditor from './line-attributes-editor';

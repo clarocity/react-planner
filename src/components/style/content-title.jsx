@@ -11,6 +11,7 @@ export default function ContentTitle({children, style = {}, ...rest}) {
   return <h1 style={{...STYLE, ...style}} {...rest}>{children}</h1>
 }
 
-ContentTitle.propsType = {
-  style: PropTypes.object
+ContentTitle.propTypes = {
+  style: PropTypes.object,
+  children: PropTypes.node,
 };

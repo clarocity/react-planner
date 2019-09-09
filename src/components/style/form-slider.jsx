@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactRange from '@mapbox/react-range';
 import FormTextInput from './form-text-input';
+import PropTypes from 'prop-types';
 
 const sliderContainerStyle = {display: 'inline-block', width: '80%', marginRight: '5%'};
 const sliderStyle = { display: 'block', width: '100%', height: '30px' };
@@ -19,4 +20,10 @@ export default function FormNumberInput({value, onChange, ...rest}) {
       </div>
     </div>
   )
+}
+
+
+FormNumberInput.propTypes = {
+  value: PropTypes.string,
+  onChange: PropTypes.function,
 }

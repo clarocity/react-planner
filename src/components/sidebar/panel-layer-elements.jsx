@@ -144,7 +144,7 @@ export default class PanelLayerElement extends Component {
 
     return (
       <Panel name={this.context.translator.t('Elements on layer {0}', layer.name)}>
-        <div style={contentArea} onWheel={e => e.stopPropagation()}>
+        <div style={contentArea} onWheel={(e) => e.stopPropagation()}>
 
           <table style={tableSearchStyle}>
             <tbody>
@@ -166,7 +166,7 @@ export default class PanelLayerElement extends Component {
                     return (
                       <div
                         key={lineID}
-                        onClick={e => this.context.linesActions.selectLine(layer.id, line.id)}
+                        onClick={() => this.context.linesActions.selectLine(layer.id, line.id)}
                         style={line.selected ? elementSelectedStyle : elementStyle}
                       >
                         {line.name}
@@ -187,7 +187,7 @@ export default class PanelLayerElement extends Component {
                     return (
                       <div
                         key={holeID}
-                        onClick={e => this.context.holesActions.selectHole(layer.id, hole.id)}
+                        onClick={() => this.context.holesActions.selectHole(layer.id, hole.id)}
                         style={hole.selected ? elementSelectedStyle : elementStyle}
                       >
                         {hole.name}
@@ -208,7 +208,7 @@ export default class PanelLayerElement extends Component {
                     return (
                       <div
                         key={itemID}
-                        onClick={e => this.context.itemsActions.selectItem(layer.id, item.id)}
+                        onClick={() => this.context.itemsActions.selectItem(layer.id, item.id)}
                         style={item.selected ? elementSelectedStyle : elementStyle}
                       >
                         {item.name}
@@ -230,6 +230,7 @@ export default class PanelLayerElement extends Component {
 PanelLayerElement.propTypes = {
   mode: PropTypes.string.isRequired,
   layers: PropTypes.object.isRequired,
+  selectedLayer: PropTypes.object,
 };
 
 PanelLayerElement.contextTypes = {

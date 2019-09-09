@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as SharedStyle from '../../shared-style';
+import PropTypes from 'prop-types';
 
 const STYLE_INPUT = {
   display: 'block',
@@ -30,13 +31,17 @@ export default class FormTextInput extends Component {
     if (this.state.focus) textInputStyle.border = `1px solid ${SharedStyle.SECONDARY_COLOR.main}`;
 
     return <input
-      onFocus={e => this.setState({ focus: true })}
-      onBlur={e => this.setState({ focus: false })}
+      onFocus={() => this.setState({ focus: true })}
+      onBlur={() => this.setState({ focus: false })}
       style={textInputStyle}
       type="text"
       {...rest}
     />
   }
+}
+
+FormTextInput.propTypes = {
+  style: PropTypes.object,
 }
 
 FormTextInput.defaultProps = {

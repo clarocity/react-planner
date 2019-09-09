@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from './button';
 import * as SharedStyle from '../../shared-style';
+import PropTypes from 'prop-types';
 
 const STYLE = {
   borderColor: "#c12e2a",
@@ -16,4 +17,8 @@ const STYLE_HOVER = {
 
 export default function FormDeleteButton({children, ...rest}) {
   return <Button style={STYLE} styleHover={STYLE_HOVER} {...rest}>{children}</Button>
+}
+
+FormDeleteButton.propTypes = {
+  children: PropTypes.node,
 }

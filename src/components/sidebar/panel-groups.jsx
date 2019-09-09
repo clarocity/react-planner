@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Panel from './panel';
 import * as SharedStyle from '../../shared-style';
-import {TiPlus, TiDelete} from 'react-icons/ti';
+import {TiPlus} from 'react-icons/ti';
 import {FaTrash, FaEye, FaLink, FaUnlink} from 'react-icons/fa';
 import { Map } from 'immutable';
 
@@ -57,8 +57,8 @@ export default class PanelGroups extends Component {
     };
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return ( 
+  shouldComponentUpdate(nextProps /*, nextState */) {
+    return (
       this.props.groups.hashCode() !== nextProps.groups.hashCode() ||
       this.props.layers.hashCode() !== nextProps.layers.hashCode() ||
       this.props.mode !== nextProps.mode
@@ -84,7 +84,7 @@ export default class PanelGroups extends Component {
             {
               groups.entrySeq().map(([ groupID, group ]) => {
 
-                let selectClick = e => this.context.groupsActions.selectGroup(groupID);
+                let selectClick = () => this.context.groupsActions.selectGroup(groupID);
 
                 let swapVisibility = e => {
                   e.stopPropagation();
@@ -141,13 +141,13 @@ export default class PanelGroups extends Component {
                     </td>
                     <td style={iconColStyle} title={this.context.translator.t('Un-chain all Group\'s Elements and remove Group')}>
                       <FaUnlink
-                        onClick={ e => this.context.groupsActions.removeGroup(groupID) }
+                        onClick={ () => this.context.groupsActions.removeGroup(groupID) }
                         style={!shouldHighlight ? styleEditButton : styleEditButtonHover}
                       />
                     </td>
                     <td style={iconColStyle} title={this.context.translator.t('Delete group and all Elements')}>
                       <FaTrash
-                        onClick={ e => this.context.groupsActions.removeGroupAndDeleteElements(groupID) }
+                        onClick={ () => this.context.groupsActions.removeGroupAndDeleteElements(groupID) }
                         style={!shouldHighlight ? styleEditButton : styleEditButtonHover}
                       />
                     </td>
@@ -171,7 +171,7 @@ export default class PanelGroups extends Component {
                 style={ !this.state.newEmptyHover ? newLayerLableStyle : newLayerLableHoverStyle }
                 onMouseOver={ () => this.setState({newEmptyHover: true}) }
                 onMouseOut={ () => this.setState({newEmptyHover: false}) }
-                onClick={ e => this.context.groupsActions.addGroup() }
+                onClick={ () => this.context.groupsActions.addGroup() }
               >
                 <TiPlus />
                 <b style={styleAddLabel}>{this.context.translator.t('New Empty Group')}</b>
@@ -180,7 +180,7 @@ export default class PanelGroups extends Component {
                 style={ !this.state.newSelectedHover ? newLayerLableStyle : newLayerLableHoverStyle }
                 onMouseOver={ () => this.setState({newSelectedHover: true}) }
                 onMouseOut={ () => this.setState({newSelectedHover: false}) }
-                onClick={ e => this.context.groupsActions.addGroupFromSelected() }
+                onClick={ () => this.context.groupsActions.addGroupFromSelected() }
               >
                 <TiPlus />
                 <b style={styleAddLabel}>{this.context.translator.t('New Group from selected')}</b>

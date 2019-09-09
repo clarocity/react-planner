@@ -113,7 +113,7 @@ export default {
     };
 
     if(cached3DWindow) {
-      return Promise.resolve(onLoadItem(cached3DWindow.clone()));;
+      return Promise.resolve(onLoadItem(cached3DWindow.clone()));
     }
 
     let mtl = require('./venetian.mtl');

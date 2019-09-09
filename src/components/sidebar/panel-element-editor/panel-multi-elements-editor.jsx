@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Panel from '../panel';
-import {Seq} from 'immutable';
 import {
   MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON,
   MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_DRAGGING_LINE,
@@ -9,7 +8,6 @@ import {
   MODE_ROTATING_ITEM
 } from '../../../constants';
 import { FormSelect } from '../../../components/style/export';
-import { Group } from '../../../class/export';
 
 const tableStyle = { width: '100%' };
 const firstTdStyle = { width: '6em' };
@@ -67,7 +65,7 @@ export default class PanelMultiElementsEditor extends Component {
                     }
                   </FormSelect>
                 </td>
-                <td style={{cursor:'pointer', padding:'0.5em 0', textAlign:'center'}} onClick={ e => {
+                <td style={{cursor:'pointer', padding:'0.5em 0', textAlign:'center'}} onClick={ () => {
                   if( !this.state.selectedGroupID || this.state.selectedGroupID === '' || !selecteds || !selecteds.size ) return;
 
                   let selectedJs = selecteds.toJS();

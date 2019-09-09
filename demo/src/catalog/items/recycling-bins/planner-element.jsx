@@ -91,7 +91,7 @@ export default {
       points.push(new Three.Vector2(0.4, 0.3));
       points.push(new Three.Vector2(0.4, 0.3));
 
-      var geometry = new Three.LatheGeometry(points, 200, 0, Math.PI / 2);
+      geometry = new Three.LatheGeometry(points, 200, 0, Math.PI / 2);
       var etichetta = new Three.Mesh(geometry, grey);
       etichetta.rotation.y += Math.PI;
       etichetta.rotation.x += Math.PI / 2;

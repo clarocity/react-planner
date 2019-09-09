@@ -200,7 +200,7 @@ export default function Viewer2D(
 
     switch (mode) {
 
-      case constants.MODE_IDLE:
+      case constants.MODE_IDLE: {
         let elementData = extractElementData(event.target);
 
         if (elementData && elementData.selected) return;
@@ -227,7 +227,7 @@ export default function Viewer2D(
             break;
         }
         break;
-
+      }
       case constants.MODE_WAITING_DRAWING_LINE:
         linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
         break;

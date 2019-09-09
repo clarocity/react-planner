@@ -82,7 +82,6 @@ export default class CatalogList extends Component {
 
     let page = props.state.catalog.page;
     let currentCategory = context.catalog.getCategory(page);
-    let categoriesToDisplay = currentCategory.categories;
     let elementsToDisplay = currentCategory.elements.filter(element => element.info.visibility ? element.info.visibility.catalog : true );
 
     this.state = {
@@ -125,7 +124,7 @@ export default class CatalogList extends Component {
       matchString: text,
       matchedElements: filtered
     });
-  };
+  }
 
   select( element ) {
 
@@ -160,7 +159,7 @@ export default class CatalogList extends Component {
       this.props.state.catalog.path.forEach(pathName => {
         breadcrumbsNames.push({
           name: this.context.catalog.getCategory(pathName).label,
-          action: () => projectActions.goBackToCatalogPage(pathName)
+          action: () => this.context.projectActions.goBackToCatalogPage(pathName)
         });
       });
 

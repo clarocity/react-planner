@@ -2,11 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import If from '../../utils/react-if';
 
-const STYLE_LINE = {
-  fill: "#0096fd",
-  stroke: "#0096fd"
-};
-
 const STYLE_CIRCLE = {
   fill: "#0096fd",
   stroke: "#0096fd",

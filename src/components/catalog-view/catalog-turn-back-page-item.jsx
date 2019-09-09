@@ -64,9 +64,9 @@ export default class CatalogTurnBackPageItem extends Component {
     return (
       <div
         style={hover ? STYLE_BOX_HOVER : STYLE_BOX}
-        onClick={e => this.changePage(page.name)}
-        onMouseEnter={e => this.setState({hover: true})}
-        onMouseLeave={e => this.setState({hover: false})}
+        onClick={() => this.changePage(page.name)}
+        onMouseEnter={() => this.setState({hover: true})}
+        onMouseLeave={() => this.setState({hover: false})}
       >
         <div style={CONTAINER_DIV}>
           <MdNavigateBefore style={ !hover ? STYLE_BACK : STYLE_BACK_HOVER}/>

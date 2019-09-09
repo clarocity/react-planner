@@ -13,7 +13,7 @@ const STYLE_CIRCLE = {
   cursor: 'default'
 };
 
-export default function Group({ layer, group, scene, catalog }, {translator}) {
+export default function Group({ layer, group }, {translator}) {
   return (
     <g
       data-element-root

@@ -1,6 +1,6 @@
 import React from 'react';
 import FormTextInput from './form-text-input';
-
+import PropTypes from 'prop-types';
 
 const STYLE = {
   padding: 0,
@@ -17,4 +17,8 @@ export default function FormColorInput({onChange, ...rest}) {
   };
 
   return <FormTextInput type="color" style={STYLE} onChange={onChangeCustom} autoComplete="off" {...rest}/>;
+}
+
+FormColorInput.propTypes = {
+  onChange: PropTypes.function,
 }

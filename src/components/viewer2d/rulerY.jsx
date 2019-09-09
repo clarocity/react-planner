@@ -112,6 +112,8 @@ export default class RulerY extends Component {
 }
 
 RulerY.propTypes = {
+  positiveUnitsNumber: PropTypes.number.isRequired,
+  negativeUnitsNumber: PropTypes.number.isRequired,
   unitPixelSize: PropTypes.number.isRequired,
   zoom: PropTypes.number.isRequired,
   mouseY: PropTypes.number.isRequired,

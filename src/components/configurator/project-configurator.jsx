@@ -73,8 +73,10 @@ export default class ProjectConfigurator extends Component {
             <tbody>
             <tr>
               <td>
-                <CancelButton size='large'
-                              onClick={e => projectActions.rollback()}>{translator.t('Cancel')}</CancelButton>
+                <CancelButton
+                  size='large'
+                  onClick={() => projectActions.rollback()}
+                >{translator.t('Cancel')}</CancelButton>
               </td>
               <td>
                 <FormSubmitButton size='large'>{translator.t('Save')}</FormSubmitButton>

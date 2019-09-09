@@ -24,7 +24,7 @@ export default function PropertyCheckbox({value, onUpdate, configs, sourceElemen
       <tr>
         <td style={PropertyStyle.firstTdStyle}><FormLabel>{configs.label}</FormLabel></td>
         <td>
-          <input style={checkboxStyle} type="checkbox" checked={value} onChange={e => update(!value)}/>
+          <input style={checkboxStyle} type="checkbox" checked={value} onChange={() => update(!value)}/>
         </td>
       </tr>
       </tbody>

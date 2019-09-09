@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from './button';
+import PropTypes from 'prop-types';
 
 const STYLE = {
   borderColor: "#adadad",
@@ -13,4 +14,8 @@ const STYLE_HOVER = {
 
 export default function CancelButton({children, ...rest}) {
   return <Button style={STYLE} styleHover={STYLE_HOVER} {...rest}>{children}</Button>
+}
+
+CancelButton.propTypes = {
+  children: PropTypes.node,
 }

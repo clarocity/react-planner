@@ -1,5 +1,6 @@
 import React from 'react';
 import * as SharedStyle from '../../shared-style';
+import PropTypes from 'prop-types';
 
 const BASE_STYLE = {
   display: "block",
@@ -22,4 +23,9 @@ const BASE_STYLE = {
 
 export default function FormSelect({children, style, ...rest}) {
   return <select type="text" style={{...BASE_STYLE, ...style}} {...rest}>{children}</select>;
+}
+
+FormSelect.propTypes = {
+  children: PropTypes.node,
+  style: PropTypes.object,
 }

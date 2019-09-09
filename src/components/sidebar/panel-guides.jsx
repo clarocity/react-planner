@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Panel from './panel';
-import * as SharedStyle from '../../shared-style';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { FaPencil, FaTrash, FaTimes } from 'react-icons/fa';
+import { FaTrash, FaTimes } from 'react-icons/fa';
 import { FormNumberInput } from '../../components/style/export';
 
 const tabStyle = { margin: '1em' };
@@ -74,7 +73,7 @@ export default class PanelGuides extends Component {
                           {/*<FaPencil style={iconStyle} />*/}
                           <FaTrash
                             style={iconStyle}
-                            onClick={e =>
+                            onClick={() =>
                               projectActions.removeHorizontalGuide(hgKey)
                             }
                           />
@@ -87,7 +86,7 @@ export default class PanelGuides extends Component {
                     <td
                       colSpan='3'
                       style={addGuideStyle}
-                      onClick={e => this.setState({ addHGVisible: false })}
+                      onClick={() => this.setState({ addHGVisible: false })}
                     >
                       {translator.t('+ Add Horizontal Giude')}
                     </td>
@@ -97,7 +96,7 @@ export default class PanelGuides extends Component {
                     <td colSpan='2'>
                       <FormNumberInput
                         value={0}
-                        onChange={e => {
+                        onChange={(e) => {
                           projectActions.addHorizontalGuide(e.target.value);
                           return this.setState({ addHGVisible: true });
                         }}
@@ -108,7 +107,7 @@ export default class PanelGuides extends Component {
                     <td>
                       <FaTimes
                         style={iconStyle}
-                        onClick={e => this.setState({ addHGVisible: true })}
+                        onClick={() => this.setState({ addHGVisible: true })}
                       />
                     </td>
                   </tr>
@@ -131,7 +130,7 @@ export default class PanelGuides extends Component {
                           {/*<FaPencil style={iconStyle} />*/}
                           <FaTrash
                             style={iconStyle}
-                            onClick={e =>
+                            onClick={() =>
                               projectActions.removeVerticalGuide(hgKey)
                             }
                           />
@@ -144,7 +143,7 @@ export default class PanelGuides extends Component {
                     <td
                       colSpan='3'
                       style={addGuideStyle}
-                      onClick={e => this.setState({ addVGVisible: false })}
+                      onClick={() => this.setState({ addVGVisible: false })}
                     >
                       {translator.t('+ Add Vertical Giude')}
                     </td>
@@ -154,7 +153,7 @@ export default class PanelGuides extends Component {
                     <td colSpan='2'>
                       <FormNumberInput
                         value={0}
-                        onChange={e => {
+                        onChange={(e) => {
                           projectActions.addVerticalGuide(e.target.value);
                           return this.setState({ addVGVisible: true });
                         }}
@@ -165,7 +164,7 @@ export default class PanelGuides extends Component {
                     <td>
                       <FaTimes
                         style={iconStyle}
-                        onClick={e => this.setState({ addVGVisible: true })}
+                        onClick={() => this.setState({ addVGVisible: true })}
                       />
                     </td>
                   </tr>

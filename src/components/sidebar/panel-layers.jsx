@@ -132,8 +132,8 @@ export default class PanelLayers extends Component {
             {
               scene.layers.entrySeq().map(([layerID, layer]) => {
 
-                let selectClick = e => this.context.sceneActions.selectLayer(layerID);
-                let configureClick = e => this.setState({editingLayer: layer, layerAddUIVisible: true});
+                let selectClick = () => this.context.sceneActions.selectLayer(layerID);
+                let configureClick = () => this.setState({editingLayer: layer, layerAddUIVisible: true});
 
                 let swapVisibility = e => {
                   e.stopPropagation();

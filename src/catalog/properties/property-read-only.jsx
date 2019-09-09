@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { FormLabel } from '../../components/style/export';
 import PropertyStyle from './shared-property-style';
 
-export default function PropertyReadOnly({value, onUpdate, configs, sourceElement, internalState, state}) {
+export default function PropertyReadOnly({value, configs}) {
   return (
     <table className="PropertyReadOnly" style={PropertyStyle.tableStyle}>
       <tbody>

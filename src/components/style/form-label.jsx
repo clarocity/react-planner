@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const BASE_STYLE = {
   display: "block",
@@ -7,4 +8,9 @@ const BASE_STYLE = {
 
 export default function FormLabel({children, style, ...rest}) {
   return <label style={{...BASE_STYLE, style}} {...rest}>{children}</label>
+}
+
+FormLabel.propTypes = {
+  children: PropTypes.node,
+  style: PropTypes.object,
 }

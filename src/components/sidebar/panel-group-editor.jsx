@@ -51,11 +51,8 @@ export default class PanelGroupEditor extends Component {
     this.state = {};
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate() {
     return true;
-  }
-
-  componentWillReceiveProps( nextProps, nextContext ) {
   }
 
   render() {
@@ -144,7 +141,7 @@ export default class PanelGroupEditor extends Component {
                             >
                               <td style={iconColStyle} title={this.context.translator.t('Un-chain Element from Group')}>
                                 <FaUnlink
-                                  onClick={ e => this.context.groupsActions.removeFromGroup( this.props.groupID, layerID, elementPrototype, elementID ) }
+                                  onClick={ () => this.context.groupsActions.removeFromGroup( this.props.groupID, layerID, elementPrototype, elementID ) }
                                   style={styleEditButton}
                                 />
                               </td>

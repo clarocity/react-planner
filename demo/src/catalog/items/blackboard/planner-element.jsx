@@ -60,11 +60,8 @@ export default {
   let newAltitude = element.properties.get('altitude').get('length');
 
     //colors
-    var grey2 = new Three.MeshLambertMaterial( {color: 0x000000} );
     var grey = new Three.MeshLambertMaterial( {color: 0xCCCCCC} );
     var grey2 = new Three.MeshLambertMaterial( {color: 0x414449} );
-
-
 
     var lavagna = new Three.Object3D();
 

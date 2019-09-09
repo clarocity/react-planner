@@ -75,7 +75,6 @@ const STYLE_PLUS_HOVER = {
 
 const STYLE_DESCRIPTION = {
   display: 'block',
-  display: '-webkit-box',
   height: '2em',
   margin: '0 auto',
   fontSize: '0.75em',
@@ -136,9 +135,9 @@ export default class CatalogItem extends Component {
     return (
       <div
         style={hover ? STYLE_BOX_HOVER : STYLE_BOX}
-        onClick={e => this.select()}
-        onMouseEnter={e => this.setState({hover: true})}
-        onMouseLeave={e => this.setState({hover: false})}
+        onClick={() => this.select()}
+        onMouseEnter={() => this.setState({hover: true})}
+        onMouseLeave={() => this.setState({hover: false})}
       >
         <b style={ !hover ? STYLE_TITLE : STYLE_TITLE_HOVER }>{element.info.title}</b>
         <div style={ STYLE_IMAGE_CONTAINER }>

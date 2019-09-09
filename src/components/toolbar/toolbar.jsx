@@ -23,8 +23,8 @@ const iconTextStyle = {
   userSelect: 'none'
 };
 
-const Icon2D = ( {style} ) => <p style={{...iconTextStyle, ...style}}>2D</p>;
-const Icon3D = ( {style} ) => <p style={{...iconTextStyle, ...style}}>3D</p>;
+const Icon2D = ( {style} ) => <p style={{...iconTextStyle, ...style}}>2D</p>; //eslint-disable-line react/prop-types
+const Icon3D = ( {style} ) => <p style={{...iconTextStyle, ...style}}>3D</p>; //eslint-disable-line react/prop-types
 
 const ASIDE_STYLE = {
   backgroundColor: SharedStyle.PRIMARY_COLOR.main,
@@ -62,7 +62,7 @@ export default class Toolbar extends Component {
     this.state = {};
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps /*, nextState */) {
     return this.props.state.mode !== nextProps.state.mode ||
       this.props.height !== nextProps.height ||
       this.props.width !== nextProps.width ||
@@ -85,7 +85,7 @@ export default class Toolbar extends Component {
         index: 0, condition: allowProjectFileSupport, dom: <ToolbarButton
           active={false}
           tooltip={translator.t('New project')}
-          onClick={event => confirm(translator.t('Would you want to start a new Project?')) ? projectActions.newProject() : null}>
+          onClick={() => confirm(translator.t('Would you want to start a new Project?')) ? projectActions.newProject() : null}>
           <FaFile />
         </ToolbarButton>
       },
@@ -102,7 +102,7 @@ export default class Toolbar extends Component {
         dom: <ToolbarButton
           active={[MODE_VIEWING_CATALOG].includes(mode)}
           tooltip={translator.t('Open catalog')}
-          onClick={event => projectActions.openCatalog()}>
+          onClick={() => projectActions.openCatalog()}>
           <FaPlus />
         </ToolbarButton>
       },
@@ -110,7 +110,7 @@ export default class Toolbar extends Component {
         index: 4, condition: true, dom: <ToolbarButton
           active={[MODE_3D_VIEW].includes(mode)}
           tooltip={translator.t('3D View')}
-          onClick={event => viewer3DActions.selectTool3DView()}>
+          onClick={() => viewer3DActions.selectTool3DView()}>
           <Icon3D />
         </ToolbarButton>
       },
@@ -118,7 +118,7 @@ export default class Toolbar extends Component {
         index: 5, condition: true, dom: <ToolbarButton
           active={[MODE_IDLE].includes(mode)}
           tooltip={translator.t('2D View')}
-          onClick={event => projectActions.setMode( MODE_IDLE )}>
+          onClick={() => projectActions.setMode( MODE_IDLE )}>
           {[MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? <Icon2D style={{color: alterateColor}} /> : <FaMousePointer style={{color: alterateColor}} />}
         </ToolbarButton>
       },
@@ -126,7 +126,7 @@ export default class Toolbar extends Component {
         index: 6, condition: true, dom: <ToolbarButton
           active={[MODE_3D_FIRST_PERSON].includes(mode)}
           tooltip={translator.t('3D First Person')}
-          onClick={event => viewer3DActions.selectTool3DFirstPerson()}>
+          onClick={() => viewer3DActions.selectTool3DFirstPerson()}>
           <MdDirectionsRun />
         </ToolbarButton>
       },
@@ -134,7 +134,7 @@ export default class Toolbar extends Component {
         index: 7, condition: true, dom: <ToolbarButton
           active={false}
           tooltip={translator.t('Undo (CTRL-Z)')}
-          onClick={event => projectActions.undo()}>
+          onClick={() => projectActions.undo()}>
           <MdUndo />
         </ToolbarButton>
       },
@@ -142,7 +142,7 @@ export default class Toolbar extends Component {
         index: 8, condition: true, dom: <ToolbarButton
           active={[MODE_CONFIGURING_PROJECT].includes(mode)}
           tooltip={translator.t('Configure project')}
-          onClick={event => projectActions.openProjectConfigurator()}>
+          onClick={() => projectActions.openProjectConfigurator()}>
           <MdSettings />
         </ToolbarButton>
       }

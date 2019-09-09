@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import FormNumberInput from '../../../style/form-number-input';
 import FormTextInput from '../../../style/form-text-input';

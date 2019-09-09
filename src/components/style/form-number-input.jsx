@@ -49,7 +49,7 @@ export default class FormNumberInput extends Component {
 
   render() {
 
-    let { value, min, max, precision, onChange, onValid, onInvalid, style, placeholder } = this.props;
+    let { min, max, precision, onChange, onValid, onInvalid, style, placeholder } = this.props;
     let numericInputStyle = { ...STYLE_INPUT, ...style };
 
     if (this.state.focus) numericInputStyle.border = `1px solid ${SharedStyle.SECONDARY_COLOR.main}`;
@@ -93,8 +93,8 @@ export default class FormNumberInput extends Component {
 
             this.setState({ valid });
           }}
-          onFocus={e => this.setState({ focus: true })}
-          onBlur={e => this.setState({ focus: false })}
+          onFocus={() => this.setState({ focus: true })}
+          onBlur={() => this.setState({ focus: false })}
           onKeyDown={e => {
             var keyCode = e.keyCode || e.which;
             if ((keyCode == KEYBOARD_BUTTON_CODE.ENTER || keyCode == KEYBOARD_BUTTON_CODE.TAB) && different) {

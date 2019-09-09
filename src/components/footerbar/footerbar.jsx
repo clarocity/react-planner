@@ -133,7 +133,7 @@ export default class FooterBar extends Component {
           </div>
         </If>
 
-        {this.props.footerbarComponents.map((Component, index) => <Component state={state} key={index} />)}
+        {this.props.footerbarComponents.map((Component, index) => <Component state={globalState} key={index} />)}
 
         {
           this.props.softwareSignature ?

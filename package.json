@@ -18,7 +18,7 @@
     "version": "npm run update-version-file && npm run build && npm run add-build-to-vcs",
     "postpublish": "npm run website-update",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint ./"
+    "lint": "eslint './+(src|demo)/**/*.{js,jsx}?'"
   },
   "repository": {
     "type": "git",

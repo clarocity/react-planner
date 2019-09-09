@@ -60,8 +60,8 @@ export default class ToolbarButton extends Component {
 
     return (
       <div style={STYLE}
-        onMouseOver={event => this.setState({ active: true })}
-        onMouseOut={event => this.setState({ active: false })}>
+        onMouseOver={() => this.setState({ active: true })}
+        onMouseOut={() => this.setState({ active: false })}>
         <div style={{ color }} onClick={props.onClick}>
           {props.children}
         </div>
@@ -81,6 +81,7 @@ export default class ToolbarButton extends Component {
 }
 
 ToolbarButton.propTypes = {
+  children: PropTypes.node,
   active: PropTypes.bool.isRequired,
   tooltip: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired

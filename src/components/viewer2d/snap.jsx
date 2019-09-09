@@ -16,7 +16,7 @@ export default function ActiveDrawingHelper({snap, width, height}) {
           <line x1="-70" y1="0" x2="70" y2="0" style={STYLE}/>
         </g>);
 
-    case 'line':
+    case 'line': {
       let h0 = Geometry.horizontalLine(0);
       let h1 = Geometry.horizontalLine(height);
       let pointH0 = Geometry.twoLinesIntersection(snap.a, snap.b, snap.c, h0.a, h0.b, h0.c);
@@ -32,7 +32,7 @@ export default function ActiveDrawingHelper({snap, width, height}) {
       if (pointV0 && pointV1)
         return <line x1={pointV0.x} y1={pointV0.y} x2={pointV1.x} y2={pointV1.y} style={STYLE}/>;
       return null;
-
+    }
     case'line-segment':
       return <line x1={snap.x1} y1={snap.y1} x2={snap.x2} y2={snap.y2} style={STYLE}/>;
 

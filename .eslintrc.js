@@ -9,11 +9,12 @@ module.exports = {
     ],
   "globals": {
     "Atomics": "readonly",
-    "SharedArrayBuffer": "readonly"
+    "SharedArrayBuffer": "readonly",
+    "isProduction": "readonly"
   },
   parser: 'babel-eslint',
   parserOptions: {
-    ecmaVersion: 2018,
+    ecmaVersion: 2019,
     sourceType: 'module',
     ecmaFeatures: {
       jsx: true,
@@ -35,20 +36,32 @@ module.exports = {
     "react/display-name": "off"
   },
   "overrides": [
-  {
-    files: [
-      "**/webpack.config.js",
-    ],
-    "env": {
-      "node": true,
+    {
+      files: [
+        "**/webpack.config.js",
+        "demo/src/catalog/**/*.js"
+      ],
+      "env": {
+        "node": true,
+      },
+      "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "script",
+        "ecmaFeatures": {
+          "jsx": false
+        }
+      },
     },
-    "parserOptions": {
-      "ecmaVersion": 6,
-      "sourceType": "script",
-      "ecmaFeatures": {
-        "jsx": false
+    {
+      files: [
+        "demo/src/catalog/**/*.jsx"
+      ],
+      "globals": {
+        "require": "readonly"
+      },
+      rules: {
+        'no-unused-vars': 'off'
       }
-    },
-  }
+    }
   ]
 };

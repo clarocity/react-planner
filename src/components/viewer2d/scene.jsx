@@ -4,13 +4,13 @@ import { Layer, Grids } from './export';
 
 export default class Scene extends Component {
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps /*, nextState */) {
     return this.props.scene.hashCode() !== nextProps.scene.hashCode();
   }
 
   render() {
     let {scene, catalog} = this.props;
-    let {height, layers} = scene;
+    let {layers} = scene;
     let selectedLayer = layers.get(scene.selectedLayer);
 
     return (

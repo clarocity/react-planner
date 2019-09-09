@@ -10,7 +10,7 @@ import {
 } from '../../../constants';
 import ElementEditor from './element-editor';
 
-export default function PanelElementEditor({state}, {projectActions, translator}) {
+export default function PanelElementEditor({state}, {translator}) {
 
   let {scene, mode} = state;
 
@@ -42,6 +42,5 @@ PanelElementEditor.propTypes = {
 };
 
 PanelElementEditor.contextTypes = {
-  projectActions: PropTypes.object.isRequired,
   translator: PropTypes.object.isRequired
 };

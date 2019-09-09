@@ -51,8 +51,8 @@ export default class Button extends Component {
 
     return <button
       type={type}
-      onMouseEnter={e => this.setState({hover: true})}
-      onMouseLeave={e => this.setState({hover: false})}
+      onMouseEnter={() => this.setState({hover: true})}
+      onMouseLeave={() => this.setState({hover: false})}
       style={styleMerged}
       {...rest}>{children}</button>
   }
@@ -72,6 +72,7 @@ Button.defaultProps = {
 };
 
 Button.propTypes = {
+  children: PropTypes.node,
   type: PropTypes.string,
   style: PropTypes.object,
   styleHover: PropTypes.object,

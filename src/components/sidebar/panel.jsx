@@ -80,6 +80,7 @@ export default class Panel extends Component {
 }
 
 Panel.propTypes = {
+  children: PropTypes.node,
   name: PropTypes.string.isRequired,
   headComponents: PropTypes.array,
   opened: PropTypes.bool

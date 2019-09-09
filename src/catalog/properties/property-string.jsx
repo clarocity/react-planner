@@ -3,9 +3,6 @@ import PropTypes from 'prop-types';
 import { FormLabel, FormTextInput } from '../../components/style/export';
 import PropertyStyle from './shared-property-style';
 
-const tableStyle = {width: "100%", borderSpacing: "2px 0", marginBottom: "2px"};
-const firstTdStyle = {width: '6em', textTransform:'capitalize'};
-
 export default function PropertyString({value, onUpdate, configs, sourceElement, internalState, state}) {
 
   let update = (val) => {

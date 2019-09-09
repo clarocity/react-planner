@@ -101,14 +101,14 @@ export default class FooterContentButton extends Component {
     this.state = {
       over: false,
       closeOver: false,
-      active: this.props.toggleState || false
+      active: false
     };
   }
 
-  toggleOver(e) { this.setState({ over: true }); }
-  toggleOut(e) { this.setState({ over: false }); }
+  toggleOver() { this.setState({ over: true }); }
+  toggleOut() { this.setState({ over: false }); }
 
-  toggle(e) {
+  toggle() {
     let isActive = !this.state.active;
     this.setState({ active: isActive });
   }
@@ -119,14 +119,8 @@ export default class FooterContentButton extends Component {
     if( this.state.active != nextState.active ) return true;
 
     if( this.props.content.length != nextProps.content.length ) return true;
-    if( this.props.toggleState != nextProps.toggleState ) return true;
 
     return false;
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.toggleState != this.props.toggleState  )
-      this.state.active = nextProps.toggleState;
   }
 
   render() {
@@ -154,9 +148,9 @@ export default class FooterContentButton extends Component {
             <b style={{...titleStyle, ...inputTitleStyle}}>{p.title}</b>
             <IconClose
               style={ s.closeOver ? iconCloseStyleOver : iconCloseStyleOut}
-              onMouseOver={e => this.setState({closeOver:true})}
-              onMouseOut={e => this.setState({closeOver:false})}
-              onClick={e => this.toggle(e)}
+              onMouseOver={() => this.setState({closeOver:true})}
+              onMouseOut={() => this.setState({closeOver:false})}
+              onClick={() => this.toggle()}
             />
           </div>
           <div style={contentAreaStyle}>
@@ -175,7 +169,6 @@ FooterContentButton.propTypes = {
   icon: PropTypes.func,
   iconStyle: PropTypes.object,
   content: PropTypes.array.isRequired,
-  toggleState: PropTypes.bool,
   title: PropTypes.string,
   titleStyle: PropTypes.object
 };

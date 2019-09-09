@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import PropertyLengthMeasure from '../../../../catalog/properties/property-lenght-measure';
 import PropertyString from '../../../../catalog/properties/property-string';
 
-export default function HoleAttributesEditor({element, onUpdate, attributeFormData, state, ...rest}, {translator}) {
+export default function HoleAttributesEditor({element, onUpdate, attributeFormData, state, ...rest}) {
   let name = attributeFormData.has('name') ? attributeFormData.get('name') : element.name;
   let offsetA = attributeFormData.has('offsetA') ? attributeFormData.get('offsetA') : element.offsetA;
   let offsetB = attributeFormData.has('offsetB') ? attributeFormData.get('offsetB') : element.offsetA;
@@ -38,8 +38,4 @@ HoleAttributesEditor.propTypes = {
   onUpdate: PropTypes.func.isRequired,
   attributeFormData: PropTypes.object.isRequired,
   state: PropTypes.object.isRequired
-};
-
-HoleAttributesEditor.contextTypes = {
-  translator: PropTypes.object.isRequired,
 };

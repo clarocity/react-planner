@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from './button';
 import * as SharedStyle from '../../shared-style';
+import PropTypes from 'prop-types';
 
 const STYLE = {
   borderColor: "#415375",
@@ -16,4 +17,8 @@ const STYLE_HOVER = {
 
 export default function FormSubmitButton({children, ...rest}) {
   return <Button type="submit" style={STYLE} styleHover={STYLE_HOVER} {...rest}>{children}</Button>
+}
+
+FormSubmitButton.propTypes = {
+  children: PropTypes.node,
 }

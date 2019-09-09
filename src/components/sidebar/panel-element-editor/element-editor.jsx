@@ -55,10 +55,8 @@ export default class ElementEditor extends Component {
   }
 
   componentWillReceiveProps({ element, layer, state }) {
-    let { prototype, id } = element;
     let scene = this.props.state.get('scene');
     let selectedLayer = scene.getIn(['layers', scene.get('selectedLayer')]);
-    let selected = selectedLayer.getIn([prototype, id]);
 
     if( selectedLayer.hashCode() !== layer.hashCode() ) this.setState({
       attributesFormData: this.initAttrData(element, layer, state),
@@ -66,7 +64,7 @@ export default class ElementEditor extends Component {
     });
   }
 
-  initAttrData(element, layer, state) {
+  initAttrData(element, layer/* , state */) {
 
     element = typeof element.misc === 'object' ? element.set('misc', new Map(element.misc)) : element;
 
@@ -126,7 +124,7 @@ export default class ElementEditor extends Component {
 
   }
 
-  initPropData(element, layer, state) {
+  initPropData(element /* , layer, state */) {
     let {catalog} = this.context;
     let catalogElement = catalog.getElement(element.type);
 
@@ -291,7 +289,7 @@ export default class ElementEditor extends Component {
             attributesFormData = attributesFormData.set(attributeName, value);
             break;
           }
-        };
+        }
         break;
       }
       default:
@@ -352,7 +350,7 @@ export default class ElementEditor extends Component {
   render() {
     let {
       state: {propertiesFormData, attributesFormData},
-      context: {projectActions, catalog, translator},
+      context: {catalog, translator},
       props: {state: appState, element},
     } = this;
 
@@ -368,10 +366,10 @@ export default class ElementEditor extends Component {
 
         <div style={attrPorpSeparatorStyle}>
           <div style={headActionStyle}>
-            <div title={translator.t('Copy')} style={iconHeadStyle} onClick={ e => this.copyProperties(element.properties) }><MdContentCopy /></div>
+            <div title={translator.t('Copy')} style={iconHeadStyle} onClick={ () => this.copyProperties(element.properties) }><MdContentCopy /></div>
             {
               appState.get('clipboardProperties') && appState.get('clipboardProperties').size ?
-                <div title={translator.t('Paste')} style={iconHeadStyle} onClick={ e => this.pasteProperties() }><MdContentPaste /></div> : null
+                <div title={translator.t('Paste')} style={iconHeadStyle} onClick={ () => this.pasteProperties() }><MdContentPaste /></div> : null
             }
           </div>
         </div>

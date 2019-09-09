@@ -23,7 +23,7 @@ export default function PropertyToggle({value, onUpdate, configs, sourceElement,
       <tr>
         <td style={PropertyStyle.firstTdStyle}><FormLabel>{configs.label}</FormLabel></td>
         <td>
-          <Button onClick={e => update(!value)} size="small">{configs.actionName}</Button>
+          <Button onClick={() => update(!value)} size="small">{configs.actionName}</Button>
         </td>
       </tr>
       </tbody>

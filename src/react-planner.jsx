@@ -90,7 +90,20 @@ ReactPlanner.propTypes = {
   sidebarComponents: PropTypes.array,
   footerbarComponents: PropTypes.array,
   customContents: PropTypes.object,
-  softwareSignature: PropTypes.string
+  softwareSignature: PropTypes.string,
+
+  // Props mapped from redux
+  state:           PropTypes.object,
+  projectActions:  PropTypes.object,
+  viewer2DActions: PropTypes.object,
+  viewer3DActions: PropTypes.object,
+  linesActions:    PropTypes.object,
+  holesActions:    PropTypes.object,
+  sceneActions:    PropTypes.object,
+  verticesActions: PropTypes.object,
+  itemsActions:    PropTypes.object,
+  areaActions:     PropTypes.object,
+  groupsActions:   PropTypes.object,
 };
 
 ReactPlanner.contextTypes = {

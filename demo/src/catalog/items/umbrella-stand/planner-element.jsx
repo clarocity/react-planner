@@ -155,7 +155,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function (element /*, layer, scene */) {
 
     let angle = element.rotation + 90;
 
@@ -177,7 +177,7 @@ export default {
     )
   },
 
-  render3D: function (element, layer, scene) {
+  render3D: function (element /*, layer, scene */) {
 
     let newAltitude = element.properties.get('altitude').get('length');
 
