@@ -106,7 +106,7 @@
     "react-container-dimensions": "1.4.1",
     "react-dom": "~16.9.0",
     "rimraf": "~3.0.0",
-    "style-loader": "0.23.1",
+    "style-loader": "~1.0.0",
     "three": "~0.108.0",
     "webpack": "~4.39.3",
     "webpack-cli": "~3.3.8",
