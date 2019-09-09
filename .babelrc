@@ -1,15 +1,31 @@
 {
   "plugins": [
-    "transform-object-rest-spread",
+    "@babel/plugin-proposal-object-rest-spread",
     "import-glob",
-    "transform-runtime"
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "corejs": 2
+      }
+    ]
   ],
   "env": {
     "commonjs": {
-      "presets": ["env", "react"]
+      "presets": [
+        "@babel/preset-env",
+        "@babel/preset-react"
+      ]
     },
     "es": {
-      "presets": [["env", { "modules": false }], "react"]
+      "presets": [
+        [
+          "@babel/preset-env",
+          {
+            "modules": false
+          }
+        ],
+        "@babel/preset-react"
+      ]
     }
   }
 }

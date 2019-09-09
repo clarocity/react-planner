@@ -2,7 +2,7 @@
  * @author mrdoob / http://mrdoob.com/
  */
 
-import THREE from 'three';
+import * as THREE from 'three';
 
 const OBJLoader = (function () {
   // o object_name | g group_name

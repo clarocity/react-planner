@@ -46,11 +46,17 @@ module.exports = (env, self) => {
           options: {
             'compact': false,
             'plugins': [
-              'transform-object-rest-spread'
+              '@babel/plugin-proposal-object-rest-spread',
+              [
+                "@babel/plugin-transform-runtime",
+                {
+                  "corejs": 2
+                }
+              ]
             ],
             'presets': [
-              'env',
-              'react'
+              "@babel/preset-env",
+              "@babel/preset-react"
             ]
           }
 
