@@ -29,3 +29,5 @@ export {
   ElementsFactories,
   ReactPlannerUtils
 };
+
+export const Context = ReactPlannerComponents.Context;
