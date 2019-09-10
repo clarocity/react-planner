@@ -11,7 +11,8 @@ import {
   ToolbarComponents,
   Content,
   SidebarComponents,
-  FooterBarComponents
+  FooterBarComponents,
+  Context,
 } from './components/export';
 import {VERSION} from './version';
 import './styles/export';
@@ -31,28 +32,10 @@ const wrapperStyle = {
 
 class ReactPlanner extends Component {
 
-  getChildContext() {
-    return {
-      ...objectsMap(actions, actionNamespace => this.props[actionNamespace]),
-      translator: this.props.translator,
-      catalog: this.props.catalog,
-    }
-  }
-
-  componentWillMount() {
-    let {store} = this.context;
-    let {projectActions, catalog, stateExtractor, plugins} = this.props;
-    plugins.forEach(plugin => plugin(store, stateExtractor));
-    projectActions.initCatalog(catalog);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    let {stateExtractor, state, projectActions, catalog} = nextProps;
-    let plannerState = stateExtractor(state);
-    let catalogReady = plannerState.getIn(['catalog', 'ready']);
-    if (!catalogReady) {
-      projectActions.initCatalog(catalog);
-    }
+  constructor (props) {
+    super(props);
+    const {actions, catalog} = props;
+    actions.project.initCatalog(catalog);
   }
 
   render() {
@@ -66,46 +49,35 @@ class ReactPlanner extends Component {
     let extractedState = stateExtractor(state);
 
     return (
-      <div style={{...wrapperStyle, height}}>
+      <div style={{...wrapperStyle, height}}><Context.Provider state={extractedState} {...props}>
         <Toolbar width={toolbarW} height={toolbarH} state={extractedState} {...props} />
         <Content width={contentW} height={contentH} state={extractedState} {...props} onWheel={event => event.preventDefault()} />
         <Sidebar width={sidebarW} height={sidebarH} state={extractedState} {...props} />
         <FooterBar width={width} height={footerBarH} state={extractedState} {...props} />
-      </div>
+      </Context.Provider></div>
     );
   }
 }
 
 ReactPlanner.propTypes = {
-  translator: PropTypes.instanceOf(Translator),
-  catalog: PropTypes.instanceOf(Catalog),
+  state:                   PropTypes.object,
   actions:                 PropTypes.object,
+  translator:              PropTypes.instanceOf(Translator),
+  catalog:                 PropTypes.instanceOf(Catalog),
   allowProjectFileSupport: PropTypes.bool,
-  plugins: PropTypes.arrayOf(PropTypes.func),
-  autosaveKey: PropTypes.string,
-  autosaveDelay: PropTypes.number,
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
-  stateExtractor: PropTypes.func.isRequired,
-  toolbarButtons: PropTypes.array,
-  sidebarComponents: PropTypes.array,
-  footerbarComponents: PropTypes.array,
-  customContents: PropTypes.object,
-  softwareSignature: PropTypes.string,
-
-  // Props mapped from redux
-  state:           PropTypes.object,
+  plugins:                 PropTypes.arrayOf(PropTypes.func),
+  autosaveKey:             PropTypes.string,
+  autosaveDelay:           PropTypes.number,
+  width:                   PropTypes.number.isRequired,
+  height:                  PropTypes.number.isRequired,
+  stateExtractor:          PropTypes.func.isRequired,
+  toolbarButtons:          PropTypes.array,
+  sidebarComponents:       PropTypes.array,
+  footerbarComponents:     PropTypes.array,
+  customContents:          PropTypes.object,
+  softwareSignature:       PropTypes.string,
 };
 
-ReactPlanner.contextTypes = {
-  store: PropTypes.object.isRequired,
-};
-
-ReactPlanner.childContextTypes = {
-  ...objectsMap(actions, () => PropTypes.object),
-  translator: PropTypes.object,
-  catalog: PropTypes.object,
-};
 
 ReactPlanner.defaultProps = {
   translator: new Translator(),
