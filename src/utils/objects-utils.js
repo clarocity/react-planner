@@ -1,7 +1,8 @@
 export function objectsMap(object, func){
   let mappedObject = {};
+  let i = 0;
   for (let key in object) {
-    mappedObject[key] = func(key, mappedObject[key]);
+    mappedObject[key] = func(object[key], key, i++);
   }
   return mappedObject;
 }
@@ -10,7 +11,7 @@ export function objectsCompare( x, y ) {
   if ( x === y ) return true;
   if ( ! ( x instanceof Object ) || ! ( y instanceof Object ) ) return false;
   if ( x.constructor !== y.constructor ) return false;
-  
+
   for ( let p in x ) {
     if ( ! x.hasOwnProperty( p ) ) continue;
     if ( ! y.hasOwnProperty( p ) ) return false;

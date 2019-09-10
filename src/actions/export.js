@@ -1,36 +1,36 @@
-import * as projectActions from './project-actions';
-import * as viewer2DActions from './viewer2d-actions';
-import * as viewer3DActions from './viewer3d-actions';
-import * as linesActions from './lines-actions';
-import * as holesActions from './holes-actions';
-import * as sceneActions from './scene-actions';
-import * as verticesActions from './vertices-actions';
-import * as itemsActions from './items-actions';
-import * as areaActions from './area-actions';
-import * as groupsActions from './groups-actions';
+import * as project from './project-actions';
+import * as viewer2D from './viewer2d-actions';
+import * as viewer3D from './viewer3d-actions';
+import * as lines from './lines-actions';
+import * as holes from './holes-actions';
+import * as scene from './scene-actions';
+import * as vertices from './vertices-actions';
+import * as items from './items-actions';
+import * as area from './area-actions';
+import * as groups from './groups-actions';
 
 export {
-  projectActions,
-  viewer2DActions,
-  viewer3DActions,
-  linesActions,
-  holesActions,
-  sceneActions,
-  verticesActions,
-  itemsActions,
-  areaActions,
-  groupsActions
+  project,
+  viewer2D,
+  viewer3D,
+  lines,
+  holes,
+  scene,
+  vertices,
+  items,
+  area,
+  groups
 };
 
 export default {
-  projectActions,
-  viewer2DActions,
-  viewer3DActions,
-  linesActions,
-  holesActions,
-  sceneActions,
-  verticesActions,
-  itemsActions,
-  areaActions,
-  groupsActions
+  project,
+  viewer2D,
+  viewer3D,
+  lines,
+  holes,
+  scene,
+  vertices,
+  items,
+  area,
+  groups
 };

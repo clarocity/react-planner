@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 
 import Translator from './translator/translator';
 import Catalog from './catalog/catalog';
-import actions from './actions/export';
+import Actions from './actions/export';
 import {objectsMap} from './utils/objects-utils';
 import {
   ToolbarComponents,
@@ -79,6 +79,7 @@ class ReactPlanner extends Component {
 ReactPlanner.propTypes = {
   translator: PropTypes.instanceOf(Translator),
   catalog: PropTypes.instanceOf(Catalog),
+  actions:                 PropTypes.object,
   allowProjectFileSupport: PropTypes.bool,
   plugins: PropTypes.arrayOf(PropTypes.func),
   autosaveKey: PropTypes.string,
@@ -94,16 +95,6 @@ ReactPlanner.propTypes = {
 
   // Props mapped from redux
   state:           PropTypes.object,
-  projectActions:  PropTypes.object,
-  viewer2DActions: PropTypes.object,
-  viewer3DActions: PropTypes.object,
-  linesActions:    PropTypes.object,
-  holesActions:    PropTypes.object,
-  sceneActions:    PropTypes.object,
-  verticesActions: PropTypes.object,
-  itemsActions:    PropTypes.object,
-  areaActions:     PropTypes.object,
-  groupsActions:   PropTypes.object,
 };
 
 ReactPlanner.contextTypes = {
@@ -136,7 +127,8 @@ function mapStateToProps(reduxState) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return objectsMap(actions, actionNamespace => bindActionCreators(actions[actionNamespace], dispatch));
+  const actions = objectsMap(Actions, (creators) => bindActionCreators(creators, dispatch));
+  return { actions }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReactPlanner);
