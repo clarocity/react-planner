@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { MdCamera } from 'react-icons/md'
-import {ReactPlannerComponents, ReactPlannerConstants} from 'react-planner';
+import {ReactPlannerComponents, ReactPlannerConstants, Context} from 'react-planner';
 
 const {
   MODE_IDLE,
@@ -23,7 +23,7 @@ const {
 
 const { ToolbarButton } = ReactPlannerComponents.ToolbarComponents;
 
-export default function ToolbarScreenshotButton({mode}, {translator}) {
+function ToolbarScreenshotButton({mode, translator}) {
 
   let imageBrowserDownload = imageUri => {
     let fileOutputLink = document.createElement('a');
@@ -126,8 +126,7 @@ export default function ToolbarScreenshotButton({mode}, {translator}) {
 
 ToolbarScreenshotButton.propTypes = {
   mode: PropTypes.string.isRequired,
+  ...Context.ContextPropTypes,
 };
 
-ToolbarScreenshotButton.contextTypes = {
-  translator: PropTypes.object.isRequired,
-};
+export default Context.needsContext(ToolbarScreenshotButton)

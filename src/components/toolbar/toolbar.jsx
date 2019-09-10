@@ -14,6 +14,7 @@ import {
   MODE_CONFIGURING_PROJECT
 } from '../../constants';
 import * as SharedStyle from '../../shared-style';
+import { ContextPropTypes, needsContext } from '../context';
 
 const iconTextStyle = {
   fontSize: '19px',
@@ -55,10 +56,11 @@ const mapButtonsCb = (el, ind) => {
   );
 };
 
-export default class Toolbar extends Component {
 
-  constructor(props, context) {
-    super(props, context);
+export default @needsContext class Toolbar extends Component {
+
+  constructor(props) {
+    super(props);
     this.state = {};
   }
 
@@ -71,10 +73,7 @@ export default class Toolbar extends Component {
 
   render() {
 
-    let {
-      props: { state, width, height, toolbarButtons, allowProjectFileSupport },
-      context: { projectActions, viewer3DActions, translator }
-    } = this;
+    const { state, width, height, toolbarButtons, allowProjectFileSupport, actions, translator } = this.props;
 
     let mode = state.get('mode');
     let alterate = state.get('alterate');
@@ -85,7 +84,7 @@ export default class Toolbar extends Component {
         index: 0, condition: allowProjectFileSupport, dom: <ToolbarButton
           active={false}
           tooltip={translator.t('New project')}
-          onClick={() => confirm(translator.t('Would you want to start a new Project?')) ? projectActions.newProject() : null}>
+          onClick={() => confirm(translator.t('Would you want to start a new Project?')) ? actions.project.newProject() : null}>
           <FaFile />
         </ToolbarButton>
       },
@@ -102,7 +101,7 @@ export default class Toolbar extends Component {
         dom: <ToolbarButton
           active={[MODE_VIEWING_CATALOG].includes(mode)}
           tooltip={translator.t('Open catalog')}
-          onClick={() => projectActions.openCatalog()}>
+          onClick={() => actions.project.openCatalog()}>
           <FaPlus />
         </ToolbarButton>
       },
@@ -110,7 +109,7 @@ export default class Toolbar extends Component {
         index: 4, condition: true, dom: <ToolbarButton
           active={[MODE_3D_VIEW].includes(mode)}
           tooltip={translator.t('3D View')}
-          onClick={() => viewer3DActions.selectTool3DView()}>
+          onClick={() => actions.viewer3D.selectTool3DView()}>
           <Icon3D />
         </ToolbarButton>
       },
@@ -118,7 +117,7 @@ export default class Toolbar extends Component {
         index: 5, condition: true, dom: <ToolbarButton
           active={[MODE_IDLE].includes(mode)}
           tooltip={translator.t('2D View')}
-          onClick={() => projectActions.setMode( MODE_IDLE )}>
+          onClick={() => actions.project.setMode( MODE_IDLE )}>
           {[MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? <Icon2D style={{color: alterateColor}} /> : <FaMousePointer style={{color: alterateColor}} />}
         </ToolbarButton>
       },
@@ -126,7 +125,7 @@ export default class Toolbar extends Component {
         index: 6, condition: true, dom: <ToolbarButton
           active={[MODE_3D_FIRST_PERSON].includes(mode)}
           tooltip={translator.t('3D First Person')}
-          onClick={() => viewer3DActions.selectTool3DFirstPerson()}>
+          onClick={() => actions.viewer3D.selectTool3DFirstPerson()}>
           <MdDirectionsRun />
         </ToolbarButton>
       },
@@ -134,7 +133,7 @@ export default class Toolbar extends Component {
         index: 7, condition: true, dom: <ToolbarButton
           active={false}
           tooltip={translator.t('Undo (CTRL-Z)')}
-          onClick={() => projectActions.undo()}>
+          onClick={() => actions.project.undo()}>
           <MdUndo />
         </ToolbarButton>
       },
@@ -142,7 +141,7 @@ export default class Toolbar extends Component {
         index: 8, condition: true, dom: <ToolbarButton
           active={[MODE_CONFIGURING_PROJECT].includes(mode)}
           tooltip={translator.t('Configure project')}
-          onClick={() => projectActions.openProjectConfigurator()}>
+          onClick={() => actions.project.openProjectConfigurator()}>
           <MdSettings />
         </ToolbarButton>
       }
@@ -171,18 +170,11 @@ export default class Toolbar extends Component {
 
 Toolbar.propTypes = {
   state: PropTypes.object.isRequired,
+  actions: PropTypes.object.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
   allowProjectFileSupport: PropTypes.bool.isRequired,
-  toolbarButtons: PropTypes.array
-};
+  toolbarButtons: PropTypes.array,
 
-Toolbar.contextTypes = {
-  projectActions: PropTypes.object.isRequired,
-  viewer2DActions: PropTypes.object.isRequired,
-  viewer3DActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
+  ...ContextPropTypes,
 };

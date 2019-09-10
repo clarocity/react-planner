@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
+import { ContextPropTypes, needsContext } from '../context';
 
 //http://www.cssportal.com/css-tooltip-generator/
 
@@ -49,28 +50,29 @@ const STYLE_TOOLTIP_PIN = {
 
 export default class ToolbarButton extends Component {
 
-  constructor(props, context) {
-    super(props, context);
-    this.state = { active: false };
+  constructor(props) {
+    super(props);
+    this.state = { hover: false };
   }
 
   render() {
-    let { state, props } = this;
-    let color = props.active || state.active ? SharedStyle.SECONDARY_COLOR.icon : SharedStyle.PRIMARY_COLOR.icon;
+    const { onClick, children, tooltip } = this.props;
+    const { hover } = this.state;
+    let color = this.props.active || hover ? SharedStyle.SECONDARY_COLOR.icon : SharedStyle.PRIMARY_COLOR.icon;
 
     return (
       <div style={STYLE}
-        onMouseOver={() => this.setState({ active: true })}
-        onMouseOut={() => this.setState({ active: false })}>
-        <div style={{ color }} onClick={props.onClick}>
-          {props.children}
+        onMouseOver={() => this.setState({ hover: true })}
+        onMouseOut={() => this.setState({ hover: false })}>
+        <div style={{ color }} onClick={onClick}>
+          {children}
         </div>
 
         {
-          state.active ?
+          hover ?
           <div style={STYLE_TOOLTIP}>
             <span style={STYLE_TOOLTIP_PIN} />
-            {props.tooltip}
+            {tooltip}
           </div>
           : null
         }
@@ -84,5 +86,5 @@ ToolbarButton.propTypes = {
   children: PropTypes.node,
   active: PropTypes.bool.isRequired,
   tooltip: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
 };

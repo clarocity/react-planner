@@ -1,11 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {FaSave as IconSave} from 'react-icons/fa';
 import ToolbarButton from './toolbar-button';
 import {browserDownload}  from '../../utils/browser';
 import { Project } from '../../class/export';
+import { ContextPropTypes, needsContext } from '../context';
 
-export default function ToolbarSaveButton({state}, {translator}) {
+function ToolbarSaveButton({state, translator}) {
 
   let saveProjectToFile = e => {
     e.preventDefault();
@@ -21,9 +21,7 @@ export default function ToolbarSaveButton({state}, {translator}) {
 }
 
 ToolbarSaveButton.propTypes = {
-  state: PropTypes.object.isRequired,
+  ...ContextPropTypes
 };
 
-ToolbarSaveButton.contextTypes = {
-  translator: PropTypes.object.isRequired,
-};
+export default needsContext(ToolbarSaveButton);

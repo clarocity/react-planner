@@ -1,15 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {FaFolderOpen as IconLoad} from 'react-icons/fa';
 import ToolbarButton from './toolbar-button';
 import {browserUpload}  from '../../utils/browser';
+import { ContextPropTypes, needsContext } from '../context';
 
-export default function ToolbarLoadButton(props, {translator, projectActions}) {
+function ToolbarLoadButton({actions, translator}) {
 
   let loadProjectFromFile = event => {
     event.preventDefault();
     browserUpload().then((data) => {
-      projectActions.loadProject(JSON.parse(data));
+      actions.project.loadProject(JSON.parse(data));
     });
   };
 
@@ -21,10 +21,7 @@ export default function ToolbarLoadButton(props, {translator, projectActions}) {
 }
 
 ToolbarLoadButton.propTypes = {
-  state: PropTypes.object.isRequired,
+  ...ContextPropTypes,
 };
 
-ToolbarLoadButton.contextTypes = {
-  projectActions: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
-};
+export default needsContext(ToolbarLoadButton);
