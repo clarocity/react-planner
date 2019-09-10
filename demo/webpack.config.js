@@ -45,8 +45,10 @@ module.exports = (env, self) => {
           loader: 'babel-loader',
           options: {
             'compact': false,
+            sourceMaps: 'inline',
             'plugins': [
               '@babel/plugin-proposal-object-rest-spread',
+              [ "@babel/plugin-proposal-decorators", { legacy: true }],
               [
                 "@babel/plugin-transform-runtime",
                 {

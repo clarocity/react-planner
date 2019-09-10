@@ -1,6 +1,7 @@
 {
   "plugins": [
     "@babel/plugin-proposal-object-rest-spread",
+    [ "@babel/plugin-proposal-decorators", { "legacy": true }],
     "import-glob",
     [
       "@babel/plugin-transform-runtime",
