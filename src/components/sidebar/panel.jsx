@@ -32,8 +32,8 @@ const STYLE_ARROW = {
 
 export default class Panel extends Component {
 
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
 
     this.state = {
       opened: props.hasOwnProperty('opened') ? props.opened : false,

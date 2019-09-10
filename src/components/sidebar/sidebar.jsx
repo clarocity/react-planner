@@ -48,25 +48,25 @@ export default function Sidebar({ state, width, height, sidebarComponents }) {
   let selectedGroup = state.getIn(['scene', 'groups']).findEntry( g => g.get('selected') );
 
   let sorter = [
-    { index: 0, condition: true, dom: <PanelGuides state={state}/> },
-    { index: 1, condition: true, dom: <PanelLayers state={state} /> },
+    { index: 0, condition: true, dom: <PanelGuides /> },
+    { index: 1, condition: true, dom: <PanelLayers /> },
     { index: 2, condition: true, dom: <PanelLayerElements mode={state.mode} layers={state.scene.layers} selectedLayer={state.scene.selectedLayer} /> },
     { index: 3, condition: true, dom: <PanelGroups mode={state.mode} groups={state.scene.groups} layers={state.scene.layers} /> },
-    { index: 4, condition: !multiselected, dom: <PanelElementEditor state={state} /> },
-    //{ index: 5, condition: multiselected, dom: <PanelMultiElementsEditor state={state} /> },
-    { index: 6, condition: !!selectedGroup, dom: <PanelGroupEditor state={state} groupID={selectedGroup ? selectedGroup[0] : null} /> }
+    { index: 4, condition: !multiselected, dom: <PanelElementEditor /> },
+    //{ index: 5, condition: multiselected, dom: <PanelMultiElementsEditor /> },
+    { index: 6, condition: !!selectedGroup, dom: <PanelGroupEditor groupID={selectedGroup ? selectedGroup[0] : null} /> }
   ];
 
   sorter = sorter.concat(sidebarComponents.map((Component, key) => {
     return Component.prototype ? //if is a react component
       {
         condition: true,
-        dom: React.createElement(Component, { state, key })
+        dom: <Component key={key} />
       } :
       {                           //else is a sortable toolbar button
         index: Component.index,
         condition: Component.condition,
-        dom: React.createElement(Component.dom, { state, key })
+        dom: <Component.dom key={key} />
       };
   }));
 

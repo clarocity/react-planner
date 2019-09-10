@@ -4,6 +4,7 @@ import Panel from './panel';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { FaTrash, FaTimes } from 'react-icons/fa';
 import { FormNumberInput } from '../../components/style/export';
+import { ContextPropTypes, needsContext } from '../context';
 
 const tabStyle = { margin: '1em' };
 
@@ -23,9 +24,9 @@ const tableTabStyle = {
   textAlign: 'center'
 };
 
-export default class PanelGuides extends Component {
-  constructor(props, context) {
-    super(props, context);
+export default @needsContext class PanelGuides extends Component {
+  constructor(props) {
+    super(props);
 
     this.state = {
       addHGVisible: true,
@@ -45,8 +46,7 @@ export default class PanelGuides extends Component {
   }
 
   render() {
-    let { state } = this.props;
-    let { projectActions, translator } = this.context;
+    let { state, actions, translator } = this.props;
     let { guides } = state.scene;
 
     return (
@@ -74,7 +74,7 @@ export default class PanelGuides extends Component {
                           <FaTrash
                             style={iconStyle}
                             onClick={() =>
-                              projectActions.removeHorizontalGuide(hgKey)
+                              actions.project.removeHorizontalGuide(hgKey)
                             }
                           />
                         </td>
@@ -97,11 +97,11 @@ export default class PanelGuides extends Component {
                       <FormNumberInput
                         value={0}
                         onChange={(e) => {
-                          projectActions.addHorizontalGuide(e.target.value);
+                          actions.project.addHorizontalGuide(e.target.value);
                           return this.setState({ addHGVisible: true });
                         }}
                         min={0}
-                        max={this.props.state.getIn(['scene', 'height'])}
+                        max={state.getIn(['scene', 'height'])}
                       />
                     </td>
                     <td>
@@ -131,7 +131,7 @@ export default class PanelGuides extends Component {
                           <FaTrash
                             style={iconStyle}
                             onClick={() =>
-                              projectActions.removeVerticalGuide(hgKey)
+                              actions.project.removeVerticalGuide(hgKey)
                             }
                           />
                         </td>
@@ -154,11 +154,11 @@ export default class PanelGuides extends Component {
                       <FormNumberInput
                         value={0}
                         onChange={(e) => {
-                          projectActions.addVerticalGuide(e.target.value);
+                          actions.project.addVerticalGuide(e.target.value);
                           return this.setState({ addVGVisible: true });
                         }}
                         min={0}
-                        max={this.props.state.getIn(['scene', 'height'])}
+                        max={state.getIn(['scene', 'height'])}
                       />
                     </td>
                     <td>
@@ -182,10 +182,5 @@ export default class PanelGuides extends Component {
 }
 
 PanelGuides.propTypes = {
-  state: PropTypes.object.isRequired
-};
-
-PanelGuides.contextTypes = {
-  translator: PropTypes.object.isRequired,
-  projectActions: PropTypes.object.isRequired
+  ...ContextPropTypes
 };

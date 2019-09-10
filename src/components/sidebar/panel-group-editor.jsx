@@ -4,6 +4,7 @@ import Panel from './panel';
 import * as SharedStyle from '../../shared-style';
 import { FormNumberInput, FormTextInput } from '../style/export';
 import { Map } from 'immutable';
+import { ContextPropTypes, needsContext } from '../context';
 
 import {FaUnlink} from 'react-icons/fa';
 
@@ -43,10 +44,10 @@ const tablegroupStyle = {
 
 const iconColStyle = {width: '2em'};
 
-export default class PanelGroupEditor extends Component {
+export default @needsContext class PanelGroupEditor extends Component {
 
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
 
     this.state = {};
   }
@@ -56,22 +57,25 @@ export default class PanelGroupEditor extends Component {
   }
 
   render() {
-    if (!this.props.groupID || !VISIBILITY_MODE[this.props.state.mode]) return null;
 
-    let group = this.props.state.getIn(['scene', 'groups', this.props.groupID]);
+    const { translator, actions, state } = this.props;
+
+    if (!this.props.groupID || !VISIBILITY_MODE[state.mode]) return null;
+
+    let group = state.getIn(['scene', 'groups', this.props.groupID]);
     let elements = group.get('elements');
 
     return (
-      <Panel name={this.context.translator.t('Group [{0}]', group.get('name'))} opened={true}>
+      <Panel name={translator.t('Group [{0}]', group.get('name'))} opened={true}>
         <div style={{padding: '5px 15px'}}>
           <table style={tableStyle}>
             <tbody>
               <tr>
-                <td style={firstTdStyle}>{this.context.translator.t('Name')}</td>
+                <td style={firstTdStyle}>{translator.t('Name')}</td>
                 <td>
                   <FormTextInput
                     value={group.get('name')}
-                    onChange={e => this.context.groupsActions.setGroupAttributes( this.props.groupID, new Map({ 'name': e.target.value }) ) }
+                    onChange={e => actions.group.setGroupAttributes( this.props.groupID, new Map({ 'name': e.target.value }) ) }
                     style={inputStyle}
                   />
                 </td>
@@ -81,9 +85,9 @@ export default class PanelGroupEditor extends Component {
                 <td>
                   <FormNumberInput
                     value={group.get('x')}
-                    onChange={e => this.context.groupsActions.groupTranslate( this.props.groupID, e.target.value, group.get('y') ) }
+                    onChange={e => actions.group.groupTranslate( this.props.groupID, e.target.value, group.get('y') ) }
                     style={inputStyle}
-                    state={this.props.state}
+                    state={state}
                     precision={2}
                   />
                 </td>
@@ -93,21 +97,21 @@ export default class PanelGroupEditor extends Component {
                 <td>
                   <FormNumberInput
                     value={group.get('y')}
-                    onChange={e => this.context.groupsActions.groupTranslate( this.props.groupID, group.get('x'), e.target.value ) }
+                    onChange={e => actions.group.groupTranslate( this.props.groupID, group.get('x'), e.target.value ) }
                     style={inputStyle}
-                    state={this.props.state}
+                    state={state}
                     precision={2}
                   />
                 </td>
               </tr>
               <tr>
-                <td style={firstTdStyle}>{this.context.translator.t('Rotation')}</td>
+                <td style={firstTdStyle}>{translator.t('Rotation')}</td>
                 <td>
                   <FormNumberInput
                     value={group.get('rotation')}
-                    onChange={e => this.context.groupsActions.groupRotate( this.props.groupID, e.target.value ) }
+                    onChange={e => actions.group.groupRotate( this.props.groupID, e.target.value ) }
                     style={inputStyle}
-                    state={this.props.state}
+                    state={state}
                     precision={2}
                   />
                 </td>
@@ -117,14 +121,14 @@ export default class PanelGroupEditor extends Component {
           {
             elements.size ?
               <div>
-                <p style={{textAlign:'center', borderBottom:SharedStyle.PRIMARY_COLOR.border , paddingBottom:'1em'}}>{this.context.translator.t('Group\'s Elements')}</p>
+                <p style={{textAlign:'center', borderBottom:SharedStyle.PRIMARY_COLOR.border , paddingBottom:'1em'}}>{translator.t('Group\'s Elements')}</p>
                 <table style={tablegroupStyle}>
                   <thead>
                     <tr>
                       <th style={iconColStyle}></th>
-                      <th>{this.context.translator.t('Layer')}</th>
-                      <th>{this.context.translator.t('Prototype')}</th>
-                      <th>{this.context.translator.t('Name')}</th>
+                      <th>{translator.t('Layer')}</th>
+                      <th>{translator.t('Prototype')}</th>
+                      <th>{translator.t('Name')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -134,14 +138,14 @@ export default class PanelGroupEditor extends Component {
                         return layerElements.entrySeq().map(([elementPrototype, ElementList]) => {
 
                           return ElementList.valueSeq().map( elementID => {
-                            let element = this.props.state.getIn(['scene', 'layers', layerID, elementPrototype, elementID]);
+                            let element = state.getIn(['scene', 'layers', layerID, elementPrototype, elementID]);
 
                             return <tr
                               key={elementID}
                             >
-                              <td style={iconColStyle} title={this.context.translator.t('Un-chain Element from Group')}>
+                              <td style={iconColStyle} title={translator.t('Un-chain Element from Group')}>
                                 <FaUnlink
-                                  onClick={ () => this.context.groupsActions.removeFromGroup( this.props.groupID, layerID, elementPrototype, elementID ) }
+                                  onClick={ () => actions.group.removeFromGroup( this.props.groupID, layerID, elementPrototype, elementID ) }
                                   style={styleEditButton}
                                 />
                               </td>
@@ -172,16 +176,6 @@ export default class PanelGroupEditor extends Component {
 }
 
 PanelGroupEditor.propTypes = {
-  state: PropTypes.object.isRequired,
-  groupID: PropTypes.string
-};
-
-PanelGroupEditor.contextTypes = {
-  catalog: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  groupsActions: PropTypes.object.isRequired,
-  projectActions: PropTypes.object.isRequired
+  groupID: PropTypes.string,
+  ...ContextPropTypes,
 };

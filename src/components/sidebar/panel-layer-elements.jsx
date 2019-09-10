@@ -9,6 +9,8 @@ import {
 } from '../../constants';
 import * as SharedStyle from '../../shared-style';
 import {MdSearch} from 'react-icons/md';
+import { ContextPropTypes, needsContext } from '../context';
+
 
 const VISIBILITY_MODE = {
   MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON,
@@ -53,10 +55,10 @@ const tableSearchStyle = {width: '100%', marginTop: '0.8em'};
 const searchIconStyle = {fontSize: '1.5em'};
 const searchInputStyle = {fontSize: '1em', width: '100%', height: '1em', padding: '1em 0.5em'};
 
-export default class PanelLayerElement extends Component {
+export default @needsContext class PanelLayerElement extends Component {
 
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
 
     let layer = props.layers.get(props.selectedLayer);
     let elements = {
@@ -87,7 +89,7 @@ export default class PanelLayerElement extends Component {
     return false;
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     let layer = nextProps.layers.get(nextProps.selectedLayer);
 
     if ( this.props.layers.hashCode() === nextProps.layers.hashCode() ) return;
@@ -138,12 +140,13 @@ export default class PanelLayerElement extends Component {
   }
 
   render() {
-    if (!VISIBILITY_MODE[this.props.mode]) return null;
+    const { mode, translator, actions, layers, selectedLayer } = this.props;
+    if (!VISIBILITY_MODE[mode]) return null;
 
-    let layer = this.props.layers.get(this.props.selectedLayer);
+    let layer = layers.get(selectedLayer);
 
     return (
-      <Panel name={this.context.translator.t('Elements on layer {0}', layer.name)}>
+      <Panel name={translator.t('Elements on layer {0}', layer.name)}>
         <div style={contentArea} onWheel={(e) => e.stopPropagation()}>
 
           <table style={tableSearchStyle}>
@@ -160,13 +163,13 @@ export default class PanelLayerElement extends Component {
           {
             this.state.matchedElements.lines.count() ?
               <div>
-                <p style={categoryDividerStyle}>{this.context.translator.t('Lines')}</p>
+                <p style={categoryDividerStyle}>{translator.t('Lines')}</p>
                 {
                   this.state.matchedElements.lines.entrySeq().map(([lineID, line]) => {
                     return (
                       <div
                         key={lineID}
-                        onClick={() => this.context.linesActions.selectLine(layer.id, line.id)}
+                        onClick={() => actions.lines.selectLine(layer.id, line.id)}
                         style={line.selected ? elementSelectedStyle : elementStyle}
                       >
                         {line.name}
@@ -181,13 +184,13 @@ export default class PanelLayerElement extends Component {
           {
             this.state.matchedElements.holes.count() ?
               <div>
-                <p style={categoryDividerStyle}>{this.context.translator.t('Holes')}</p>
+                <p style={categoryDividerStyle}>{translator.t('Holes')}</p>
                 {
                   this.state.matchedElements.holes.entrySeq().map(([holeID, hole]) => {
                     return (
                       <div
                         key={holeID}
-                        onClick={() => this.context.holesActions.selectHole(layer.id, hole.id)}
+                        onClick={() => actions.holes.selectHole(layer.id, hole.id)}
                         style={hole.selected ? elementSelectedStyle : elementStyle}
                       >
                         {hole.name}
@@ -202,13 +205,13 @@ export default class PanelLayerElement extends Component {
           {
             this.state.matchedElements.items.count() ?
               <div>
-                <p style={categoryDividerStyle}>{this.context.translator.t('Items')}</p>
+                <p style={categoryDividerStyle}>{translator.t('Items')}</p>
                 {
                   this.state.matchedElements.items.entrySeq().map(([itemID, item]) => {
                     return (
                       <div
                         key={itemID}
-                        onClick={() => this.context.itemsActions.selectItem(layer.id, item.id)}
+                        onClick={() => actions.items.selectItem(layer.id, item.id)}
                         style={item.selected ? elementSelectedStyle : elementStyle}
                       >
                         {item.name}
@@ -230,14 +233,6 @@ export default class PanelLayerElement extends Component {
 PanelLayerElement.propTypes = {
   mode: PropTypes.string.isRequired,
   layers: PropTypes.object.isRequired,
-  selectedLayer: PropTypes.object,
-};
-
-PanelLayerElement.contextTypes = {
-  catalog: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  projectActions: PropTypes.object.isRequired
+  selectedLayer: PropTypes.string,
+  ...ContextPropTypes,
 };

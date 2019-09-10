@@ -6,6 +6,7 @@ import { GeometryUtils, MathUtils } from '../../../utils/export';
 import * as SharedStyle from '../../../shared-style';
 import convert from 'convert-units';
 import {MdContentCopy, MdContentPaste} from 'react-icons/md';
+import { ContextPropTypes, needsContext } from '../../context';
 
 const PRECISION = 2;
 
@@ -31,10 +32,10 @@ const iconHeadStyle = {
   fontSize:'1.4em'
 };
 
-export default class ElementEditor extends Component {
+export default @needsContext class ElementEditor extends Component {
 
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
 
     this.state = {
       attributesFormData: this.initAttrData(this.props.element, this.props.layer, this.props.state),
@@ -65,7 +66,7 @@ export default class ElementEditor extends Component {
   }
 
   initAttrData(element, layer/* , state */) {
-
+    const {catalog} = this.props;
     element = typeof element.misc === 'object' ? element.set('misc', new Map(element.misc)) : element;
 
     switch (element.prototype) {
@@ -77,8 +78,8 @@ export default class ElementEditor extends Component {
         let v_b = layer.vertices.get(element.vertices.get(1));
 
         let distance = GeometryUtils.pointsDistance(v_a.x, v_a.y, v_b.x, v_b.y);
-        let _unit = element.misc.get('_unitLength') || this.context.catalog.unit;
-        let _length = convert(distance).from(this.context.catalog.unit).to(_unit);
+        let _unit = element.misc.get('_unitLength') || catalog.unit;
+        let _length = convert(distance).from(catalog.unit).to(_unit);
 
         return new Map({
           vertexOne: v_a,
@@ -93,12 +94,12 @@ export default class ElementEditor extends Component {
         let lineLength = GeometryUtils.pointsDistance(x0, y0, x1, y1);
         let startAt = lineLength * element.offset - element.properties.get('width').get('length') / 2;
 
-        let _unitA = element.misc.get('_unitA') || this.context.catalog.unit;
-        let _lengthA = convert(startAt).from(this.context.catalog.unit).to(_unitA);
+        let _unitA = element.misc.get('_unitA') || catalog.unit;
+        let _lengthA = convert(startAt).from(catalog.unit).to(_unitA);
 
         let endAt = lineLength - lineLength * element.offset - element.properties.get('width').get('length') / 2;
-        let _unitB = element.misc.get('_unitB') || this.context.catalog.unit;
-        let _lengthB = convert(endAt).from(this.context.catalog.unit).to(_unitB);
+        let _unitB = element.misc.get('_unitB') || catalog.unit;
+        let _lengthB = convert(endAt).from(catalog.unit).to(_unitB);
 
         return new Map({
           offset: element.offset,
@@ -125,8 +126,7 @@ export default class ElementEditor extends Component {
   }
 
   initPropData(element /* , layer, state */) {
-    let {catalog} = this.context;
-    let catalogElement = catalog.getElement(element.type);
+    let catalogElement = this.props.catalog.getElement(element.type);
 
     let mapped = {};
     for (let name in catalogElement.properties) {
@@ -176,7 +176,7 @@ export default class ElementEditor extends Component {
 
               attr.mergeIn(['lineLength'], attr.get('lineLength').merge({
                 'length': newDistance,
-                '_length': convert(newDistance).from(this.context.catalog.unit).to(attr.get('lineLength').get('_unit'))
+                '_length': convert(newDistance).from(this.props.catalog.unit).to(attr.get('lineLength').get('_unit'))
               }));
             });
             break;
@@ -222,7 +222,7 @@ export default class ElementEditor extends Component {
 
             let offsetB = new Map({
               length: endAt,
-              _length: convert(endAt).from(this.context.catalog.unit).to(offsetUnit),
+              _length: convert(endAt).from(this.props.catalog.unit).to(offsetUnit),
               _unit: offsetUnit
             });
 
@@ -231,7 +231,7 @@ export default class ElementEditor extends Component {
             let offsetAttribute = new Map({
               length: MathUtils.toFixedFloat(lengthValue, PRECISION),
               _unit: value.get('_unit'),
-              _length: MathUtils.toFixedFloat(convert(lengthValue).from(this.context.catalog.unit).to(value.get('_unit')), PRECISION)
+              _length: MathUtils.toFixedFloat(convert(lengthValue).from(this.props.catalog.unit).to(value.get('_unit')), PRECISION)
             });
 
             attributesFormData = attributesFormData.set(attributeName, offsetAttribute);
@@ -268,7 +268,7 @@ export default class ElementEditor extends Component {
 
             let offsetA = new Map({
               length: startAt,
-              _length: convert(startAt).from(this.context.catalog.unit).to(offsetUnit),
+              _length: convert(startAt).from(this.props.catalog.unit).to(offsetUnit),
               _unit: offsetUnit
             });
 
@@ -277,7 +277,7 @@ export default class ElementEditor extends Component {
             let offsetAttribute = new Map({
               length: MathUtils.toFixedFloat(lengthValue, PRECISION),
               _unit: value.get('_unit'),
-              _length: MathUtils.toFixedFloat(convert(lengthValue).from(this.context.catalog.unit).to(value.get('_unit')), PRECISION)
+              _length: MathUtils.toFixedFloat(convert(lengthValue).from(this.props.catalog.unit).to(value.get('_unit')), PRECISION)
             });
 
             attributesFormData = attributesFormData.set(attributeName, offsetAttribute);
@@ -318,21 +318,21 @@ export default class ElementEditor extends Component {
         return data.get('currentValue');
       });
 
-      this.context.projectActions.setProperties(properties);
+      this.props.actions.project.setProperties(properties);
     }
 
     if( attributesFormData ) {
       switch (this.props.element.prototype) {
         case 'items': {
-          this.context.projectActions.setItemsAttributes(attributesFormData);
+          this.props.actions.project.setItemsAttributes(attributesFormData);
           break;
         }
         case 'lines': {
-          this.context.projectActions.setLinesAttributes(attributesFormData);
+          this.props.actions.project.setLinesAttributes(attributesFormData);
           break;
         }
         case 'holes': {
-          this.context.projectActions.setHolesAttributes(attributesFormData);
+          this.props.actions.project.setHolesAttributes(attributesFormData);
           break;
         }
       }
@@ -340,11 +340,11 @@ export default class ElementEditor extends Component {
   }
 
   copyProperties( properties ) {
-    this.context.projectActions.copyProperties( properties );
+    this.props.actions.project.copyProperties( properties );
   }
 
   pasteProperties() {
-    this.context.projectActions.pasteProperties();
+    this.props.actions.project.pasteProperties();
   }
 
   render() {
@@ -402,11 +402,6 @@ export default class ElementEditor extends Component {
 ElementEditor.propTypes = {
   state: PropTypes.object.isRequired,
   element: PropTypes.object.isRequired,
-  layer: PropTypes.object.isRequired
-};
-
-ElementEditor.contextTypes = {
-  projectActions: PropTypes.object.isRequired,
-  catalog: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
+  layer: PropTypes.object.isRequired,
+  ...ContextPropTypes,
 };

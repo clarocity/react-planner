@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
 import { MdUpdate } from 'react-icons/md';
 import { KEYBOARD_BUTTON_CODE } from '../../constants';
+import { ContextPropTypes, needsContext } from '../context';
 
 const STYLE_INPUT = {
   display: 'block',
@@ -30,10 +31,10 @@ const confirmStyle = {
   transition: 'all 0.1s linear'
 };
 
-export default class FormNumberInput extends Component {
+export default @needsContext class FormNumberInput extends Component {
 
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
     this.state = {
       focus: false,
       valid: true,
@@ -41,7 +42,7 @@ export default class FormNumberInput extends Component {
     };
   }
 
-  componentWillReceiveProps( nextProps ) {
+  UNSAFE_componentWillReceiveProps( nextProps ) {
     if( this.props.value !== nextProps.value ) {
       this.setState({ showedValue: nextProps.value });
     }
@@ -49,7 +50,7 @@ export default class FormNumberInput extends Component {
 
   render() {
 
-    let { min, max, precision, onChange, onValid, onInvalid, style, placeholder } = this.props;
+    let { min, max, precision, onChange, onValid, onInvalid, style, placeholder, translator } = this.props;
     let numericInputStyle = { ...STYLE_INPUT, ...style };
 
     if (this.state.focus) numericInputStyle.border = `1px solid ${SharedStyle.SECONDARY_COLOR.main}`;
@@ -105,7 +106,7 @@ export default class FormNumberInput extends Component {
         />
         <div
           onClick={e => { if (different) saveFn(e); }}
-          title={this.context.translator.t('Confirm')}
+          title={translator.t('Confirm')}
           style={{ ...confirmStyle, visibility: different ? 'visible' : 'hidden', opacity: different ? '1' : '0' }}
         >
           <MdUpdate style={{ width: '100%', height: '100%', padding: '0.2em', color: '#FFF' }} />
@@ -124,11 +125,8 @@ FormNumberInput.propTypes = {
   min: PropTypes.number,
   max: PropTypes.number,
   precision: PropTypes.number,
-  placeholder: PropTypes.string
-};
-
-FormNumberInput.contextTypes = {
-  translator: PropTypes.object.isRequired
+  placeholder: PropTypes.string,
+  ...ContextPropTypes,
 };
 
 FormNumberInput.defaultProps = {

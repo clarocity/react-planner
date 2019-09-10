@@ -9,8 +9,7 @@ import {
   MODE_ROTATING_ITEM
 } from '../../../constants';
 import ElementEditor from './element-editor';
-
-export default function PanelElementEditor({state}, {translator}) {
+import { ContextPropTypes, needsContext } from '../../context';
 
 function LayerPanel ({ element, layer, translator }) {
   return (
@@ -28,6 +27,7 @@ LayerPanel.propTypes = {
   translator: PropTypes.object.required,
 }
 
+function PanelElementEditor({state, translator}) {
 
   let {scene, mode} = state;
 
@@ -48,9 +48,7 @@ LayerPanel.propTypes = {
 }
 
 PanelElementEditor.propTypes = {
-  state: PropTypes.object.isRequired,
+  ...ContextPropTypes,
 };
 
-PanelElementEditor.contextTypes = {
-  translator: PropTypes.object.isRequired
-};
+export default needsContext(PanelElementEditor);

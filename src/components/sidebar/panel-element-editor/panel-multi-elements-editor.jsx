@@ -8,14 +8,15 @@ import {
   MODE_ROTATING_ITEM
 } from '../../../constants';
 import { FormSelect } from '../../../components/style/export';
+import { ContextPropTypes, needsContext } from '../../context';
 
 const tableStyle = { width: '100%' };
 const firstTdStyle = { width: '6em' };
 
-export default class PanelMultiElementsEditor extends Component {
-//export default function PanelMultiElementsEditor({state}, {projectActions, translator}) {
-  constructor(props, context) {
-    super(props, context);
+export default @needsContext class PanelMultiElementsEditor extends Component {
+
+  constructor(props) {
+    super(props);
 
     this.state = {
       selectedGroupID: ''
@@ -71,7 +72,7 @@ export default class PanelMultiElementsEditor extends Component {
                   let selectedJs = selecteds.toJS();
 
                   for( let x = 0; x < selectedJs.lines.length; x++ )
-                    this.context.groupsActions.addToGroup( this.state.selectedGroupID, selectedLayer, 'lines', selectedJs.lines[x] );
+                    this.props.actions.groups.addToGroup( this.state.selectedGroupID, selectedLayer, 'lines', selectedJs.lines[x] );
 
                 }}>+</td>
               </tr>
@@ -85,11 +86,5 @@ export default class PanelMultiElementsEditor extends Component {
 }
 
 PanelMultiElementsEditor.propTypes = {
-  state: PropTypes.object.isRequired,
-};
-
-PanelMultiElementsEditor.contextTypes = {
-  projectActions: PropTypes.object.isRequired,
-  groupsActions: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired
+  ...ContextPropTypes
 };
