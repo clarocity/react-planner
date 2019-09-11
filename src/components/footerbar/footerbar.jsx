@@ -6,6 +6,7 @@ import FooterContentButton from './footer-content-button';
 import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_GRID, SNAP_GUIDE } from '../../utils/snap';
 import { MODE_SNAPPING } from '../../constants';
 import * as SharedStyle from '../../shared-style';
+import { ContextPropTypes, needsContext } from '../context';
 import { MdAddCircle, MdWarning } from 'react-icons/md';
 import { VERSION } from '../../version';
 
@@ -49,15 +50,14 @@ const coordStyle = {
 
 const appMessageStyle = { borderBottom: '1px solid #555', lineHeight: '1.5em' };
 
-export default class FooterBar extends Component {
-  constructor(props, context) {
-    super(props, context);
+export default @needsContext class FooterBar extends Component {
+  constructor(props) {
+    super(props);
     this.state = {};
   }
 
   render() {
-    let { state: globalState, width, height } = this.props;
-    let { translator, projectActions } = this.context;
+    let { state: globalState, width, height, translator, actions } = this.props;
     let { x, y } = globalState.get('mouse').toJS();
     let zoom = globalState.get('zoom');
     let mode = globalState.get('mode');
@@ -76,7 +76,7 @@ export default class FooterBar extends Component {
     let warningLableStyle = warnings.length ? { color: SharedStyle.MATERIAL_COLORS[500].yellow } : {};
     let warningIconStyle = warningLableStyle;
 
-    let updateSnapMask = (val) => projectActions.toggleSnap(globalState.snapMask.merge(val));
+    let updateSnapMask = (val) => actions.project.toggleSnap(globalState.snapMask.merge(val));
 
     return (
       <div style={{ ...footerBarStyle, width, height }}>
@@ -175,19 +175,10 @@ export default class FooterBar extends Component {
 }
 
 FooterBar.propTypes = {
-  state: PropTypes.object.isRequired,
   footerbarComponents: PropTypes.array.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
-  softwareSignature: PropTypes.string
-};
+  softwareSignature: PropTypes.string,
 
-FooterBar.contextTypes = {
-  projectActions: PropTypes.object.isRequired,
-  viewer2DActions: PropTypes.object.isRequired,
-  viewer3DActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
+  ...ContextPropTypes
 };

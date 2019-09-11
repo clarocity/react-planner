@@ -65,20 +65,9 @@ export default class FooterToggleButton extends Component {
 }
 
 FooterToggleButton.propTypes = {
-  state: PropTypes.object.isRequired,
   toggleOn: PropTypes.func.isRequired,
   toggleOff: PropTypes.func.isRequired,
   text: PropTypes.string.isRequired,
   toggleState: PropTypes.bool,
   title: PropTypes.string
-};
-
-FooterToggleButton.contextTypes = {
-  projectActions: PropTypes.object.isRequired,
-  viewer2DActions: PropTypes.object.isRequired,
-  viewer3DActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
 };

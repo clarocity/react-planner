@@ -163,7 +163,6 @@ export default class FooterContentButton extends Component {
 }
 
 FooterContentButton.propTypes = {
-  state: PropTypes.object.isRequired,
   text: PropTypes.string.isRequired,
   textStyle: PropTypes.object,
   icon: PropTypes.func,
@@ -171,14 +170,4 @@ FooterContentButton.propTypes = {
   content: PropTypes.array.isRequired,
   title: PropTypes.string,
   titleStyle: PropTypes.object
-};
-
-FooterContentButton.contextTypes = {
-  projectActions: PropTypes.object.isRequired,
-  viewer2DActions: PropTypes.object.isRequired,
-  viewer3DActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
 };
