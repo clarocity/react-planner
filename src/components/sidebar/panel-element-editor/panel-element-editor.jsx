@@ -22,9 +22,9 @@ function LayerPanel ({ element, layer, translator }) {
 }
 
 LayerPanel.propTypes = {
-  element: PropTypes.object.required,
-  layer: PropTypes.object.required,
-  translator: PropTypes.object.required,
+  element: PropTypes.object.isRequired,
+  layer: PropTypes.object.isRequired,
+  translator: PropTypes.object.isRequired,
 }
 
 function PanelElementEditor({state, translator}) {
