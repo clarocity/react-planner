@@ -80,7 +80,3 @@ PropertyLengthMeasure.propTypes = {
   internalState: PropTypes.object,
   state: PropTypes.object.isRequired
 };
-
-PropertyLengthMeasure.contextTypes = {
-  catalog: PropTypes.object.isRequired
-};

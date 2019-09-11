@@ -82,7 +82,7 @@ export default @needsContext class CatalogList extends Component {
     super(props);
 
     let page = props.state.catalog.page;
-    let currentCategory = props.context.catalog.getCategory(page);
+    let currentCategory = props.catalog.getCategory(page);
     let elementsToDisplay = currentCategory.elements.filter(element => element.info.visibility ? element.info.visibility.catalog : true );
 
     this.state = {
