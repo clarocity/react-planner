@@ -50,10 +50,10 @@ class ReactPlanner extends Component {
 
     return (
       <div style={{...wrapperStyle, height}}><Context.Provider state={extractedState} {...props}>
-        <Toolbar width={toolbarW} height={toolbarH} state={extractedState} {...props} />
-        <Content width={contentW} height={contentH} state={extractedState} {...props} onWheel={event => event.preventDefault()} />
-        <Sidebar width={sidebarW} height={sidebarH} state={extractedState} {...props} />
-        <FooterBar width={width} height={footerBarH} state={extractedState} {...props} />
+        <Toolbar width={toolbarW} height={toolbarH}   {...props} />
+        <Content width={contentW} height={contentH}   {...props} mode={extractedState.get('mode')} onWheel={event => event.preventDefault()} />
+        <Sidebar width={sidebarW} height={sidebarH}   {...props} state={extractedState} />
+        <FooterBar width={width}  height={footerBarH} {...props} />
       </Context.Provider></div>
     );
   }
