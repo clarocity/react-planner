@@ -9,11 +9,13 @@ import {
   FormSubmitButton,
   CancelButton
 } from '../style/export';
+import { ContextPropTypes, needsContext } from '../context';
 
-export default class ProjectConfigurator extends Component {
 
-  constructor(props, context) {
-    super(props, context);
+export default @needsContext class ProjectConfigurator extends Component {
+
+  constructor(props) {
+    super(props);
 
     let scene = props.state.scene;
 
@@ -26,23 +28,20 @@ export default class ProjectConfigurator extends Component {
   onSubmit(event) {
     event.preventDefault();
 
-    let {projectActions} = this.context;
-
     let {dataWidth, dataHeight} = this.state;
     dataWidth = parseInt(dataWidth);
     dataHeight = parseInt(dataHeight);
     if (dataWidth <= 100 || dataHeight <= 100) {
       alert('Scene size too small');
     } else {
-      projectActions.setProjectProperties({width: dataWidth, height: dataHeight});
+      this.props.actions.project.setProjectProperties({width: dataWidth, height: dataHeight});
     }
   }
 
 
   render() {
-    let {width, height} = this.props;
+    let {width, height, actions, translator} = this.props;
     let {dataWidth, dataHeight} = this.state;
-    let {projectActions, translator} = this.context;
 
     return (
       <ContentContainer width={width} height={height}>
@@ -75,7 +74,7 @@ export default class ProjectConfigurator extends Component {
               <td>
                 <CancelButton
                   size='large'
-                  onClick={() => projectActions.rollback()}
+                  onClick={() => actions.project.rollback()}
                 >{translator.t('Cancel')}</CancelButton>
               </td>
               <td>
@@ -93,10 +92,6 @@ export default class ProjectConfigurator extends Component {
 ProjectConfigurator.propTypes = {
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
-  state: PropTypes.object.isRequired,
-};
 
-ProjectConfigurator.contextTypes = {
-  projectActions: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
+  ...ContextPropTypes
 };

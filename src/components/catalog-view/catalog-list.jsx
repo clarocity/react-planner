@@ -7,6 +7,7 @@ import CatalogTurnBackPageItem from './catalog-turn-back-page-item';
 import ContentContainer from '../style/content-container';
 import ContentTitle from '../style/content-title';
 import * as SharedStyle from '../../shared-style';
+import { ContextPropTypes, needsContext } from '../context';
 
 const containerStyle = {
   position: 'fixed',
@@ -75,13 +76,13 @@ const historyElementStyle = {
   padding: '0 1em'
 };
 
-export default class CatalogList extends Component {
+export default @needsContext class CatalogList extends Component {
 
-  constructor(props, context) {
+  constructor(props) {
     super(props);
 
     let page = props.state.catalog.page;
-    let currentCategory = context.catalog.getCategory(page);
+    let currentCategory = props.context.catalog.getCategory(page);
     let elementsToDisplay = currentCategory.elements.filter(element => element.info.visibility ? element.info.visibility.catalog : true );
 
     this.state = {
@@ -127,26 +128,27 @@ export default class CatalogList extends Component {
   }
 
   select( element ) {
+    const {actions} = this.props;
 
     switch (element.prototype) {
       case 'lines':
-        this.context.linesActions.selectToolDrawingLine(element.name);
+        actions.lines.selectToolDrawingLine(element.name);
         break;
       case 'items':
-        this.context.itemsActions.selectToolDrawingItem(element.name);
+        actions.items.selectToolDrawingItem(element.name);
         break;
       case 'holes':
-        this.context.holesActions.selectToolDrawingHole(element.name);
+        actions.holes.selectToolDrawingHole(element.name);
         break;
     }
 
-    this.context.projectActions.pushLastSelectedCatalogElementToHistory(element);
+    actions.project.pushLastSelectedCatalogElementToHistory(element);
   }
 
   render() {
-
-    let page = this.props.state.catalog.page;
-    let currentCategory = this.context.catalog.getCategory(page);
+    const {width, height, style, state: globalState, catalog, actions, translator} = this.props;
+    let page = globalState.catalog.page;
+    let currentCategory = catalog.getCategory(page);
     let categoriesToDisplay = currentCategory.categories;
     let elementsToDisplay = currentCategory.elements.filter(element => element.info.visibility ? element.info.visibility.catalog : true );
 
@@ -156,10 +158,10 @@ export default class CatalogList extends Component {
 
       let breadcrumbsNames = [];
 
-      this.props.state.catalog.path.forEach(pathName => {
+      globalState.catalog.path.forEach(pathName => {
         breadcrumbsNames.push({
-          name: this.context.catalog.getCategory(pathName).label,
-          action: () => this.context.projectActions.goBackToCatalogPage(pathName)
+          name: catalog.getCategory(pathName).label,
+          action: () => actions.project.goBackToCatalogPage(pathName)
         });
       });
 
@@ -168,28 +170,28 @@ export default class CatalogList extends Component {
       breadcrumbComponent = (<CatalogBreadcrumb names={breadcrumbsNames}/>);
     }
 
-    let pathSize = this.props.state.catalog.path.size;
+    let pathSize = globalState.catalog.path.size;
 
     let turnBackButton = pathSize > 0 ? (
-      <CatalogTurnBackPageItem key={pathSize} page={this.context.catalog.categories[this.props.state.catalog.path.get(pathSize - 1)]}/>) : null;
+      <CatalogTurnBackPageItem key={pathSize} page={catalog.categories[globalState.catalog.path.get(pathSize - 1)]}/>) : null;
 
 
-    let selectedHistory = this.props.state.get('selectedElementsHistory');
+    let selectedHistory = globalState.get('selectedElementsHistory');
     let selectedHistoryElements = selectedHistory.map( ( el, ind ) =>
       <div key={ind} style={historyElementStyle} title={el.name} onClick={() => this.select(el) }>{el.name}</div>
     );
 
     return (
-      <ContentContainer width={this.props.width} height={this.props.height} style={{...containerStyle, ...this.props.style}}>
-        <ContentTitle>{this.context.translator.t('Catalog')}</ContentTitle>
+      <ContentContainer width={width} height={height} style={{...containerStyle, ...style}}>
+        <ContentTitle>{translator.t('Catalog')}</ContentTitle>
         {breadcrumbComponent}
         <div style={searchContainer}>
-          <span style={searchText}>{this.context.translator.t('Search Element')}</span>
+          <span style={searchText}>{translator.t('Search Element')}</span>
           <input type="text" style={searchInput} onChange={( e ) => { this.matcharray( e.target.value ); } }/>
         </div>
         { selectedHistory.size ?
           <div style={historyContainer}>
-            <span>{this.context.translator.t('Last Selected')}</span>
+            <span>{translator.t('Last Selected')}</span>
             {selectedHistoryElements}
           </div> :
           null
@@ -210,17 +212,8 @@ export default class CatalogList extends Component {
 }
 
 CatalogList.propTypes = {
-  state: PropTypes.object.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
-  style: PropTypes.object
-};
-
-CatalogList.contextTypes = {
-  catalog: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  projectActions: PropTypes.object.isRequired
+  style: PropTypes.object,
+  ...ContextPropTypes,
 };

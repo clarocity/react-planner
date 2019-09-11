@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {MdNavigateBefore} from 'react-icons/md';
 import * as SharedStyle from '../../shared-style';
+import { ContextPropTypes, needsContext } from '../context';
 
 const STYLE_BOX = {
   width: '14em',
@@ -46,7 +47,7 @@ const CONTAINER_DIV = {
   justifyContent: 'center'
 };
 
-export default class CatalogTurnBackPageItem extends Component {
+export default @needsContext class CatalogTurnBackPageItem extends Component {
 
   constructor(props) {
     super(props);
@@ -54,7 +55,7 @@ export default class CatalogTurnBackPageItem extends Component {
   }
 
   changePage(newPage) {
-    this.context.projectActions.goBackToCatalogPage(newPage)
+    this.props.actions.project.goBackToCatalogPage(newPage)
   }
 
   render() {
@@ -78,9 +79,6 @@ export default class CatalogTurnBackPageItem extends Component {
 }
 
 CatalogTurnBackPageItem.propTypes = {
-  page: PropTypes.object.isRequired
-};
-
-CatalogTurnBackPageItem.contextTypes = {
-  projectActions: PropTypes.object.isRequired
+  page: PropTypes.object.isRequired,
+  ...ContextPropTypes
 };

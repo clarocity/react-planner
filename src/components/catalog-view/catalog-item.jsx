@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {FaPlusCircle as IconAdd} from 'react-icons/fa';
 import * as SharedStyle from '../../shared-style';
+import { ContextPropTypes, needsContext } from '../context';
 
 const STYLE_BOX = {
   width: '14em',
@@ -103,7 +104,7 @@ const STYLE_TAG = {
   borderRadius: '3px'
 };
 
-export default class CatalogItem extends Component {
+export default @needsContext class CatalogItem extends Component {
 
   constructor(props) {
     super(props);
@@ -111,21 +112,21 @@ export default class CatalogItem extends Component {
   }
 
   select() {
-    let element = this.props.element;
+    const { element, actions } = this.props;
 
     switch (element.prototype) {
       case 'lines':
-        this.context.linesActions.selectToolDrawingLine(element.name);
+        actions.lines.selectToolDrawingLine(element.name);
         break;
       case 'items':
-        this.context.itemsActions.selectToolDrawingItem(element.name);
+        actions.items.selectToolDrawingItem(element.name);
         break;
       case 'holes':
-        this.context.holesActions.selectToolDrawingHole(element.name);
+        actions.holes.selectToolDrawingHole(element.name);
         break;
     }
 
-    this.context.projectActions.pushLastSelectedCatalogElementToHistory(element);
+    actions.project.pushLastSelectedCatalogElementToHistory(element);
   }
 
   render() {
@@ -156,11 +157,5 @@ export default class CatalogItem extends Component {
 
 CatalogItem.propTypes = {
   element: PropTypes.object.isRequired,
-};
-
-CatalogItem.contextTypes = {
-  itemsActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  projectActions: PropTypes.object.isRequired
+  ...ContextPropTypes,
 };

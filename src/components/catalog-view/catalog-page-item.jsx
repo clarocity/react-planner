@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {MdNavigateNext} from 'react-icons/md';
 import * as SharedStyle from '../../shared-style';
+import { ContextPropTypes, needsContext } from '../context';
 
 const STYLE_BOX = {
   width: '14em',
@@ -61,7 +62,7 @@ const CONTAINER_DIV = {
   justifyContent: 'center'
 };
 
-export default class CatalogPageItem extends Component {
+export default @needsContext class CatalogPageItem extends Component {
 
   constructor(props) {
     super(props);
@@ -69,7 +70,7 @@ export default class CatalogPageItem extends Component {
   }
 
   changePage(newPage) {
-    this.context.projectActions.changeCatalogPage(newPage, this.props.oldPage.name)
+    this.props.actions.project.changeCatalogPage(newPage, this.props.oldPage.name)
   }
 
   render() {
@@ -101,8 +102,5 @@ export default class CatalogPageItem extends Component {
 CatalogPageItem.propTypes = {
   page: PropTypes.object.isRequired,
   oldPage: PropTypes.object.isRequired,
-};
-
-CatalogPageItem.contextTypes = {
-  projectActions: PropTypes.object.isRequired
+  ...ContextPropTypes,
 };
