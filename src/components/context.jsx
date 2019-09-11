@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ReactReduxContext } from 'react-redux';
 
 export const Context = React.createContext(null);
 
@@ -20,13 +21,16 @@ export const ContextPropTypes = {
   translator: PropTypes.object,
   catalog: PropTypes.object,
   state: PropTypes.object,
+  store: PropTypes.object,
 };
 
 export const Consumer = Context.Consumer;
 
 export const Provider = function Provider ({ state, actions, translator, catalog, children }) {
   return (
-    <Context.Provider value={{ state, actions, translator, catalog }}>{children}</Context.Provider>
+    <ReactReduxContext.Consumer>{({ store }) => (
+      <Context.Provider value={{ store, state, actions, translator, catalog }}>{children}</Context.Provider>
+    )}</ReactReduxContext.Consumer>
   );
 }
 
@@ -37,11 +41,13 @@ Provider.propTypes = {
 
 export function needsContext (Component) {
   if (!Component) throw new Error('needsContext did not receive a component. Did you use this as a decorator function?');
-  return function ContextWrapper (props) { return (
-    <Context.Consumer>{(context) =>
-      <Component {...props} {...context} />
-    }</Context.Consumer>
-  )}
+  return function ContextWrapper (props) {
+    return (
+      <Context.Consumer>{(context) => (
+        <Component {...props} {...context} />
+      )}</Context.Consumer>
+    )
+  }
 }
 
 export default {
