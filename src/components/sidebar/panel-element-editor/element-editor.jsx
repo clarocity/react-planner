@@ -55,7 +55,7 @@ export default @needsContext class ElementEditor extends Component {
     return false;
   }
 
-  componentWillReceiveProps({ element, layer, state }) {
+  UNSAFE_componentWillReceiveProps({ element, layer, state }) {
     let scene = this.props.state.get('scene');
     let selectedLayer = scene.getIn(['layers', scene.get('selectedLayer')]);
 
@@ -348,10 +348,10 @@ export default @needsContext class ElementEditor extends Component {
   }
 
   render() {
+
     let {
       state: {propertiesFormData, attributesFormData},
-      context: {catalog, translator},
-      props: {state: appState, element},
+      props: {state: appState, element, catalog, translator},
     } = this;
 
     return (

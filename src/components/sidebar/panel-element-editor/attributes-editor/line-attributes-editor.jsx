@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FormNumberInput, FormTextInput } from '../../../style/export';
 import { PropertyLengthMeasure } from '../../../../catalog/properties/export';
+import { ContextPropTypes, needsContext } from '../../../context';
 
 const tableStyle = { width: '100%' };
 const firstTdStyle = { width: '6em' };
 const inputStyle = { textAlign: 'left' };
 
-export default function LineAttributesEditor({element, onUpdate, attributeFormData, state, ...rest}, {translator}) {
+function LineAttributesEditor({element, onUpdate, attributeFormData, state, translator, ...rest}) {
 
   let name = attributeFormData.has('name') ? attributeFormData.get('name') : element.name;
   let vertexOne = attributeFormData.has('vertexOne') ? attributeFormData.get('vertexOne') : null;
@@ -97,9 +98,7 @@ LineAttributesEditor.propTypes = {
   onUpdate: PropTypes.func.isRequired,
   onValid: PropTypes.func,
   attributeFormData: PropTypes.object.isRequired,
-  state: PropTypes.object.isRequired
+  ...ContextPropTypes
 };
 
-LineAttributesEditor.contextTypes = {
-  translator: PropTypes.object.isRequired,
-};
+export default needsContext(LineAttributesEditor);
