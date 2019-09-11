@@ -9,8 +9,9 @@ import diff from 'immutablediff';
 import {initPointerLock} from "./pointer-lock-navigation";
 import {firstPersonOnKeyDown, firstPersonOnKeyUp} from "./libs/first-person-controls";
 import * as SharedStyle from '../../shared-style';
+import { ContextPropTypes, needsContext } from '../context';
 
-export default class Viewer3DFirstPerson extends React.Component {
+export default @needsContext class Viewer3DFirstPerson extends React.Component {
 
   constructor(props) {
     super(props);
@@ -35,17 +36,16 @@ export default class Viewer3DFirstPerson extends React.Component {
     let moveRight = false;
     let canJump = false;
 
-    let {catalog} = this.context;
+    const {state, catalog, actions} = this.props;
 
-    let actions = {
-      areaActions: this.context.areaActions,
-      holesActions: this.context.holesActions,
-      itemsActions: this.context.itemsActions,
-      linesActions: this.context.linesActions,
-      projectActions: this.context.projectActions
+    let sceneActions = {
+      areaActions:    actions.area,
+      holesActions:   actions.holes,
+      itemsActions:   actions.items,
+      linesActions:   actions.lines,
+      projectActions: actions.project
     };
 
-    let {state} = this.props;
     let data = state.scene;
 
     let scene3D = new Three.Scene();
@@ -58,7 +58,7 @@ export default class Viewer3DFirstPerson extends React.Component {
     this.renderer.setSize(this.width, this.height);
 
     // LOAD DATA
-    this.planData = parseData(data, actions, catalog);
+    this.planData = parseData(data, sceneActions, catalog);
 
     scene3D.add(this.planData.plan);
 
@@ -189,7 +189,7 @@ export default class Viewer3DFirstPerson extends React.Component {
         if (intersects.length > 0 && !(isNaN(intersects[0].distance))) {
           intersects[0].object.interact && intersects[0].object.interact();
         } else {
-          this.context.projectActions.unselectAll();
+          actions.project.unselectAll();
         }
       }
 
@@ -282,15 +282,15 @@ export default class Viewer3DFirstPerson extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let {width, height} = nextProps;
+    let {width, height, actions, catalog} = nextProps;
     let {camera, renderer, scene3D, sceneOnTop, planData} = this;
 
-    let actions = {
-      areaActions: this.context.areaActions,
-      holesActions: this.context.holesActions,
-      itemsActions: this.context.itemsActions,
-      linesActions: this.context.linesActions,
-      projectActions: this.context.projectActions
+    let sceneActions = {
+      areaActions:    actions.area,
+      holesActions:   actions.holes,
+      itemsActions:   actions.items,
+      linesActions:   actions.lines,
+      projectActions: actions.project,
     };
 
     this.width = width;
@@ -302,7 +302,7 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     if (nextProps.state.scene !== this.props.state.scene) {
       let changedValues = diff(this.props.state.scene, nextProps.state.scene);
-      updateScene(planData, nextProps.state.scene, this.props.state.scene, changedValues.toJS(), actions, this.context.catalog);
+      updateScene(planData, nextProps.state.scene, this.props.state.scene, changedValues.toJS(), sceneActions, catalog);
     }
 
     renderer.setSize(width, height);
@@ -319,16 +319,7 @@ export default class Viewer3DFirstPerson extends React.Component {
 }
 
 Viewer3DFirstPerson.propTypes = {
-  state: PropTypes.object.isRequired,
   width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired
-};
-
-Viewer3DFirstPerson.contextTypes = {
-  areaActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  projectActions: PropTypes.object.isRequired,
-  catalog: PropTypes.object
+  height: PropTypes.number.isRequired,
+  ...ContextPropTypes
 };

@@ -6,6 +6,7 @@ import * as constants from '../../constants';
 import State from './state';
 import * as SharedStyle from '../../shared-style';
 import { RulerX, RulerY } from './export';
+import { ContextPropTypes, needsContext } from '../context';
 
 function mode2Tool(mode) {
   switch (mode) {
@@ -88,10 +89,7 @@ function extractElementData(node) {
   }
 }
 
-export default function Viewer2D(
-  { state, width, height },
-  { viewer2DActions, linesActions, holesActions, verticesActions, itemsActions, areaActions, projectActions, catalog }) {
-
+function Viewer2D({ state, width, height, catalog, actions }) {
 
   let { viewer2D, mode, scene } = state;
 
@@ -101,7 +99,7 @@ export default function Viewer2D(
     return { x, y: -y + scene.height }
   };
 
-  let onMouseMove = viewerEvent => {
+  let onMouseMove = (viewerEvent) => {
 
     //workaround that allow imageful component to work
     let evt = new Event('mousemove-planner-event');
@@ -110,39 +108,39 @@ export default function Viewer2D(
 
     let { x, y } = mapCursorPosition(viewerEvent);
 
-    projectActions.updateMouseCoord({ x, y });
+    actions.project.updateMouseCoord({ x, y });
 
     switch (mode) {
       case constants.MODE_DRAWING_LINE:
-        linesActions.updateDrawingLine(x, y, state.snapMask);
+        actions.lines.updateDrawingLine(x, y, state.snapMask);
         break;
 
       case constants.MODE_DRAWING_HOLE:
-        holesActions.updateDrawingHole(layerID, x, y);
+        actions.holes.updateDrawingHole(layerID, x, y);
         break;
 
       case constants.MODE_DRAWING_ITEM:
-        itemsActions.updateDrawingItem(layerID, x, y);
+        actions.items.updateDrawingItem(layerID, x, y);
         break;
 
       case constants.MODE_DRAGGING_HOLE:
-        holesActions.updateDraggingHole(x, y);
+        actions.holes.updateDraggingHole(x, y);
         break;
 
       case constants.MODE_DRAGGING_LINE:
-        linesActions.updateDraggingLine(x, y, state.snapMask);
+        actions.lines.updateDraggingLine(x, y, state.snapMask);
         break;
 
       case constants.MODE_DRAGGING_VERTEX:
-        verticesActions.updateDraggingVertex(x, y, state.snapMask);
+        actions.vertices.updateDraggingVertex(x, y, state.snapMask);
         break;
 
       case constants.MODE_DRAGGING_ITEM:
-        itemsActions.updateDraggingItem(x, y);
+        actions.items.updateDraggingItem(x, y);
         break;
 
       case constants.MODE_ROTATING_ITEM:
-        itemsActions.updateRotatingItem(x, y);
+        actions.items.updateRotatingItem(x, y);
         break;
     }
 
@@ -165,22 +163,22 @@ export default function Viewer2D(
 
       switch (elementData.prototype) {
         case 'lines':
-          linesActions.beginDraggingLine(elementData.layer, elementData.id, x, y, state.snapMask);
+          actions.lines.beginDraggingLine(elementData.layer, elementData.id, x, y, state.snapMask);
           break;
 
         case 'vertices':
-          verticesActions.beginDraggingVertex(elementData.layer, elementData.id, x, y, state.snapMask);
+          actions.vertices.beginDraggingVertex(elementData.layer, elementData.id, x, y, state.snapMask);
           break;
 
         case 'items':
           if (elementData.part === 'rotation-anchor')
-            itemsActions.beginRotatingItem(elementData.layer, elementData.id, x, y);
+            actions.items.beginRotatingItem(elementData.layer, elementData.id, x, y);
           else
-            itemsActions.beginDraggingItem(elementData.layer, elementData.id, x, y);
+            actions.items.beginDraggingItem(elementData.layer, elementData.id, x, y);
           break;
 
         case 'holes':
-          holesActions.beginDraggingHole(elementData.layer, elementData.id, x, y);
+          actions.holes.beginDraggingHole(elementData.layer, elementData.id, x, y);
           break;
 
         default: break;
@@ -207,62 +205,62 @@ export default function Viewer2D(
 
         switch (elementData ? elementData.prototype : 'none') {
           case 'areas':
-            areaActions.selectArea(elementData.layer, elementData.id);
+            actions.area.selectArea(elementData.layer, elementData.id);
             break;
 
           case 'lines':
-            linesActions.selectLine(elementData.layer, elementData.id);
+            actions.lines.selectLine(elementData.layer, elementData.id);
             break;
 
           case 'holes':
-            holesActions.selectHole(elementData.layer, elementData.id);
+            actions.holes.selectHole(elementData.layer, elementData.id);
             break;
 
           case 'items':
-            itemsActions.selectItem(elementData.layer, elementData.id);
+            actions.items.selectItem(elementData.layer, elementData.id);
             break;
 
           case 'none':
-            projectActions.unselectAll();
+            actions.project.unselectAll();
             break;
         }
         break;
       }
       case constants.MODE_WAITING_DRAWING_LINE:
-        linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
+        actions.lines.beginDrawingLine(layerID, x, y, state.snapMask);
         break;
 
       case constants.MODE_DRAWING_LINE:
-        linesActions.endDrawingLine(x, y, state.snapMask);
-        linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
+        actions.lines.endDrawingLine(x, y, state.snapMask);
+        actions.lines.beginDrawingLine(layerID, x, y, state.snapMask);
         break;
 
       case constants.MODE_DRAWING_HOLE:
-        holesActions.endDrawingHole(layerID, x, y);
+        actions.holes.endDrawingHole(layerID, x, y);
         break;
 
       case constants.MODE_DRAWING_ITEM:
-        itemsActions.endDrawingItem(layerID, x, y);
+        actions.items.endDrawingItem(layerID, x, y);
         break;
 
       case constants.MODE_DRAGGING_LINE:
-        linesActions.endDraggingLine(x, y, state.snapMask);
+        actions.lines.endDraggingLine(x, y, state.snapMask);
         break;
 
       case constants.MODE_DRAGGING_VERTEX:
-        verticesActions.endDraggingVertex(x, y, state.snapMask);
+        actions.vertices.endDraggingVertex(x, y, state.snapMask);
         break;
 
       case constants.MODE_DRAGGING_ITEM:
-        itemsActions.endDraggingItem(x, y);
+        actions.items.endDraggingItem(x, y);
         break;
 
       case constants.MODE_DRAGGING_HOLE:
-        holesActions.endDraggingHole(x, y);
+        actions.holes.endDraggingHole(x, y);
         break;
 
       case constants.MODE_ROTATING_ITEM:
-        itemsActions.endRotatingItem(x, y);
+        actions.items.endRotatingItem(x, y);
         break;
     }
 
@@ -270,26 +268,26 @@ export default function Viewer2D(
   };
 
   let onChangeValue = (value) => {
-    projectActions.updateZoomScale(value.a);
-    return viewer2DActions.updateCameraView(value)
+    actions.project.updateZoomScale(value.a);
+    return actions.viewer2D.updateCameraView(value)
   };
 
   let onChangeTool = (tool) => {
     switch (tool) {
       case TOOL_NONE:
-        projectActions.selectToolEdit();
+        actions.project.selectToolEdit();
         break;
 
       case TOOL_PAN:
-        viewer2DActions.selectToolPan();
+        actions.viewer2D.selectToolPan();
         break;
 
       case TOOL_ZOOM_IN:
-        viewer2DActions.selectToolZoomIn();
+        actions.viewer2D.selectToolZoomIn();
         break;
 
       case TOOL_ZOOM_OUT:
-        viewer2DActions.selectToolZoomOut();
+        actions.viewer2D.selectToolZoomOut();
         break;
     }
   };
@@ -351,7 +349,7 @@ export default function Viewer2D(
         style={{ gridColumn: 2, gridRow: 2 }}
         width={width - rulerSize}
         height={height - rulerSize}
-        value={viewer2D.isEmpty() ? null : viewer2D.toJS()}
+        value={/*viewer2D.isEmpty() ? null : */viewer2D.toJS()}
         onChangeValue={onChangeValue}
         tool={mode2Tool(mode)}
         onChangeTool={onChangeTool}
@@ -380,20 +378,10 @@ export default function Viewer2D(
   );
 }
 
-
 Viewer2D.propTypes = {
-  state: PropTypes.object.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
+  ...ContextPropTypes
 };
 
-Viewer2D.contextTypes = {
-  viewer2DActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  verticesActions: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  areaActions: PropTypes.object.isRequired,
-  projectActions: PropTypes.object.isRequired,
-  catalog: PropTypes.object.isRequired,
-};
+export default needsContext(Viewer2D);

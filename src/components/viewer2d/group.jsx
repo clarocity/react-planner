@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import If from '../../utils/react-if';
 import * as sharedStyles from '../../shared-style';
+import { ContextPropTypes, needsContext } from '../context';
 
 const cx = 0;
 const cy = 0;
@@ -13,7 +14,7 @@ const STYLE_CIRCLE = {
   cursor: 'default'
 };
 
-export default function Group({ layer, group }, {translator}) {
+function Group({ layer, group, translator}) {
   return (
     <g
       data-element-root
@@ -46,9 +47,7 @@ Group.propTypes = {
   group: PropTypes.object.isRequired,
   layer: PropTypes.object.isRequired,
   scene: PropTypes.object.isRequired,
-  catalog: PropTypes.object.isRequired
+  ...ContextPropTypes
 };
 
-Group.contextTypes = {
-  translator: PropTypes.object.isRequired
-};
+export default needsContext(Group);

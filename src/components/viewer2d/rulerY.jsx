@@ -4,10 +4,6 @@ import * as SharedStyle from '../../shared-style';
 
 export default class RulerY extends Component {
 
-  constructor(props, context) {
-    super(props, context);
-  }
-
   render() {
 
     let elementH = this.props.unitPixelSize * this.props.zoom;
@@ -131,7 +127,3 @@ RulerY.defaultProps = {
   fontColor: SharedStyle.COLORS.white,
   markerColor: SharedStyle.SECONDARY_COLOR.main
 }
-
-RulerY.contextTypes = {
-  translator: PropTypes.object.isRequired
-};

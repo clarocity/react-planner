@@ -4,10 +4,6 @@ import * as SharedStyle from '../../shared-style';
 
 export default class RulerX extends Component {
 
-  constructor(props, context) {
-    super(props, context);
-  }
-
   render() {
 
     let elementW = this.props.unitPixelSize * this.props.zoom;
@@ -127,7 +123,3 @@ RulerX.defaultProps = {
   fontColor: SharedStyle.COLORS.white,
   markerColor: SharedStyle.SECONDARY_COLOR.main
 }
-
-RulerX.contextTypes = {
-  translator: PropTypes.object.isRequired
-};
