@@ -15,11 +15,11 @@ export const ContextPropTypes = {
     items:    PropTypes.object,
     area:     PropTypes.object,
     groups:   PropTypes.object,
-  }).isRequired,
+  }),
 
-  translator: PropTypes.object.isRequired,
-  catalog: PropTypes.object.isRequired,
-  state: PropTypes.object.isRequired,
+  translator: PropTypes.object,
+  catalog: PropTypes.object,
+  state: PropTypes.object,
 };
 
 export const Consumer = Context.Consumer;
@@ -37,11 +37,11 @@ Provider.propTypes = {
 
 export function needsContext (Component) {
   if (!Component) throw new Error('needsContext did not receive a component. Did you use this as a decorator function?');
-  return (props) => (
+  return function ContextWrapper (props) { return (
     <Context.Consumer>{(context) =>
       <Component {...props} {...context} />
     }</Context.Consumer>
-  );
+  )}
 }
 
 export default {
