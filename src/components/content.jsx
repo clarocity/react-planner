@@ -8,18 +8,16 @@ import ProjectConfigurator from './configurator/project-configurator';
 
 import * as constants from '../constants';
 
-export default function Content({width, height, state, customContents}) {
-  let mode = state.get('mode');
-
+export default function Content({mode, width, height, customContents}) {
   switch (mode) {
     case constants.MODE_3D_VIEW:
-      return <Viewer3D state={state} width={width} height={height}/>;
+      return <Viewer3D width={width} height={height}/>;
 
     case constants.MODE_3D_FIRST_PERSON:
-      return <Viewer3DFirstPerson state={state} width={width} height={height}/>;
+      return <Viewer3DFirstPerson width={width} height={height}/>;
 
     case constants.MODE_VIEWING_CATALOG:
-      return <CatalogList state={state} width={width} height={height}/>;
+      return <CatalogList width={width} height={height}/>;
 
     case constants.MODE_IDLE:
     case constants.MODE_2D_ZOOM_IN:
@@ -34,15 +32,15 @@ export default function Content({width, height, state, customContents}) {
     case constants.MODE_DRAWING_ITEM:
     case constants.MODE_DRAGGING_HOLE:
     case constants.MODE_ROTATING_ITEM:
-      return <Viewer2D state={state} width={width} height={height}/>;
+      return <Viewer2D width={width} height={height}/>;
 
     case constants.MODE_CONFIGURING_PROJECT:
-      return <ProjectConfigurator width={width} height={height} state={state}/>;
+      return <ProjectConfigurator width={width} height={height}/>;
 
     default:
       if (customContents.hasOwnProperty(mode)) {
         let CustomContent = customContents[mode];
-        return <CustomContent width={width} height={height} state={state}/>
+        return <CustomContent width={width} height={height}/>
       } else {
         throw new Error(`Mode ${mode} doesn't have a mapped content`);
       }
@@ -50,7 +48,7 @@ export default function Content({width, height, state, customContents}) {
 }
 
 Content.propTypes = {
-  state: PropTypes.object.isRequired,
+  mode: PropTypes.string.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired
 };
