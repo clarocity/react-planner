@@ -281,7 +281,7 @@ export default @needsContext class Viewer3DFirstPerson extends React.Component {
     this.renderer.renderLists.dispose();
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     let {width, height, actions, catalog} = nextProps;
     let {camera, renderer, scene3D, sceneOnTop, planData} = this;
 
