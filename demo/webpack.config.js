@@ -48,7 +48,8 @@ module.exports = (env, self) => {
             sourceMaps: 'inline',
             'plugins': [
               '@babel/plugin-proposal-object-rest-spread',
-              [ "@babel/plugin-proposal-decorators", { legacy: true }],
+              ["@babel/plugin-proposal-decorators", { legacy: true }],
+              "@babel/plugin-proposal-class-properties",
               [
                 "@babel/plugin-transform-runtime",
                 {
