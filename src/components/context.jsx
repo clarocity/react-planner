@@ -22,14 +22,15 @@ export const ContextPropTypes = {
   catalog: PropTypes.object,
   state: PropTypes.object,
   store: PropTypes.object,
+  events: PropTypes.object,
 };
 
 export const Consumer = Context.Consumer;
 
-export const Provider = function Provider ({ state, actions, translator, catalog, children }) {
+export const Provider = function Provider ({ children, ...passThru }) {
   return (
     <ReactReduxContext.Consumer>{({ store }) => (
-      <Context.Provider value={{ store, state, actions, translator, catalog }}>{children}</Context.Provider>
+      <Context.Provider value={{ store, ...passThru }}>{children}</Context.Provider>
     )}</ReactReduxContext.Consumer>
   );
 }
