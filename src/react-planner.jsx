@@ -14,6 +14,8 @@ import {
   FooterBarComponents,
   Context,
 } from './components/export';
+import Keyboard from './components/keyboard';
+import EventsMediator from './utils/events';
 import {VERSION} from './version';
 import './styles/export';
 
@@ -36,6 +38,19 @@ class ReactPlanner extends Component {
     super(props);
     const {actions, catalog} = props;
     actions.project.initCatalog(catalog);
+
+    this.element = React.createRef();
+    this.events = new EventsMediator();
+  }
+
+  onComponentDidMount() {
+    this.element.current.focus();
+    this.events.onRootMount(this, this.element.current);
+  }
+
+  onClick = (e) => {
+    this.element.current.focus();
+    this.events.onClick(e);
   }
 
   render() {
@@ -49,12 +64,26 @@ class ReactPlanner extends Component {
     let extractedState = stateExtractor(state);
 
     return (
-      <div style={{...wrapperStyle, height}}><Context.Provider state={extractedState} {...props}>
-        <Toolbar width={toolbarW} height={toolbarH}   {...props} />
-        <Content width={contentW} height={contentH}   {...props} mode={extractedState.get('mode')} onWheel={event => event.preventDefault()} />
-        <Sidebar width={sidebarW} height={sidebarH}   {...props} state={extractedState} />
-        <FooterBar width={width}  height={footerBarH} {...props} />
-      </Context.Provider></div>
+      <div
+        style={{...wrapperStyle, height}}
+        tabIndex={0}
+        ref={this.element}
+        onClick={this.onClick}
+        onKeyDown={this.events.onKeyDown}
+        onKeyUp={this.events.onKeyUp}
+        onKeyPress={this.events.onKeyPress}
+        onFocus={this.events.onFocus}
+        onBlur={this.events.onBlur}
+
+      >
+        <Context.Provider state={extractedState} root={this} events={this.events} {...props}>
+          <Toolbar width={toolbarW} height={toolbarH}   {...props} />
+          <Content width={contentW} height={contentH}   {...props} mode={extractedState.get('mode')} onWheel={event => event.preventDefault()} />
+          <Sidebar width={sidebarW} height={sidebarH}   {...props} state={extractedState} />
+          <FooterBar width={width}  height={footerBarH} {...props} />
+          <Keyboard />
+        </Context.Provider>
+      </div>
     );
   }
 }
