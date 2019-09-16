@@ -54,7 +54,7 @@ class ReactPlanner extends Component {
   }
 
   render() {
-    let {width, height, state, stateExtractor, ...props} = this.props;
+    let {width, height, state, stateExtractor, children, ...props} = this.props;
 
     let contentW = width - toolbarW - sidebarW;
     let toolbarH = height - footerBarH;
@@ -82,6 +82,7 @@ class ReactPlanner extends Component {
           <Sidebar width={sidebarW} height={sidebarH}   {...props} state={extractedState} />
           <FooterBar width={width}  height={footerBarH} {...props} />
           <Keyboard />
+          {children}
         </Context.Provider>
       </div>
     );
@@ -89,6 +90,7 @@ class ReactPlanner extends Component {
 }
 
 ReactPlanner.propTypes = {
+  children:                PropTypes.node,
   state:                   PropTypes.object,
   actions:                 PropTypes.object,
   translator:              PropTypes.instanceOf(Translator),
