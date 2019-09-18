@@ -1,38 +1,51 @@
 const localStorage = window.hasOwnProperty('localStorage') ? window.localStorage : false;
+import { Component } from 'react';
+import PropTypes from 'prop-types';
+import { ContextPropTypes, needsContext } from '../components/context';
+import debounce from '../utils/debounce';
 import { loadProject } from '../actions/project-actions';
 
 const TIMEOUT_DELAY = 500;
 
-let timeout = null;
+export default @needsContext class AutoSave extends Component {
 
-export default function autosave(autosaveKey, delay) {
+  store = null;
+  hook = null;
 
-  return (store, stateExtractor) => {
+  componentDidMount () {
+    const { store, storageKey, delay = TIMEOUT_DELAY } = this.props;
 
-    delay = delay || TIMEOUT_DELAY;
-
-    if (!autosaveKey) return;
     if (!localStorage) return;
 
-    //revert
-    if (localStorage.getItem(autosaveKey) !== null) {
-      let data = localStorage.getItem(autosaveKey);
+
+    if (localStorage.getItem(storageKey) !== null) {
+      let data = localStorage.getItem(storageKey);
       let json = JSON.parse(data);
       store.dispatch(loadProject(json));
     }
 
-    //update
-    store.subscribe(() => {
-      if (timeout) clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        let state = stateExtractor(store.getState());
-        localStorage.setItem(autosaveKey, JSON.stringify(state.scene.toJS()));
-        /*let scene = state.sceneHistory.last;
-        if (scene) {
-          let json = JSON.stringify(scene.toJS());
-          localStorage.setItem(autosaveKey, json);
-        }*/
-      }, delay);
-    });
-  };
+    this.store = store;
+    this.hook = debounce(this.onChange.bind(this), delay);
+    store.subscribe(this.hook);
+  }
+
+  componentWillUnmount() {
+    this.store.unsubscribe(this.hook);
+  }
+
+  onChange () {
+    let { state, storageKey } = this.props;
+    const scene = state.scene.toJS();
+    localStorage.setItem(storageKey, JSON.stringify(scene));
+    // console.log('Autosaved', scene);
+  }
+
+  render () { return null; }
+}
+
+
+AutoSave.propTypes = {
+  storageKey: PropTypes.string.isRequired,
+  delay: PropTypes.number,
+  ...ContextPropTypes,
 }

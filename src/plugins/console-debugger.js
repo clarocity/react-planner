@@ -1,17 +1,25 @@
+import { Component } from 'react';
+import { ContextPropTypes, needsContext } from '../components/context';
 import actions from '../actions/export';
 
-export default function consoleDebugger() {
 
-  return (store, stateExtractor) => {
+export default @needsContext class ConsoleDebugger extends Component {
+
+  store = null;
+  hook = null;
+
+  componentDidMount () {
+    const { store, state } = this.props;
+
     window.ReactPlanner = {
       ...actions,
 
-      getStore() {
+      get store () {
         return store;
       },
 
-      getState() {
-        return stateExtractor(store.getState())
+      get state () {
+        return state;
       },
 
       do(actions, delay = 300) {
@@ -27,11 +35,16 @@ export default function consoleDebugger() {
         setTimeout(dispatchAction, 0);
       }
     };
-
-    console.groupCollapsed("ReactPlanner");
-    console.info("ReactPlanner is ready");
-    console.info("console.log(ReactPlanner)");
-    console.log(window.ReactPlanner);
-    console.groupEnd();
   }
+
+  componentWillUnmount() {
+    delete window.ReactPlanner;
+  }
+
+  render () { return null; }
+}
+
+
+ConsoleDebugger.propTypes = {
+  ...ContextPropTypes,
 }

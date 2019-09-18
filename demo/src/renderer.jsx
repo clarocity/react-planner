@@ -14,7 +14,7 @@ import {
   Models as PlannerModels,
   reducer as PlannerReducer,
   ReactPlanner,
-  Plugins as PlannerPlugins,
+  Plugins,
 } from 'react-planner'; //react-planner
 
 //define state
@@ -65,11 +65,6 @@ let store = createStore(
     f => f
 );
 
-let plugins = [
-  PlannerPlugins.Autosave('react-planner_v0'),
-  PlannerPlugins.ConsoleDebugger(),
-];
-
 let toolbarButtons = [
   ToolbarScreenshotButton,
 ];
@@ -84,10 +79,12 @@ ReactDOM.render(
             catalog={MyCatalog}
             width={width}
             height={height}
-            plugins={plugins}
             toolbarButtons={toolbarButtons}
             stateExtractor={state => state.get('react-planner')}
-          />
+          >
+            <Plugins.Autosave storageKey="react-planner_v0" />
+            <Plugins.ConsoleDebugger />
+          </ReactPlanner>
         }
       </ContainerDimensions>
     </Provider>
