@@ -117,12 +117,7 @@ export default @needsContext class Keyboard extends Component {
     }
   }
 
-  render() {
-
-    return (
-      null
-    )
-  }
+  render() { return null; }
 }
 
 Keyboard.propTypes = {

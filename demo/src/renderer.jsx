@@ -66,7 +66,6 @@ let store = createStore(
 );
 
 let plugins = [
-  PlannerPlugins.Keyboard(),
   PlannerPlugins.Autosave('react-planner_v0'),
   PlannerPlugins.ConsoleDebugger(),
 ];
