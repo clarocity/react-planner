@@ -4,15 +4,19 @@ export default function EventsMediator () {
 
   function invokeEvent (name, source, args) {
     for (let c of components) {
-      if (typeof c[name] !== 'function') return;
+      if (typeof c[name] !== 'function') continue;
       const result = c[name](source, ...args);
       if (result === false) break;
     }
   }
 
-  const proxy = new Proxy({}, { get: function (q, key) {
+  const proxy = new Proxy({
+    get components () {
+      return components;
+    }
+  }, { get: function (q, key) {
     if (key in q) return q[key];
-    const stub = (...args) => {
+    const stub = function (...args) {
       invokeEvent(key, this, args);
     }
 
