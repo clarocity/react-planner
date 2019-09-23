@@ -49,7 +49,9 @@ class ReactPlanner extends Component {
   }
 
   onClick = (e) => {
-    this.element.current.focus();
+    if (!['INPUT', 'TEXTAREA'].includes(e.target.nodeName)) {
+      this.element.current.focus();
+    }
     this.events.onClick(e);
   }
 
