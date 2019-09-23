@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Map, fromJS} from 'immutable';
+import memoize from 'memoize-one';
 import AttributesEditor from './attributes-editor/attributes-editor';
 import { GeometryUtils, MathUtils } from '../../../utils/export';
 import * as SharedStyle from '../../../shared-style';
@@ -38,8 +39,7 @@ export default @needsContext class ElementEditor extends Component {
     super(props);
 
     this.state = {
-      attributesFormData: this.initAttrData(this.props.element, this.props.layer, this.props.state),
-      propertiesFormData: this.initPropData(this.props.element, this.props.layer, this.props.state)
+      timestamp: Date.now(),
     };
 
     this.updateAttribute = this.updateAttribute.bind(this);
@@ -47,25 +47,30 @@ export default @needsContext class ElementEditor extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     if(
-      this.state.attributesFormData.hashCode() !== nextState.attributesFormData.hashCode() ||
-      this.state.propertiesFormData.hashCode() !== nextState.propertiesFormData.hashCode() ||
+      this.state.timestamp !== nextState.timestamp ||
       this.props.state.clipboardProperties.hashCode() !== nextProps.state.clipboardProperties.hashCode()
     ) return true;
 
     return false;
   }
 
-  UNSAFE_componentWillReceiveProps({ element, layer, state }) {
-    let scene = this.props.state.get('scene');
-    let selectedLayer = scene.getIn(['layers', scene.get('selectedLayer')]);
+  get derivedState () {
+    const scene = this.props.state.get('scene');
+    const selectedLayer = scene.getIn(['layers', scene.get('selectedLayer')]);
+    const hashCode = selectedLayer.hashCode();
+    const ts = this.state.timestamp;
 
-    if( selectedLayer.hashCode() !== layer.hashCode() ) this.setState({
-      attributesFormData: this.initAttrData(element, layer, state),
-      propertiesFormData: this.initPropData(element, layer, state)
-    });
+    const { element, layer } = this.props;
+    return this._derived(hashCode, ts, element, layer);
   }
 
-  initAttrData(element, layer/* , state */) {
+  _derived = memoize((hashCode, ts, element, layer) => ({
+    hashCode,
+    attributesFormData: this.initAttrData(element, layer),
+    propertiesFormData: this.initPropData(element, layer)
+  }))
+
+  initAttrData (element, layer) {
     const {catalog} = this.props;
     element = typeof element.misc === 'object' ? element.set('misc', new Map(element.misc)) : element;
 
@@ -121,11 +126,9 @@ export default @needsContext class ElementEditor extends Component {
       default:
         return null;
     }
-
-
   }
 
-  initPropData(element /* , layer, state */) {
+  initPropData (element) {
     let catalogElement = this.props.catalog.getElement(element.type);
 
     let mapped = {};
@@ -141,7 +144,7 @@ export default @needsContext class ElementEditor extends Component {
 
   updateAttribute(attributeName, value) {
 
-    let {attributesFormData} = this.state;
+    let {attributesFormData} = this.derivedState;
 
     switch (this.props.element.prototype) {
       case 'items': {
@@ -296,19 +299,19 @@ export default @needsContext class ElementEditor extends Component {
         break;
     }
 
-    this.setState({attributesFormData});
+    this.setState({timestamp: Date.now()});
     this.save({attributesFormData});
   }
 
   updateProperty(propertyName, value) {
     let {state: {propertiesFormData}} = this;
     propertiesFormData = propertiesFormData.setIn([propertyName, 'currentValue'], value);
-    this.setState({propertiesFormData});
+    this.setState({timestamp: Date.now()});
     this.save({propertiesFormData});
   }
 
   reset() {
-    this.setState({propertiesFormData: this.initPropData(this.props.element, this.props.layer, this.props.state)});
+    this.setState({timestamp: Date.now()});
   }
 
   save({propertiesFormData, attributesFormData}) {
@@ -349,10 +352,8 @@ export default @needsContext class ElementEditor extends Component {
 
   render() {
 
-    let {
-      state: {propertiesFormData, attributesFormData},
-      props: {state: appState, element, catalog, translator},
-    } = this;
+    const {propertiesFormData, attributesFormData} = this.derivedState;
+    const {state: appState, element, catalog, translator} = this.props;
 
     return (
       <div>
@@ -389,7 +390,7 @@ export default @needsContext class ElementEditor extends Component {
               onUpdate={value => this.updateProperty(propertyName, value)}
               state={appState}
               sourceElement={element}
-              internalState={this.state}
+              internalState={{propertiesFormData, attributesFormData}}
             />
           })
         }
