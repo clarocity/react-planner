@@ -43,9 +43,9 @@ class ReactPlanner extends Component {
     this.events = new EventsMediator();
   }
 
-  onComponentDidMount() {
+  componentDidMount() {
+    this.events.onRootMount.call(this, this.element.current);
     this.element.current.focus();
-    this.events.onRootMount(this, this.element.current);
   }
 
   onClick = (e) => {

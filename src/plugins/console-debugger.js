@@ -45,6 +45,10 @@ export default @needsContext class ConsoleDebugger extends Component {
     if (this.mediator) this.mediator.unbind(this);
   }
 
+  onRootMount = (source, node) => {
+    console.log('Mounted', source, node);
+  }
+
   onKeyDown = (source, event) => {
     console.log('keyDown', event);
   }
