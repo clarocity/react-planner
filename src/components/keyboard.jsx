@@ -30,8 +30,6 @@ export default @needsContext class Keyboard extends Component {
   }
 
   onKeyDown = (source, event) => {
-    console.log('keyDown', event);
-
     const {store, state} = this.props;
     const mode = state.get('mode');
 

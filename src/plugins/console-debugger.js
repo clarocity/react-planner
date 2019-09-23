@@ -35,10 +35,18 @@ export default @needsContext class ConsoleDebugger extends Component {
         setTimeout(dispatchAction, 0);
       }
     };
+
+    this.mediator = this.props.events;
+    if (this.mediator) this.mediator.bind(this);
   }
 
   componentWillUnmount() {
     delete window.ReactPlanner;
+    if (this.mediator) this.mediator.unbind(this);
+  }
+
+  onKeyDown = (source, event) => {
+    console.log('keyDown', event);
   }
 
   render () { return null; }
