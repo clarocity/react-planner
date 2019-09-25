@@ -10,6 +10,7 @@ import {
 import * as SharedStyle from '../../shared-style';
 import {MdSearch} from 'react-icons/md';
 import { ContextPropTypes, needsContext } from '../context';
+import memoize from 'memoize-one';
 
 
 const VISIBILITY_MODE = {
@@ -60,83 +61,43 @@ export default @needsContext class PanelLayerElement extends Component {
   constructor(props) {
     super(props);
 
-    let layer = props.layers.get(props.selectedLayer);
-    let elements = {
-      lines: layer.lines,
-      holes: layer.holes,
-      items: layer.items,
-    };
-
     this.state = {
-      elements,
       matchString: '',
-      matchedElements: elements
     };
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     if (this.state.matchString !== nextState.matchString) return true;
-
-    let oldElements = this.state.elements;
-    let newElements = nextState.elements;
-
-    if(
-      oldElements.lines.hashCode() !== newElements.lines.hashCode() ||
-      oldElements.holes.hashCode() !== newElements.holes.hashCode() ||
-      oldElements.items.hashCode() !== newElements.items.hashCode()
-    ) return true;
+    if (this.props.selectedLayer !== nextProps.selectedLayer) return true;
+    if (this.props.layers.hashCode() !== nextProps.layers.hashCode()) return true;
 
     return false;
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    let layer = nextProps.layers.get(nextProps.selectedLayer);
 
-    if ( this.props.layers.hashCode() === nextProps.layers.hashCode() ) return;
-
-    let elements = {
+  matchedElements = memoize(function (layer, matchString) {
+    const elements = {
       lines: layer.lines,
       holes: layer.holes,
       items: layer.items,
     };
 
-    if (this.state.matchString !== '') {
-      let regexp = new RegExp(this.state.matchString, 'i');
-      let filterCb = el => regexp.test(el.get('name'));
+    if (matchString) {
+      const regexp = new RegExp(this.state.matchString, 'i');
+      const filterCb = el => regexp.test(el.get('name'));
 
-      this.setState({
-        matchedElements: {
-          elements,
-          lines: elements.lines.filter(filterCb),
-          holes: elements.holes.filter(filterCb),
-          items: elements.items.filter(filterCb)
-        }
-      });
-    } else {
-      this.setState({elements, matchedElements: elements});
-    }
-  }
-
-  matcharray(text) {
-    if (text === '') {
-      this.setState({
-        matchString: '',
-        matchedElements: this.state.elements
-      });
-      return;
+      return {
+        lines: elements.lines.filter(filterCb),
+        holes: elements.holes.filter(filterCb),
+        items: elements.items.filter(filterCb)
+      };
     }
 
-    let regexp = new RegExp(text, 'i');
-    let filterCb = el => regexp.test(el.get('name'));
+    return elements;
+  });
 
-    this.setState({
-      matchString: text,
-      matchedElements: {
-        lines: this.state.elements.lines.filter(filterCb),
-        holes: this.state.elements.holes.filter(filterCb),
-        items: this.state.elements.items.filter(filterCb)
-      }
-    });
+  onMatchChange = (e) => {
+    this.setState({ matchString: e.target.value });
   }
 
   render() {
@@ -144,6 +105,7 @@ export default @needsContext class PanelLayerElement extends Component {
     if (!VISIBILITY_MODE[mode]) return null;
 
     let layer = layers.get(selectedLayer);
+    const matchedElements = this.matchedElements(layer, this.state.matchString, selectedLayer, layers.hashCode());
 
     return (
       <Panel name={translator.t('Elements on layer {0}', layer.name)}>
@@ -153,19 +115,17 @@ export default @needsContext class PanelLayerElement extends Component {
             <tbody>
             <tr>
               <td><MdSearch style={searchIconStyle}/></td>
-              <td><input type="text" style={searchInputStyle} onChange={(e) => {
-                this.matcharray(e.target.value);
-              }}/></td>
+              <td><input type="text" style={searchInputStyle} onChange={this.onMatchChange}/></td>
             </tr>
             </tbody>
           </table>
 
           {
-            this.state.matchedElements.lines.count() ?
+            matchedElements.lines.count() ?
               <div>
                 <p style={categoryDividerStyle}>{translator.t('Lines')}</p>
                 {
-                  this.state.matchedElements.lines.entrySeq().map(([lineID, line]) => {
+                  matchedElements.lines.entrySeq().map(([lineID, line]) => {
                     return (
                       <div
                         key={lineID}
@@ -182,11 +142,11 @@ export default @needsContext class PanelLayerElement extends Component {
           }
 
           {
-            this.state.matchedElements.holes.count() ?
+            matchedElements.holes.count() ?
               <div>
                 <p style={categoryDividerStyle}>{translator.t('Holes')}</p>
                 {
-                  this.state.matchedElements.holes.entrySeq().map(([holeID, hole]) => {
+                  matchedElements.holes.entrySeq().map(([holeID, hole]) => {
                     return (
                       <div
                         key={holeID}
@@ -203,11 +163,11 @@ export default @needsContext class PanelLayerElement extends Component {
           }
 
           {
-            this.state.matchedElements.items.count() ?
+            matchedElements.items.count() ?
               <div>
                 <p style={categoryDividerStyle}>{translator.t('Items')}</p>
                 {
-                  this.state.matchedElements.items.entrySeq().map(([itemID, item]) => {
+                  matchedElements.items.entrySeq().map(([itemID, item]) => {
                     return (
                       <div
                         key={itemID}
