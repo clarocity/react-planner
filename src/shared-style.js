@@ -33,9 +33,12 @@ export const PRIMARY_COLOR = {
   alt: '#2E2F33',
   icon: '#C2C2C2',
   border: '1px solid #555',
+  border_error: '1px solid #EB2B00',
   text_main: COLORS.white,
   text_alt: '#EBEBEB',
-  input: '#55595C'
+  input: '#55595C',
+  input_error: '#AF2000',
+  background_error: '#FF9E9E',
 };
 
 export const SECONDARY_COLOR = {

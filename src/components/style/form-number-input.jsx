@@ -4,6 +4,7 @@ import * as SharedStyle from '../../shared-style';
 import { MdUpdate } from 'react-icons/md';
 import { KEYBOARD_BUTTON_CODE } from '../../constants';
 import { ContextPropTypes, needsContext } from '../context';
+import memoize from 'memoize-one';
 
 const STYLE_INPUT = {
   display: 'block',
@@ -19,7 +20,17 @@ const STYLE_INPUT = {
   height: '30px',
 };
 
-const confirmStyle = {
+const STYLE_INPUT_FOCUSED = {
+  border: `1px solid ${SharedStyle.SECONDARY_COLOR.main}`,
+};
+
+const STYLE_INPUT_INVALID = {
+  color: SharedStyle.PRIMARY_COLOR.input_error,
+  backgroundColor: SharedStyle.PRIMARY_COLOR.background_error,
+  border: SharedStyle.PRIMARY_COLOR.border_error,
+}
+
+const STYLE_CONFIRM = {
   position: 'absolute',
   cursor: 'pointer',
   width: '2em',
@@ -28,8 +39,15 @@ const confirmStyle = {
   top: '0.35em',
   backgroundColor: SharedStyle.SECONDARY_COLOR.main,
   color: '#FFF',
-  transition: 'all 0.1s linear'
+  transition: 'all 0.1s linear',
+  visibility: 'hidden',
+  opacity: 0,
 };
+
+const STYLE_CONFIRM_DIFFERENT = {
+  visibility: 'visible',
+  opacity: 1,
+}
 
 export default @needsContext class FormNumberInput extends Component {
 
@@ -42,72 +60,130 @@ export default @needsContext class FormNumberInput extends Component {
     };
   }
 
-  UNSAFE_componentWillReceiveProps( nextProps ) {
-    if( this.props.value !== nextProps.value ) {
-      this.setState({ showedValue: nextProps.value });
+  get sanitizedValue () {
+    const { min, max } = this.props;
+    let { showedValue } = this.state;
+
+    let value = (showedValue !== '' && showedValue !== '-') ? parseFloat(showedValue) : 0;
+    if (!isNaN(min) && isFinite(min) && value < min) value = min;
+    if (!isNaN(max) && isFinite(max) && value > max) value = max;
+
+    return value;
+  }
+
+  onChange = (e) => {
+    const value = e.nativeEvent.target.value;
+    const { precision, onValid, onInvalid } = this.props;
+    const regexp = new RegExp(`^-?([0-9]+)?\\.?([0-9]{0,${precision}})?$`);
+
+    const valid = regexp.test(value);
+
+    if (valid) {
+      this.setState({ showedValue: value, valid });
+      if (onValid) onValid(e.nativeEvent);
+      return;
+    }
+
+    this.setState({ valid });
+    if (onInvalid) onInvalid(e.nativeEvent);
+  }
+
+  onKeyDown = (e) => {
+    switch (e.keyCode || e.which) {
+      case KEYBOARD_BUTTON_CODE.ENTER:
+      case KEYBOARD_BUTTON_CODE.TAB:
+        e.stopPropagation();
+        if (this.differs) this.save();
+        return;
+      case KEYBOARD_BUTTON_CODE.ESC:
+        e.stopPropagation();
+        this.setState({
+          showedValue: parseFloat(this.props.value).toFixed(this.props.precision),
+          valid: true,
+        });
+        return;
     }
   }
 
+  onConfirmClick = () => {
+    if (this.differs) this.save();
+  }
+
+  onFocus = () => {
+    this.setState({
+      focus: true,
+      showedValue: parseFloat(this.props.value).toFixed(this.props.precision)
+    });
+  }
+
+  onBlur = () => {
+    this.setState({ focus: false });
+  }
+
+  save = () => {
+    const { onChange } = this.props;
+    if (this.state.valid) {
+      const value = this.sanitizedValue;
+
+      this.setState({ showedValue: parseFloat(value).toFixed(this.props.precision) });
+      if (onChange) onChange({ target: { value: value } });
+    }
+  }
+
+  _different = memoize(function (propValue, stateValue, precision) {
+    return parseFloat(propValue).toFixed(precision) !== parseFloat(stateValue).toFixed(precision);
+  })
+
+  get differs () {
+    return this._different(this.props.value, this.state.showedValue, this.props.precision);
+  }
+
+  get displayValue () {
+    const { precision, value } = this.props;
+    const { showedValue, focus:isFocused } = this.state;
+    const regexp = new RegExp(`^-?([0-9]+)?\\.?([0-9]{0,${precision}})?$`);
+
+    if (isFocused) {
+      if (regexp.test(showedValue)) return showedValue;
+      return parseFloat(showedValue).toFixed(precision)
+    }
+
+    return parseFloat(value).toFixed(precision)
+  }
+
   render() {
+    let { style, placeholder, translator } = this.props;
+    const { focus, valid } = this.state;
 
-    let { min, max, precision, onChange, onValid, onInvalid, style, placeholder, translator } = this.props;
-    let numericInputStyle = { ...STYLE_INPUT, ...style };
-
-    if (this.state.focus) numericInputStyle.border = `1px solid ${SharedStyle.SECONDARY_COLOR.main}`;
-
-    let regexp = new RegExp(`^-?([0-9]+)?\\.?([0-9]{0,${precision}})?$`);
-
-    if (!isNaN(min) && isFinite(min) && this.state.showedValue < min) this.setState({ showedValue: min }); // value = min;
-    if (!isNaN(max) && isFinite(max) && this.state.showedValue > max) this.setState({ showedValue: max }); // value = max;
-
-    let currValue = regexp.test(this.state.showedValue) ? this.state.showedValue : parseFloat(this.state.showedValue).toFixed(precision);
-
-    let different = parseFloat(this.props.value).toFixed(precision) !== parseFloat(this.state.showedValue).toFixed(precision);
-
-    let saveFn = (e) => {
-      e.stopPropagation();
-
-      if (this.state.valid) {
-        let savedValue = (this.state.showedValue !== '' && this.state.showedValue !== '-') ? parseFloat(this.state.showedValue) : 0;
-
-        this.setState({ showedValue: savedValue });
-        onChange({ target: { value: savedValue } });
+    const styles = {
+      input: {
+        ...STYLE_INPUT,
+        ...style,
+        ...(focus ? STYLE_INPUT_FOCUSED : null),
+        ...(valid ? null : STYLE_INPUT_INVALID)
+      },
+      confirm: {
+        ...STYLE_CONFIRM,
+        ...(this.differs ? STYLE_CONFIRM_DIFFERENT : null)
       }
-    };
+    }
 
     return (
       <div style={{ position: 'relative' }}>
         <input
           type="text"
-          value={currValue}
-          style={numericInputStyle}
-          onChange={(evt) => {
-            let valid = regexp.test(evt.nativeEvent.target.value);
-
-            if (valid) {
-              this.setState({ showedValue: evt.nativeEvent.target.value });
-              if (onValid) onValid(evt.nativeEvent);
-            }
-            else {
-              if (onInvalid) onInvalid(evt.nativeEvent);
-            }
-
-            this.setState({ valid });
-          }}
-          onFocus={() => this.setState({ focus: true })}
-          onBlur={() => this.setState({ focus: false })}
-          onKeyDown={e => {
-            var keyCode = e.keyCode || e.which;
-            if ((keyCode == KEYBOARD_BUTTON_CODE.ENTER || keyCode == KEYBOARD_BUTTON_CODE.TAB) && different) {
-              saveFn(e);
-            }
-          }}
+          value={this.displayValue}
+          style={styles.input}
+          onChange={this.onChange}
+          onFocus={this.onFocus}
+          onBlur={this.onBlur}
+          onKeyDown={this.onKeyDown}
           placeholder={placeholder}
         />
         <div
-          onClick={e => { if (different) saveFn(e); }}
+          onClick={this.onConfirmClick}
           title={translator.t('Confirm')}
-          style={{ ...confirmStyle, visibility: different ? 'visible' : 'hidden', opacity: different ? '1' : '0' }}
+          style={styles.confirm}
         >
           <MdUpdate style={{ width: '100%', height: '100%', padding: '0.2em', color: '#FFF' }} />
         </div>
