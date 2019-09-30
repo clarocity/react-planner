@@ -20,5 +20,6 @@ export default function FormColorInput({onChange, ...rest}) {
 }
 
 FormColorInput.propTypes = {
-  onChange: PropTypes.function,
+  value: PropTypes.any.isRequired,
+  onChange: PropTypes.func,
 }
