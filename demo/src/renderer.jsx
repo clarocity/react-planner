@@ -15,6 +15,7 @@ import {
   reducer as PlannerReducer,
   ReactPlanner,
   Plugins,
+  Buttons,
 } from 'react-planner'; //react-planner
 
 //define state
@@ -66,6 +67,7 @@ let store = createStore(
 );
 
 let toolbarButtons = [
+  ...Buttons.defaultButtons,
   ToolbarScreenshotButton,
 ];
 

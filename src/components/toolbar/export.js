@@ -1,18 +1,17 @@
 import ToolbarButton from './toolbar-button';
-import ToolbarSaveButton from './toolbar-save-button';
-import ToolbarLoadButton from './toolbar-load-button';
-import Toolbar from './toolbar';
+import Toolbar, {defaultButtons} from './toolbar';
+import Buttons from './buttons';
 
 export {
+  Toolbar,
   ToolbarButton,
-  ToolbarSaveButton,
-  ToolbarLoadButton,
-  Toolbar
+  Buttons,
+  defaultButtons,
 };
 
 export default {
+  Toolbar,
   ToolbarButton,
-  ToolbarSaveButton,
-  ToolbarLoadButton,
-  Toolbar
+  Buttons,
+  defaultButtons,
 };
