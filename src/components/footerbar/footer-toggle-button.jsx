@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
 
-const toggleButtonStyle = {
+const BUTTON_STYLE_DEFAULT = {
   width: '5.5em',
   color: '#CCC',
   textAlign: 'center',
@@ -14,11 +14,16 @@ const toggleButtonStyle = {
   display: 'inline-block'
 };
 
-const toggleButtonStyleOver = {
-  ...toggleButtonStyle,
+const BUTTON_STYLE_ACTIVE = {
   backgroundColor: '#1c82c6',
-  border: '1px solid #FFF',
-  color: SharedStyle.COLORS.white
+  border: SharedStyle.PRIMARY_COLOR.border,
+  color: SharedStyle.COLORS.white,
+}
+
+const BUTTON_STYLE_HOVER = {
+  // backgroundColor: '#1c82c6',
+  border: SharedStyle.SECONDARY_COLOR.border,
+  // color: SharedStyle.COLORS.white,
 };
 
 export default class FooterToggleButton extends Component {
@@ -52,7 +57,11 @@ export default class FooterToggleButton extends Component {
 
     return (
       <div
-        style={this.state.over || this.props.toggleState ? toggleButtonStyleOver : toggleButtonStyle}
+        style={{
+          ...BUTTON_STYLE_DEFAULT,
+          ...(this.props.toggleState && BUTTON_STYLE_ACTIVE),
+          ...(this.state.over && BUTTON_STYLE_HOVER),
+        }}
         onMouseOver={e => this.toggleOver(e)}
         onMouseOut={e => this.toggleOut(e)}
         onClick={e => this.toggle(e)}
