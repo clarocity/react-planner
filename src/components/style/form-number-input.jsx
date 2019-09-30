@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
 import { MdUpdate } from 'react-icons/md';
-import { KEYBOARD_BUTTON_CODE } from '../../constants';
 import { ContextPropTypes, needsContext } from '../context';
 import memoize from 'memoize-one';
 
@@ -89,13 +88,15 @@ export default @needsContext class FormNumberInput extends Component {
   }
 
   onKeyDown = (e) => {
-    switch (e.keyCode || e.which) {
-      case KEYBOARD_BUTTON_CODE.ENTER:
-      case KEYBOARD_BUTTON_CODE.TAB:
+    switch (e.key) {
+      case 'Enter':
+      case 'Return':
+      case 'Tab':
         e.stopPropagation();
         if (this.differs) this.save();
         return;
-      case KEYBOARD_BUTTON_CODE.ESC:
+
+      case 'Escape':
         e.stopPropagation();
         this.setState({
           showedValue: parseFloat(this.props.value).toFixed(this.props.precision),

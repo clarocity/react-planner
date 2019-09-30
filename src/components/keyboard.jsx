@@ -5,7 +5,6 @@ import {
   MODE_3D_FIRST_PERSON,
   MODE_3D_VIEW,
   MODE_SNAPPING,
-  KEYBOARD_BUTTON_CODE
 } from '../constants';
 
 import {
@@ -29,28 +28,25 @@ export default @needsContext class Keyboard extends Component {
     if (this.mediator) this.mediator.unbind(this);
   }
 
-  onKeyDown = (source, event) => {
+  onKeyDown = (source, { key, ctrlKey, metaKey }) => {
     const {store, state} = this.props;
     const mode = state.get('mode');
 
-    switch (event.keyCode) {
-      case KEYBOARD_BUTTON_CODE.BACKSPACE:
-      case KEYBOARD_BUTTON_CODE.DELETE: {
-        if ([MODE_IDLE, MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode))
+    switch (key) {
+      case 'Backspace':
+      case 'Clear':
+      case 'Delete':
+        if ([MODE_IDLE, MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode)) {
           store.dispatch(remove());
+        }
         break;
-      }
-      case KEYBOARD_BUTTON_CODE.ESC: {
+
+      case 'Escape':
         store.dispatch(rollback());
         break;
-      }
-      case KEYBOARD_BUTTON_CODE.Z: {
-        if (event.getModifierState('Control') || event.getModifierState('Meta'))
-          store.dispatch(undo());
-        break;
-      }
-      case KEYBOARD_BUTTON_CODE.ALT: {
-        if (MODE_SNAPPING.includes(mode))
+
+      case 'Alt':
+        if (MODE_SNAPPING.includes(mode)) {
           store.dispatch(toggleSnap(state.snapMask.merge({
             SNAP_POINT: false,
             SNAP_LINE: false,
@@ -59,9 +55,10 @@ export default @needsContext class Keyboard extends Component {
             SNAP_GUIDE : false,
             tempSnapConfiguartion: state.snapMask.toJS()
           })));
+        }
         break;
-      }
-      case KEYBOARD_BUTTON_CODE.C: {
+
+      case 'c': {
         let selectedLayer = state.getIn(['scene', 'selectedLayer']);
         let selected = state.getIn(['scene', 'layers', selectedLayer, 'selected']);
 
@@ -85,30 +82,38 @@ export default @needsContext class Keyboard extends Component {
         }
         break;
       }
-      case KEYBOARD_BUTTON_CODE.V: {
-        store.dispatch(pasteProperties());
+
+      case 'z':
+        if (ctrlKey || metaKey) {
+          store.dispatch(undo());
+        }
         break;
-      }
-      case KEYBOARD_BUTTON_CODE.CTRL: {
+
+      case 'v':
+        if (ctrlKey || metaKey) {
+          store.dispatch(pasteProperties());
+        }
+        break;
+
+      case 'Control':
         store.dispatch(setAlterateState());
         break;
-      }
     }
 
   }
 
-  onKeyUp = (source, event) => {
+  onKeyUp = (source, { key }) => {
     const {store, state} = this.props;
     const mode = state.get('mode');
 
-    switch (event.keyCode) {
-      case KEYBOARD_BUTTON_CODE.ALT: {
+    switch (key) {
+      case 'Alt': {
         if (MODE_SNAPPING.includes(mode))
           store.dispatch(toggleSnap(state.snapMask.merge(state.snapMask.get('tempSnapConfiguartion'))));
         break;
       }
 
-      case KEYBOARD_BUTTON_CODE.CTRL: {
+      case 'Control': {
         store.dispatch(setAlterateState());
         break;
       }
