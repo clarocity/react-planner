@@ -10,6 +10,7 @@ import {initPointerLock} from "./pointer-lock-navigation";
 import {firstPersonOnKeyDown, firstPersonOnKeyUp} from "./libs/first-person-controls";
 import * as SharedStyle from '../../shared-style';
 import { ContextPropTypes, needsContext } from '../context';
+import memoize from 'memoize-one';
 
 export default @needsContext class Viewer3DFirstPerson extends React.Component {
 
@@ -46,7 +47,7 @@ export default @needsContext class Viewer3DFirstPerson extends React.Component {
       projectActions: actions.project
     };
 
-    let data = state.scene;
+    let data = this.previousScene = state.scene;
 
     let scene3D = new Three.Scene();
 
@@ -281,8 +282,7 @@ export default @needsContext class Viewer3DFirstPerson extends React.Component {
     this.renderer.renderLists.dispose();
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    let {width, height, actions, catalog} = nextProps;
+  updateProps = memoize(function (width, height, actions, catalog, scene) {
     let {camera, renderer, scene3D, sceneOnTop, planData} = this;
 
     let sceneActions = {
@@ -300,9 +300,10 @@ export default @needsContext class Viewer3DFirstPerson extends React.Component {
 
     camera.updateProjectionMatrix();
 
-    if (nextProps.state.scene !== this.props.state.scene) {
-      let changedValues = diff(this.props.state.scene, nextProps.state.scene);
-      updateScene(planData, nextProps.state.scene, this.props.state.scene, changedValues.toJS(), sceneActions, catalog);
+    if (scene !== this.previousScene) {
+      let changedValues = diff(this.previousScene, scene);
+      updateScene(planData, scene, this.previousScene, changedValues.toJS(), sceneActions, catalog);
+      this.previousScene = scene;
     }
 
     renderer.setSize(width, height);
@@ -310,10 +311,13 @@ export default @needsContext class Viewer3DFirstPerson extends React.Component {
     renderer.render(scene3D, camera);     // render scene 1
     renderer.clearDepth();                // clear depth buffer
     renderer.render(sceneOnTop, camera);  // render scene 2
-
-  }
+  })
 
   render() {
+    const { width, height, actions, catalog } = this.props;
+    const scene = this.props.state.scene;
+
+    if (this.camera) this.updateProps(width, height, actions, catalog, scene);
     return <div ref={this.canvasWrapper} />
   }
 }

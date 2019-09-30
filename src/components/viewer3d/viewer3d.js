@@ -9,6 +9,7 @@ import OrbitControls from './libs/orbit-controls';
 import diff from 'immutablediff';
 import * as SharedStyle from '../../shared-style';
 import { ContextPropTypes, needsContext } from '../context';
+import memoize from 'memoize-one';
 
 export default @needsContext class Scene3DViewer extends React.Component {
 
@@ -37,7 +38,7 @@ export default @needsContext class Scene3DViewer extends React.Component {
     };
 
     let { state } = this.props;
-    let data = state.scene;
+    let data = this.previousScene = state.scene;
 
     let scene3D = new Three.Scene();
 
@@ -164,8 +165,7 @@ export default @needsContext class Scene3DViewer extends React.Component {
     this.renderer.renderLists.dispose();
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    let { width, height, actions, catalog } = nextProps;
+  updateProps = memoize(function (width, height, actions, catalog, scene) {
 
     let sceneActions = {
       areaActions:    actions.area,
@@ -182,15 +182,20 @@ export default @needsContext class Scene3DViewer extends React.Component {
 
     this.camera.updateProjectionMatrix();
 
-    if (nextProps.state.scene !== this.props.state.scene) {
-      let changedValues = diff(this.props.state.scene, nextProps.state.scene);
-      updateScene(this.planData, nextProps.state.scene, this.props.state.scene, changedValues.toJS(), sceneActions, catalog);
+    if (scene !== this.previousScene) {
+      let changedValues = diff(this.previousScene, scene);
+      updateScene(this.planData, scene, this.previousScene, changedValues.toJS(), sceneActions, catalog);
+      this.previousScene = scene;
     }
 
     this.renderer.setSize(width, height);
-  }
+  })
 
   render() {
+    const { width, height, actions, catalog } = this.props;
+    const scene = this.props.state.scene;
+
+    if (this.camera) this.updateProps(width, height, actions, catalog, scene);
     return <div ref={this.canvasWrapper} />
   }
 }
