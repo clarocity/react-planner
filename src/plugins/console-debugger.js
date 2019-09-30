@@ -49,8 +49,8 @@ export default @needsContext class ConsoleDebugger extends Component {
     console.log('Mounted', source, node);
   }
 
-  onKeyDown = (source, event) => {
-    console.log('keyDown', event);
+  onKeyDown = (source, { nativeEvent }) => {
+    console.log('keyDown', nativeEvent);
   }
 
   render () { return null; }
