@@ -304,7 +304,7 @@ export default @needsContext class ElementEditor extends Component {
   }
 
   updateProperty(propertyName, value) {
-    let {state: {propertiesFormData}} = this;
+    let {propertiesFormData} = this.derivedState;
     propertiesFormData = propertiesFormData.setIn([propertyName, 'currentValue'], value);
     this.setState({timestamp: Date.now()});
     this.save({propertiesFormData});
