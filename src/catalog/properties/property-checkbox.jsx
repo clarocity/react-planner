@@ -33,7 +33,7 @@ export default function PropertyCheckbox({value, onUpdate, configs, sourceElemen
 }
 
 PropertyCheckbox.propTypes = {
-  value: PropTypes.any.isRequired,
+  value: PropTypes.bool.isRequired,
   onUpdate: PropTypes.func.isRequired,
   configs: PropTypes.object.isRequired,
   sourceElement: PropTypes.object,
