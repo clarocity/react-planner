@@ -1,9 +1,10 @@
-import MTLLoader from './mtl-loader';
-import OBJLoader from './obj-loader';
+
+import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 
 export function loadObjWithMaterial(mtlFile, objFile, imgPath) {
   let mtlLoader = new MTLLoader();
-  mtlLoader.setTexturePath(imgPath);
+  mtlLoader.setResourcePath(imgPath);
   let url = mtlFile;
   return new Promise((resolve) => {
 
