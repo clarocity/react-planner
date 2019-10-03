@@ -48,7 +48,7 @@ export default {
     flip: {
       label: 'Flip',
       type: 'checkbox',
-      defaultValue: 'false',
+      defaultValue: false,
     },
   },
 
