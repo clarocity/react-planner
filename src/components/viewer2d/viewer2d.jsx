@@ -232,7 +232,9 @@ function Viewer2D({ state, width, height, catalog, actions }) {
 
       case constants.MODE_DRAWING_LINE:
         actions.lines.endDrawingLine(x, y, state.snapMask);
-        actions.lines.beginDrawingLine(layerID, x, y, state.snapMask);
+        if (state.additive) {
+          actions.lines.beginDrawingLine(layerID, x, y, state.snapMask);
+        }
         break;
 
       case constants.MODE_DRAWING_HOLE:

@@ -18,6 +18,7 @@ import {
   UPDATE_MOUSE_COORDS,
   UPDATE_ZOOM_SCALE,
   TOGGLE_SNAP,
+  TOGGLE_ADDITIVE,
   CHANGE_CATALOG_PAGE,
   GO_BACK_TO_CATALOG_PAGE,
   THROW_ERROR,
@@ -186,6 +187,13 @@ export function toggleSnap(mask) {
   return {
     type: TOGGLE_SNAP,
     mask
+  };
+}
+
+export function toggleAdditive(enabled) {
+  return {
+    type: TOGGLE_ADDITIVE,
+    enabled
   };
 }
 

@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { ContextPropTypes, needsContext } from './context';
 import {
   MODE_IDLE,
   MODE_3D_FIRST_PERSON,
   MODE_3D_VIEW,
   MODE_SNAPPING,
+  MODE_ADDITIVE,
 } from '../constants';
 
 import {
@@ -12,6 +13,7 @@ import {
   undo,
   remove,
   toggleSnap,
+  toggleAdditive,
   copyProperties,
   pasteProperties,
   setAlterateState
@@ -55,6 +57,9 @@ export default @needsContext class Keyboard extends Component {
             SNAP_GUIDE : false,
             tempSnapConfiguartion: state.snapMask.toJS()
           })));
+        }
+        if (MODE_ADDITIVE.includes(mode)) {
+          store.dispatch(toggleAdditive(true));
         }
         break;
 
@@ -108,8 +113,12 @@ export default @needsContext class Keyboard extends Component {
 
     switch (key) {
       case 'Alt': {
-        if (MODE_SNAPPING.includes(mode))
+        if (MODE_SNAPPING.includes(mode)) {
           store.dispatch(toggleSnap(state.snapMask.merge(state.snapMask.get('tempSnapConfiguartion'))));
+        }
+        if (MODE_ADDITIVE.includes(mode)) {
+          store.dispatch(toggleAdditive(false));
+        }
         break;
       }
 
