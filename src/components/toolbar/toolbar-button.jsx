@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
-import { ContextPropTypes, needsContext } from '../context';
-
-//http://www.cssportal.com/css-tooltip-generator/
 
 const STYLE = {
   width: '30px',

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Panel from './panel';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { FaTrash, FaTimes } from 'react-icons/fa';
