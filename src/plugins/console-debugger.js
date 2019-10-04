@@ -53,6 +53,11 @@ export default @needsContext class ConsoleDebugger extends Component {
     console.log('keyDown', nativeEvent);
   }
 
+  onKeyUp = (source, { nativeEvent }) => {
+    console.log('keyUp', nativeEvent);
+  }
+
+
   render () { return null; }
 }
 
