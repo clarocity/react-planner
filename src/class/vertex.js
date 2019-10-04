@@ -94,6 +94,8 @@ class Vertex{
 
     let snapElements = SnapSceneUtils.sceneSnapElements(state.scene, new List(), state.snapMask);
 
+    state = state.setIn(['scene', 'layers', layerID, 'vertices', vertexID, 'dragging'], true);
+
     state = state.merge({
       mode: MODE_DRAGGING_VERTEX,
       snapElements,
@@ -131,6 +133,8 @@ class Vertex{
     let layerID = draggingSupport.get('layerID');
     let vertexID = draggingSupport.get('vertexID');
     let lines = state.getIn(['scene', 'layers', layerID, 'vertices', vertexID, 'lines']);
+
+    state = state.setIn(['scene', 'layers', layerID, 'vertices', vertexID, 'dragging'], false);
 
     if( lines ) {
       state = lines.reduce(

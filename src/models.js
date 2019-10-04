@@ -68,6 +68,7 @@ const sharedAttributes =
   name: '',
   misc: new Map(),
   selected: false,
+  dragging: false,
   properties: new Map(),
   visible: true
 };
