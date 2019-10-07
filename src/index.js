@@ -33,3 +33,4 @@ export {
 };
 
 export const Context = ReactPlannerComponents.Context;
+export const Cursors = ReactPlannerSharedStyle.CURSORS;

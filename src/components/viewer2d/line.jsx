@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {GeometryUtils} from '../../utils/export';
 import Ruler from './ruler';
+import * as SharedStyle from '../../shared-style';
 
 export default function Line({line, layer, scene, catalog}) {
 
@@ -56,7 +57,7 @@ export default function Line({line, layer, scene, catalog}) {
       data-id={line.id}
       data-selected={line.selected}
       data-layer={layer.id}
-      style={line.selected ? {cursor: 'move'} : {}}
+      style={line.selected ? {cursor: SharedStyle.CURSORS.move} : {}}
     >
       {renderedRuler}
       {renderedLine}

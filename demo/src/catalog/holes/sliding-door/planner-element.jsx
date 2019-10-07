@@ -1,5 +1,6 @@
 import React from 'react';
 import * as Three from 'three';
+import { Cursors } from 'react-planner';
 
 const grey = new Three.MeshLambertMaterial({color: 0x3f3f3f});
 const white = new Three.MeshLambertMaterial({color: 0xffffff, transparent:true, opacity:0.5});
@@ -145,7 +146,7 @@ export default {
 
     const STYLE_HOLE_BASE = {stroke: '#000', strokeWidth: '14px', fill: '#000'};
     const STYLE_HOLE_BASE2 = {stroke: '#000', strokeWidth: '16px', fill: '#000'};
-    const STYLE_HOLE_SELECTED = {stroke: '#0096fd', strokeWidth: '14px', fill: '#0096fd', cursor: 'move'};
+    const STYLE_HOLE_SELECTED = {stroke: '#0096fd', strokeWidth: '14px', fill: '#0096fd', cursor: Cursors.drag};
 
     let epsilon = 3;
     let flip = element.properties.get('flip_horizontal');

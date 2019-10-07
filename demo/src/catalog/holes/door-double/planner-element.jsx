@@ -1,5 +1,6 @@
 import React from 'react';
 import * as Three from 'three';
+import { Cursors } from 'react-planner';
 
 const black = new Three.MeshLambertMaterial({color: 0x000000});
 const metalBlue = new Three.MeshLambertMaterial({color: 0xB7CEEC});
@@ -166,9 +167,9 @@ export default {
   render2D: function (element, layer, scene) {
 
     const STYLE_HOLE_BASE = {stroke: '#ff0000', strokeWidth: '3px', fill: '#ff0000'};
-    const STYLE_HOLE_SELECTED = {stroke: '#ff0000', strokeWidth: '4px', fill: '#ff0000', cursor: 'move'};
+    const STYLE_HOLE_SELECTED = {stroke: '#ff0000', strokeWidth: '4px', fill: '#ff0000', cursor: Cursors.drag};
     const STYLE_ARC_BASE = {stroke: '#ff0000', strokeWidth: '3px', strokeDasharray: '5,5', fill: 'none'};
-    const STYLE_ARC_SELECTED = {stroke: '#ff0000', strokeWidth: '4px', strokeDasharray: '5,5', fill: 'none', cursor: 'move'};
+    const STYLE_ARC_SELECTED = {stroke: '#ff0000', strokeWidth: '4px', strokeDasharray: '5,5', fill: 'none', cursor: Cursors.drag};
 
     let epsilon = 3;
     let flip = element.properties.get('flip_horizontal');

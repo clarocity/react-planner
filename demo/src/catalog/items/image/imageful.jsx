@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import {Map} from 'immutable';
+import { Cursors } from 'react-planner';
 
 const grabCircleRadius = 10;
 const hoverCircleRadius = 14;
@@ -9,13 +10,13 @@ const rulerColor = '#f45c42';
 const hoverColor = '#ff9900';
 
 const grabCircleStyle = {
-  cursor: 'grab',
+  cursor: Cursors.grab,
   fill: rulerColor,
   transition: 'r 150ms ease-in'
 };
 
 const hoverCircleStyle = {
-  cursor: 'grab',
+  cursor: Cursors.grab,
   fill: hoverColor,
   transition: 'r 150ms ease-in'
 };

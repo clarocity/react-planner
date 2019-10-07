@@ -4,7 +4,8 @@ import * as Geometry from '../../utils/geometry';
 
 const STYLE = {
   stroke: '#D32F2F',
-  strokeWidth: "1px"
+  strokeWidth: "1px",
+  pointerEvents: 'none',
 };
 
 export default function ActiveDrawingHelper({snap, width, height}) {

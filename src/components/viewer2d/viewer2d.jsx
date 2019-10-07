@@ -39,22 +39,24 @@ function mode2PointerEvents(mode) {
   }
 }
 
-function mode2Cursor(mode) {
+function mode2Cursor({ mode, additive }) {
   switch (mode) {
     case constants.MODE_DRAGGING_HOLE:
     case constants.MODE_DRAGGING_LINE:
     case constants.MODE_DRAGGING_VERTEX:
     case constants.MODE_DRAGGING_ITEM:
-      return { cursor: 'move' };
+      if (additive) return { cursor: SharedStyle.CURSORS.crosshairAdd };
+      return { cursor: SharedStyle.CURSORS.move };
 
     case constants.MODE_ROTATING_ITEM:
-      return { cursor: 'ew-resize' };
+      return { cursor: SharedStyle.CURSORS.rotate };
 
     case constants.MODE_WAITING_DRAWING_LINE:
     case constants.MODE_DRAWING_LINE:
-      return { cursor: 'crosshair' };
+      if (additive) return { cursor: SharedStyle.CURSORS.crosshairAdd };
+      return { cursor: SharedStyle.CURSORS.crosshair };
     default:
-      return { cursor: 'default' };
+      return { cursor: SharedStyle.CURSORS.default };
   }
 }
 
@@ -370,7 +372,7 @@ function Viewer2D({ state, width, height, catalog, actions }) {
               <path d="M-1,1 l2,-2 M0,4 l4,-4 M3,5 l2,-2" style={{ stroke: '#8E9BA2', strokeWidth: 1 }} />
             </pattern>
           </defs>
-          <g style={Object.assign(mode2Cursor(mode), mode2PointerEvents(mode))}>
+          <g style={{...mode2Cursor(state) }}>
             <State state={state} catalog={catalog} />
           </g>
         </svg>

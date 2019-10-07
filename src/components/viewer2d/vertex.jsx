@@ -1,16 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
+import { ContextPropTypes, needsContext } from '../context';
 
-const STYLE_DEFAULT  = {fill: "#0096fd", stroke: SharedStyle.COLORS.white, cursor: "move"};
+const STYLE_DEFAULT  = {fill: "#0096fd", stroke: SharedStyle.COLORS.white, cursor: SharedStyle.CURSORS.moveVertex};
 const STYLE_SELECTED = {fill: SharedStyle.COLORS.white, stroke: "#0096fd"};
+const STYLE_ADDITIVE = {cursor: SharedStyle.CURSORS.moveAdd};
 
-export default function Vertex({vertex, layer}) {
+function Vertex({vertex, layer, state}) {
 
   let {x, y} = vertex;
   const STYLE = {
     ...STYLE_DEFAULT,
     ...(vertex.dragging && STYLE_SELECTED),
+    ...(state.additive && STYLE_ADDITIVE),
   }
   return (
     <g
@@ -29,4 +32,7 @@ export default function Vertex({vertex, layer}) {
 Vertex.propTypes = {
   vertex: PropTypes.object.isRequired,
   layer: PropTypes.object.isRequired,
+  ...ContextPropTypes,
 };
+
+export default needsContext(Vertex);
