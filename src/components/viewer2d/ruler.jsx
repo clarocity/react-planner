@@ -1,5 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { feet, inches } from '../../utils/human';
+import {
+  UNIT_FEET,
+  UNIT_INCH,
+} from '../../constants';
 
 const STYLE = {
   stroke: "#0096fd",
@@ -24,7 +29,18 @@ const STYLE_TEXT = {
 
 export default function Ruler({length, unit, transform}) {
 
-  let distanceText = `${length.toFixed(2)} ${unit}`;
+  let distanceText;
+
+  switch (unit) {
+  case UNIT_FEET:
+    distanceText = feet(length, true);
+    break;
+  case UNIT_INCH:
+    distanceText = inches(length, true);
+    break;
+  default:
+    distanceText = `${length.toFixed(2)} ${unit}`;
+  }
 
   return (
     <g transform={transform}>
