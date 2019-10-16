@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
 import { ContextPropTypes, needsContext } from '../context';
 import { MdSettings, MdUndo, MdDirectionsRun } from 'react-icons/md';
@@ -30,6 +31,36 @@ export {
   Save,
   Load,
 }
+
+export const Spacer = function Spacer ({ size = 10, label = '', style }) {
+  const LABEL_STYLE = {
+    marginBottom: 18,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 9,
+    color: 'rgb(194, 194, 194)',
+    textAlign: 'center',
+    borderBottom: '2px solid',
+    lineHeight: 1
+  }
+
+  const STYLE = {
+    ...(label ? LABEL_STYLE : null),
+    marginTop: size,
+    ...style,
+  }
+
+  return (
+    <label style={STYLE}>{label}</label>
+  );
+}
+
+Spacer.propTypes = {
+  size: PropTypes.number,
+  label: PropTypes.string,
+  style: PropTypes.object,
+};
 
 export const New = needsContext(function New ({ translator, actions }) {
   return (
@@ -151,6 +182,7 @@ export const defaultButtons = [
 ];
 
 export default {
+  Spacer,
   Save,
   Load,
   New,
