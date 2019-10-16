@@ -7,8 +7,7 @@ import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 
 import MyCatalog from './catalog/mycatalog';
-
-import ToolbarScreenshotButton from './ui/toolbar-screenshot-button';
+import MyButtons from './ui/toolbar';
 
 import {
   Models as PlannerModels,
@@ -68,7 +67,7 @@ let store = createStore(
 
 let toolbarButtons = [
   ...Buttons.defaultButtons,
-  ToolbarScreenshotButton,
+  MyButtons.TakeScreenshot,
 ];
 
 //render

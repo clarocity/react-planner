@@ -22,7 +22,7 @@ const {
 
 const { ToolbarButton } = ReactPlannerComponents.ToolbarComponents;
 
-function ToolbarScreenshotButton({state, translator}) {
+function TakeScreenshot({state, translator}) {
   const mode = state.get('mode');
 
   let imageBrowserDownload = imageUri => {
@@ -124,8 +124,8 @@ function ToolbarScreenshotButton({state, translator}) {
 
 }
 
-ToolbarScreenshotButton.propTypes = {
+TakeScreenshot.propTypes = {
   ...Context.ContextPropTypes,
 };
 
-export default Context.needsContext(ToolbarScreenshotButton)
+export default Context.needsContext(TakeScreenshot)
