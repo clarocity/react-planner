@@ -15,7 +15,7 @@ export default function PropertyLengthMeasure({value, onUpdate, onValid, configs
 
   let length = value.get('length') || 0;
   let _length = value.get('_length') || length;
-  let _unit = value.get('_unit') || UNIT_CENTIMETER;
+  let _unit = value.get('_unit') || state.getIn(['scene', 'unit']) || UNIT_CENTIMETER;
   let { hook, label, ...configRest} = configs;
 
   let update = (lengthInput, unitInput) => {
