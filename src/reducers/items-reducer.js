@@ -27,7 +27,7 @@ export default function (state, action) {
 
     case END_DRAWING_ITEM:
       state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
-      return Item.endDrawingItem(state, action.layerID, action.x, action.y).updatedState;
+      return Item.endDrawingItem(state, action.layerID, action.x, action.y, action.again).updatedState;
 
     case BEGIN_DRAGGING_ITEM:
       state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });

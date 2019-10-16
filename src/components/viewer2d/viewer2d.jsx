@@ -244,7 +244,7 @@ function Viewer2D({ state, width, height, catalog, actions }) {
         break;
 
       case constants.MODE_DRAWING_ITEM:
-        actions.items.endDrawingItem(layerID, x, y);
+        actions.items.endDrawingItem(layerID, x, y, state.additive);
         break;
 
       case constants.MODE_DRAGGING_LINE:

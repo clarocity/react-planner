@@ -84,15 +84,23 @@ class Item{
     return { updatedState: state };
   }
 
-  static endDrawingItem(state, layerID, x, y) {
+  static endDrawingItem(state, layerID, x, y, again) {
     let catalog = state.catalog;
     state = this.updateDrawingItem(state, layerID, x, y, catalog).updatedState;
-    state = Layer.unselectAll( state, layerID ).updatedState;
-    state =  state.merge({
-      drawingSupport: Map({
-        type: state.drawingSupport.get('type')
-      })
-    });
+
+    if (again) {
+      state = Layer.unselectAll( state, layerID ).updatedState;
+      state =  state.merge({
+        drawingSupport: Map({
+          type: state.drawingSupport.get('type')
+        })
+      });
+    } else {
+      state = state.merge({
+        mode: MODE_IDLE,
+        drawingSupport: Map({})
+      });
+    }
 
     return { updatedState: state };
   }

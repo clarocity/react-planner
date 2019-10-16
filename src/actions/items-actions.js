@@ -33,10 +33,10 @@ export function updateDrawingItem(layerID, x, y) {
   }
 }
 
-export function endDrawingItem(layerID, x, y) {
+export function endDrawingItem(layerID, x, y, again) {
   return {
     type: END_DRAWING_ITEM,
-    layerID, x, y
+    layerID, x, y, again
   }
 }
 
