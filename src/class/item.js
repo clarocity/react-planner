@@ -56,6 +56,11 @@ class Item{
   }
 
   static selectToolDrawingItem(state, sceneComponentType) {
+    if (!state.catalog.getIn(['elements', sceneComponentType])) {
+      console.error(`Could not find item ${sceneComponentType} for drawing.`);
+      return { updatedState: state };
+    }
+
     state = state.merge({
       mode: MODE_DRAWING_ITEM,
       drawingSupport: new Map({
