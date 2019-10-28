@@ -6,7 +6,11 @@ export default class RulerY extends Component {
 
   render() {
 
-    let elementH = this.props.unitPixelSize * this.props.zoom;
+    const { grid, zoom, mouseY, height, sceneHeight, zeroTopPosition } = this.props;
+    const positiveUnitsNumber = Math.ceil( sceneHeight / grid.majorStep ) + 1;
+    const negativeUnitsNumber = 0;
+
+    let elementH = grid.majorStep * zoom;
 
     let elementStyle = {
       width: '8px',
@@ -21,7 +25,7 @@ export default class RulerY extends Component {
     };
 
     let insideElementsStyle = {
-      height: '20%',
+      height: Math.floor(grid.step / grid.majorStep * 100) + '%',
       width: '100%',
       textOrientation: 'upright',
       writingMode: 'vertical-lr',
@@ -32,14 +36,14 @@ export default class RulerY extends Component {
 
     let rulerStyle = {
       backgroundColor: this.props.backgroundColor,
-      height: this.props.height,
+      height,
       width: '100%',
       color: this.props.fontColor
     }
 
     let markerStyle = {
       position: 'absolute',
-      top: this.props.zeroTopPosition - (this.props.mouseY * this.props.zoom) - 6.5,
+      top: zeroTopPosition - (mouseY * this.props.zoom) - 6.5,
       left: 8,
       width: 0,
       height: 0,
@@ -62,37 +66,35 @@ export default class RulerY extends Component {
 
     let positiveRulerContainer = {
       ...rulerContainer,
-      top: this.props.zeroTopPosition - (this.props.positiveUnitsNumber * elementH),
-      height: (this.props.positiveUnitsNumber * elementH)
+      top: zeroTopPosition - (positiveUnitsNumber * elementH),
+      height: (positiveUnitsNumber * elementH)
     };
 
     let negativeRulerContainer = {
       ...rulerContainer,
-      top: this.props.zeroTopPosition + (this.props.negativeUnitsNumber * elementH),
-      height: (this.props.negativeUnitsNumber * elementH)
+      top: zeroTopPosition + (negativeUnitsNumber * elementH),
+      height: (negativeUnitsNumber * elementH)
     };
 
     let positiveDomElements = [];
 
-    if (elementH <= 200) {
-      for (let x = 1; x <= this.props.positiveUnitsNumber; x++) {
+    if (elementH <= grid.rulerCollapse) {
+      for (let x = 1; x <= positiveUnitsNumber; x++) {
         positiveDomElements.push(
           <div key={x} style={{ ...elementStyle, gridColumn: 1, gridRow: x }}>
-            {elementH > 30 ? ((this.props.positiveUnitsNumber - x) * 100) : ''}
+            {elementH > 30 ? ((positiveUnitsNumber - x) * 100) : ''}
           </div>
         );
       }
     }
-    else if (elementH > 200) {
-      for (let x = 1; x <= this.props.positiveUnitsNumber; x++) {
-        let val = (this.props.positiveUnitsNumber - x) * 100;
+    else if (elementH > grid.rulerCollapse) {
+      for (let x = 1; x <= positiveUnitsNumber; x++) {
+        let val = (positiveUnitsNumber - x) * 100;
         positiveDomElements.push(
           <div key={x} style={{ ...elementStyle, gridColumn: 1, gridRow: x }}>
-            <div style={insideElementsStyle}>{val + (4 * 20)}</div>
-            <div style={insideElementsStyle}>{val + (3 * 20)}</div>
-            <div style={insideElementsStyle}>{val + (2 * 20)}</div>
-            <div style={insideElementsStyle}>{val + (1 * 20)}</div>
-            <div style={insideElementsStyle}>{val}</div>
+            {range(val + grid.majorStep, val, -grid.step).map((v, i) =>
+              <div key={i} style={insideElementsStyle}>{v}</div>
+            )}
           </div>
         );
       }
@@ -108,12 +110,11 @@ export default class RulerY extends Component {
 }
 
 RulerY.propTypes = {
-  positiveUnitsNumber: PropTypes.number.isRequired,
-  negativeUnitsNumber: PropTypes.number.isRequired,
-  unitPixelSize: PropTypes.number.isRequired,
+  grid: PropTypes.object.isRequired,
   zoom: PropTypes.number.isRequired,
   mouseY: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
+  sceneHeight: PropTypes.number.isRequired,
   zeroTopPosition: PropTypes.number.isRequired,
   backgroundColor: PropTypes.string,
   fontColor: PropTypes.string,
@@ -126,4 +127,9 @@ RulerY.defaultProps = {
   backgroundColor: SharedStyle.PRIMARY_COLOR.main,
   fontColor: SharedStyle.COLORS.white,
   markerColor: SharedStyle.SECONDARY_COLOR.main
+}
+
+function range (start, end, step = 1) {
+  const len = Math.floor((end - start) / step) + 1
+  return Array(len).fill().map((_, idx) => start + (idx * step))
 }

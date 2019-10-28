@@ -298,16 +298,17 @@ function Viewer2D({ state, width, height, catalog, actions }) {
 
   let { e, f, SVGWidth, SVGHeight } = state.get('viewer2D').toJS();
 
+  const grids = state.getIn(['scene', 'grids']);
+  const gridY = grids.valueSeq().filter((g) => g.type == 'horizontal-streak').first();
+  const gridX = grids.valueSeq().filter((g) => g.type == 'vertical-streak').first();
+  const sceneWidth = SVGWidth || state.getIn(['scene', 'width']);
+  const sceneHeight = SVGHeight || state.getIn(['scene', 'height']);
+  const sceneZoom = state.zoom || 1;
+
   let rulerSize = 15; //px
-  let rulerUnitPixelSize = 100;
   let rulerBgColor = SharedStyle.PRIMARY_COLOR.main;
   let rulerFnColor = SharedStyle.COLORS.white;
   let rulerMkColor = SharedStyle.SECONDARY_COLOR.main;
-  let sceneWidth = SVGWidth || state.getIn(['scene', 'width']);
-  let sceneHeight = SVGHeight || state.getIn(['scene', 'height']);
-  let sceneZoom = state.zoom || 1;
-  let rulerXElements = Math.ceil( sceneWidth / rulerUnitPixelSize ) + 1;
-  let rulerYElements = Math.ceil( sceneHeight / rulerUnitPixelSize ) + 1;
 
   return (
     <div style={{
@@ -321,32 +322,30 @@ function Viewer2D({ state, width, height, catalog, actions }) {
       position: 'relative'
     }}>
       <div style={{ gridColumn: 1, gridRow: 1, backgroundColor: rulerBgColor }}></div>
-      <div style={{ gridRow: 1, gridColumn: 2, position: 'relative', overflow: 'hidden' }} id="rulerX">
-      { sceneWidth ? <RulerX
-          unitPixelSize={rulerUnitPixelSize}
+      <div style={{ gridRow: 1, gridColumn: 2, position: 'relative', overflow: 'hidden', backgroundColor: rulerBgColor }} id="rulerX">
+      { gridX && sceneWidth ? <RulerX
+          grid={gridX}
           zoom={sceneZoom}
           mouseX={state.mouse.get('x')}
+          sceneWidth={sceneWidth}
           width={width - rulerSize}
           zeroLeftPosition={e || 0}
           backgroundColor={rulerBgColor}
           fontColor={rulerFnColor}
           markerColor={rulerMkColor}
-          positiveUnitsNumber={rulerXElements}
-          negativeUnitsNumber={0}
         /> : null }
       </div>
-      <div style={{ gridColumn: 1, gridRow: 2, position: 'relative', overflow: 'hidden' }} id="rulerY">
-        { sceneHeight ? <RulerY
-          unitPixelSize={rulerUnitPixelSize}
+      <div style={{ gridColumn: 1, gridRow: 2, position: 'relative', overflow: 'hidden', backgroundColor: rulerBgColor }} id="rulerY">
+        { gridY && sceneHeight ? <RulerY
+          grid={gridY}
           zoom={sceneZoom}
           mouseY={state.mouse.get('y')}
           height={height - rulerSize}
+          sceneHeight={sceneHeight}
           zeroTopPosition={((sceneHeight * sceneZoom) + f) || 0}
           backgroundColor={rulerBgColor}
           fontColor={rulerFnColor}
           markerColor={rulerMkColor}
-          positiveUnitsNumber={rulerYElements}
-          negativeUnitsNumber={0}
         /> : null }
       </div>
       <ReactSVGPanZoom

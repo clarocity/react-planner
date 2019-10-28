@@ -14,6 +14,8 @@ export class Grid extends Record({
   type: '',
   properties: Map(),
   step: 20,
+  majorStep: 100,
+  rulerCollapse: 200,
 }, 'Grid') {
   constructor(json = {}) {
     super({
@@ -27,6 +29,7 @@ export const DefaultGrids = new Map({
   'h1': new Grid({
     id: 'h1',
     type: 'horizontal-streak',
+    rulerCollapse: 300,
     properties: {
       colors: ['#808080', '#ddd', '#ddd', '#ddd', '#ddd'],
     }
@@ -34,6 +37,7 @@ export const DefaultGrids = new Map({
   'v1': new Grid({
     id: 'v1',
     type: 'vertical-streak',
+    rulerCollapse: 200,
     properties: {
       colors: ['#808080', '#ddd', '#ddd', '#ddd', '#ddd'],
     }
