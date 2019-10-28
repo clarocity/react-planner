@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { feet, inches } from '../../utils/human';
 import {
-  UNIT_FEET,
+  UNIT_FOOT,
   UNIT_INCH,
 } from '../../constants';
 
@@ -32,7 +32,7 @@ export default function Ruler({length, unit, transform}) {
   let distanceText;
 
   switch (unit) {
-  case UNIT_FEET:
+  case UNIT_FOOT:
     distanceText = feet(length, true);
     break;
   case UNIT_INCH:
