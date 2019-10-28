@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {List} from 'immutable';
 
 export default function GridVerticalStreak({width, height, grid}) {
-  let step = grid.properties.get('step');
+  let step = grid.get('step');
   let colors;
 
   if (grid.properties.has('color')) {

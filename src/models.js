@@ -12,7 +12,8 @@ let safeLoadMapList = (mapList, Model, defaultMap) => {
 export class Grid extends Record({
   id: '',
   type: '',
-  properties: Map()
+  properties: Map(),
+  step: 20,
 }, 'Grid') {
   constructor(json = {}) {
     super({
@@ -27,16 +28,14 @@ export const DefaultGrids = new Map({
     id: 'h1',
     type: 'horizontal-streak',
     properties: {
-      step: 20,
-      colors: ['#808080', '#ddd', '#ddd', '#ddd', '#ddd']
+      colors: ['#808080', '#ddd', '#ddd', '#ddd', '#ddd'],
     }
   }),
   'v1': new Grid({
     id: 'v1',
     type: 'vertical-streak',
     properties: {
-      step: 20,
-      colors: ['#808080', '#ddd', '#ddd', '#ddd', '#ddd']
+      colors: ['#808080', '#ddd', '#ddd', '#ddd', '#ddd'],
     }
   })
 });
