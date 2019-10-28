@@ -49,23 +49,19 @@ export function sceneSnapElements(scene, snapElements = new List(), snapMask = n
     });
 
     if (snapMask.get(SNAP_GRID)) {
-      let divider = 5;
-      let gridCellSize = 100 / divider;
-      let xCycle = width / gridCellSize;
-      let yCycle = height / gridCellSize;
+      const hori = scene.grids.valueSeq().filter((g) => g.type == 'horizontal-streak').map((g) => steps(g, height));
+      const vert = scene.grids.valueSeq().filter((g) => g.type == 'vertical-streak').map((g) => steps(g, width));
 
-      for (let x = 0; x < xCycle; x++) {
-        let xMul = x * gridCellSize;
+      const stepSort = ([ a ], [ b ]) => a > b;
+      const Xs = [].concat(...hori).sort(stepSort);
+      const Ys = [].concat(...vert).sort(stepSort);
 
-        for (let y = 0; y < yCycle; y++) {
-          let yMul = y * gridCellSize;
+      Xs.forEach(([ x, xMajor ]) => {
+        Ys.forEach(([ y, yMajor ]) => {
+          addGridSnap(snapElements, x, y, 10, xMajor && yMajor ? 15 : 10, null);
+        });
+      });
 
-          let onXCross = !(x % divider) ? true : false;
-          let onYCross = !(y % divider) ? true : false;
-
-          addGridSnap(snapElements, xMul, yMul, 10, onXCross && onYCross ? 15 : 10, null);
-        }
-      }
     }
 
     if (snapMask.get(SNAP_GUIDE)) {
@@ -87,5 +83,14 @@ export function sceneSnapElements(scene, snapElements = new List(), snapMask = n
 
     }
 
+  })
+}
+
+function steps ({ step, majorStep }, end) {
+  const len = Math.floor(end / step) + 1
+  return Array(len).fill().map((_, idx) => {
+    const i = idx * step;
+    const major = !(i % majorStep);
+    return [ i, major ];
   })
 }
