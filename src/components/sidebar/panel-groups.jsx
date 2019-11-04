@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import Panel from './panel';
 import * as SharedStyle from '../../shared-style';
 import {TiPlus} from 'react-icons/ti';
@@ -60,16 +59,17 @@ export default @needsContext class PanelGroups extends Component {
 
   shouldComponentUpdate(nextProps /*, nextState */) {
     return (
-      this.props.groups.hashCode() !== nextProps.groups.hashCode() ||
-      this.props.layers.hashCode() !== nextProps.layers.hashCode() ||
-      this.props.mode !== nextProps.mode
+      this.props.state.scene.groups.hashCode() !== nextProps.state.scene.groups.hashCode() ||
+      this.props.state.scene.layers.hashCode() !== nextProps.state.scene.layers.hashCode() ||
+      this.props.state.mode !== nextProps.state.mode
     );
   }
 
   render() {
-    let { mode, groups, layers, actions, translator } = this.props;
+    let { state, actions, translator } = this.props;
+    const { groups, layers } = state.scene;
 
-    if (!VISIBILITY_MODE[ mode ]) return null;
+    if (!VISIBILITY_MODE[ state.mode ]) return null;
 
     return (
       <Panel name={translator.t('Groups')} opened={groups.size > 0}>
@@ -197,8 +197,5 @@ export default @needsContext class PanelGroups extends Component {
 }
 
 PanelGroups.propTypes = {
-  mode: PropTypes.string.isRequired,
-  groups: PropTypes.object.isRequired,
-  layers: PropTypes.object.isRequired,
   ...ContextPropTypes
 };

@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import Panel from './panel';
 import {
   MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON,
@@ -68,8 +67,8 @@ export default @needsContext class PanelLayerElement extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     if (this.state.matchString !== nextState.matchString) return true;
-    if (this.props.selectedLayer !== nextProps.selectedLayer) return true;
-    if (this.props.layers.hashCode() !== nextProps.layers.hashCode()) return true;
+    if (this.props.state.scene.selectedLayer     !== nextProps.state.scene.selectedLayer) return true;
+    if (this.props.state.scene.layers.hashCode() !== nextProps.state.scene.layers.hashCode()) return true;
 
     return false;
   }
@@ -101,8 +100,9 @@ export default @needsContext class PanelLayerElement extends Component {
   }
 
   render() {
-    const { mode, translator, actions, layers, selectedLayer } = this.props;
-    if (!VISIBILITY_MODE[mode]) return null;
+    const { state, translator, actions } = this.props;
+    const { layers, selectedLayer } = state.scene;
+    if (!VISIBILITY_MODE[state.mode]) return null;
 
     let layer = layers.get(selectedLayer);
     const matchedElements = this.matchedElements(layer, this.state.matchString, selectedLayer, layers.hashCode());
@@ -191,8 +191,5 @@ export default @needsContext class PanelLayerElement extends Component {
 }
 
 PanelLayerElement.propTypes = {
-  mode: PropTypes.string.isRequired,
-  layers: PropTypes.object.isRequired,
-  selectedLayer: PropTypes.string,
   ...ContextPropTypes,
 };

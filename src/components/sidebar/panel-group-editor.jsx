@@ -46,23 +46,23 @@ const iconColStyle = {width: '2em'};
 
 export default @needsContext class PanelGroupEditor extends Component {
 
-  constructor(props) {
-    super(props);
+  shouldComponentUpdate(nextProps /*, nextState */) {
 
-    this.state = {};
-  }
+    const [ prevGroupID, prevGroup ] = this.props.state.getIn(['scene', 'groups']).findEntry( g => g.get('selected') );
+    const [ nextGroupID, nextGroup ] =  nextProps.state.getIn(['scene', 'groups']).findEntry( g => g.get('selected') );
+    if (prevGroupID !== nextGroupID) return true;
+    if (prevGroup && nextGroup && prevGroup.hashCode() !== nextGroup.hashCode()) return true;
 
-  shouldComponentUpdate() {
-    return true;
+    return false;
   }
 
   render() {
 
     const { translator, actions, state } = this.props;
+    const [ groupID, group ] = state.getIn(['scene', 'groups']).findEntry( g => g.get('selected') );
 
-    if (!this.props.groupID || !VISIBILITY_MODE[state.mode]) return null;
+    if (!groupID || !VISIBILITY_MODE[state.mode]) return null;
 
-    let group = state.getIn(['scene', 'groups', this.props.groupID]);
     let elements = group.get('elements');
 
     return (
@@ -75,7 +75,7 @@ export default @needsContext class PanelGroupEditor extends Component {
                 <td>
                   <FormTextInput
                     value={group.get('name')}
-                    onChange={e => actions.group.setGroupAttributes( this.props.groupID, new Map({ 'name': e.target.value }) ) }
+                    onChange={e => actions.group.setGroupAttributes( groupID, new Map({ 'name': e.target.value }) ) }
                     style={inputStyle}
                   />
                 </td>
@@ -85,7 +85,7 @@ export default @needsContext class PanelGroupEditor extends Component {
                 <td>
                   <FormNumberInput
                     value={group.get('x')}
-                    onChange={e => actions.group.groupTranslate( this.props.groupID, e.target.value, group.get('y') ) }
+                    onChange={e => actions.group.groupTranslate( groupID, e.target.value, group.get('y') ) }
                     style={inputStyle}
                     state={state}
                     precision={2}
@@ -97,7 +97,7 @@ export default @needsContext class PanelGroupEditor extends Component {
                 <td>
                   <FormNumberInput
                     value={group.get('y')}
-                    onChange={e => actions.group.groupTranslate( this.props.groupID, group.get('x'), e.target.value ) }
+                    onChange={e => actions.group.groupTranslate( groupID, group.get('x'), e.target.value ) }
                     style={inputStyle}
                     state={state}
                     precision={2}
@@ -109,7 +109,7 @@ export default @needsContext class PanelGroupEditor extends Component {
                 <td>
                   <FormNumberInput
                     value={group.get('rotation')}
-                    onChange={e => actions.group.groupRotate( this.props.groupID, e.target.value ) }
+                    onChange={e => actions.group.groupRotate( groupID, e.target.value ) }
                     style={inputStyle}
                     state={state}
                     precision={2}
@@ -145,7 +145,7 @@ export default @needsContext class PanelGroupEditor extends Component {
                             >
                               <td style={iconColStyle} title={translator.t('Un-chain Element from Group')}>
                                 <FaUnlink
-                                  onClick={ () => actions.group.removeFromGroup( this.props.groupID, layerID, elementPrototype, elementID ) }
+                                  onClick={ () => actions.group.removeFromGroup( groupID, layerID, elementPrototype, elementID ) }
                                   style={styleEditButton}
                                 />
                               </td>
@@ -176,6 +176,5 @@ export default @needsContext class PanelGroupEditor extends Component {
 }
 
 PanelGroupEditor.propTypes = {
-  groupID: PropTypes.string,
   ...ContextPropTypes,
 };

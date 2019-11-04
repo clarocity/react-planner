@@ -50,11 +50,11 @@ export default function Sidebar({ state, width, height, sidebarComponents }) {
   let sorter = [
     { index: 0, condition: true, dom: <PanelGuides /> },
     { index: 1, condition: true, dom: <PanelLayers /> },
-    { index: 2, condition: true, dom: <PanelLayerElements mode={state.mode} layers={state.scene.layers} selectedLayer={state.scene.selectedLayer} /> },
-    { index: 3, condition: true, dom: <PanelGroups mode={state.mode} groups={state.scene.groups} layers={state.scene.layers} /> },
+    { index: 2, condition: true, dom: <PanelLayerElements /> },
+    { index: 3, condition: true, dom: <PanelGroups /> },
     { index: 4, condition: !multiselected, dom: <PanelElementEditor /> },
     //{ index: 5, condition: multiselected, dom: <PanelMultiElementsEditor /> },
-    { index: 6, condition: !!selectedGroup, dom: <PanelGroupEditor groupID={selectedGroup ? selectedGroup[0] : null} /> }
+    { index: 6, condition: !!selectedGroup, dom: <PanelGroupEditor /> }
   ];
 
   sorter = sorter.concat(sidebarComponents.map((Component, key) => {
