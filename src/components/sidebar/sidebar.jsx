@@ -52,9 +52,9 @@ export default function Sidebar({ state, width, height, sidebarComponents }) {
     { index: 1, condition: true, dom: <PanelLayers /> },
     { index: 2, condition: true, dom: <PanelLayerElements /> },
     { index: 3, condition: true, dom: <PanelGroups /> },
-    { index: 4, condition: !multiselected, dom: <PanelElementEditor /> },
-    //{ index: 5, condition: multiselected, dom: <PanelMultiElementsEditor /> },
-    { index: 6, condition: !!selectedGroup, dom: <PanelGroupEditor /> }
+    { index: 4, condition: !!selectedGroup, dom: <PanelGroupEditor /> },
+    { index: 5, condition: !multiselected, dom: <PanelElementEditor /> },
+    //{ index: 6, condition: multiselected, dom: <PanelMultiElementsEditor /> },
   ];
 
   sorter = sorter.concat(sidebarComponents.map((Component, key) => {
