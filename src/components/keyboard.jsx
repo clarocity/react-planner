@@ -101,6 +101,7 @@ export default @needsContext class Keyboard extends Component {
         break;
 
       case 'Control':
+      case 'Meta':
         store.dispatch(setAlterateState());
         break;
     }
@@ -122,10 +123,10 @@ export default @needsContext class Keyboard extends Component {
         break;
       }
 
-      case 'Control': {
+      case 'Control':
+      case 'Meta':
         store.dispatch(setAlterateState());
         break;
-      }
     }
   }
 

@@ -24,7 +24,7 @@ function Item ({layer, item, scene, catalog, state}) {
 
   const STYLE = {};
   if (item.selected) {
-    if (state.additive) {
+    if (state.alterate) {
       STYLE.cursor = SharedStyle.CURSORS.moveAdd;
     } else {
       STYLE.cursor = SharedStyle.CURSORS.move;

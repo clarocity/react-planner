@@ -5,7 +5,7 @@ import { ContextPropTypes, needsContext } from '../context';
 
 const STYLE_DEFAULT  = {fill: "#0096fd", stroke: SharedStyle.COLORS.white, cursor: SharedStyle.CURSORS.moveVertex};
 const STYLE_SELECTED = {fill: SharedStyle.COLORS.white, stroke: "#0096fd"};
-const STYLE_ADDITIVE = {cursor: SharedStyle.CURSORS.moveAdd};
+const STYLE_ALTERATIVE = {cursor: SharedStyle.CURSORS.moveAdd};
 
 function Vertex({vertex, layer, state}) {
 
@@ -13,7 +13,7 @@ function Vertex({vertex, layer, state}) {
   const STYLE = {
     ...STYLE_DEFAULT,
     ...(vertex.dragging && STYLE_SELECTED),
-    ...(state.additive && STYLE_ADDITIVE),
+    ...(state.alterate && STYLE_ALTERATIVE),
   }
   return (
     <g

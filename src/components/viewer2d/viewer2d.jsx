@@ -39,13 +39,13 @@ function mode2PointerEvents(mode) {
   }
 }
 
-function mode2Cursor({ mode, additive }) {
+function mode2Cursor({ mode, alterate }) {
   switch (mode) {
     case constants.MODE_DRAGGING_HOLE:
     case constants.MODE_DRAGGING_LINE:
     case constants.MODE_DRAGGING_VERTEX:
     case constants.MODE_DRAGGING_ITEM:
-      if (additive) return { cursor: SharedStyle.CURSORS.crosshairAdd };
+      if (alterate) return { cursor: SharedStyle.CURSORS.crosshairAdd };
       return { cursor: SharedStyle.CURSORS.move };
 
     case constants.MODE_ROTATING_ITEM:
@@ -53,7 +53,7 @@ function mode2Cursor({ mode, additive }) {
 
     case constants.MODE_WAITING_DRAWING_LINE:
     case constants.MODE_DRAWING_LINE:
-      if (additive) return { cursor: SharedStyle.CURSORS.crosshairAdd };
+      if (alterate) return { cursor: SharedStyle.CURSORS.crosshairAdd };
       return { cursor: SharedStyle.CURSORS.crosshair };
     default:
       return { cursor: SharedStyle.CURSORS.default };
@@ -234,7 +234,7 @@ function Viewer2D({ state, width, height, catalog, actions }) {
 
       case constants.MODE_DRAWING_LINE:
         actions.lines.endDrawingLine(x, y, state.snapMask);
-        if (state.additive) {
+        if (state.alterate) {
           actions.lines.beginDrawingLine(layerID, x, y, state.snapMask);
         }
         break;
@@ -244,7 +244,7 @@ function Viewer2D({ state, width, height, catalog, actions }) {
         break;
 
       case constants.MODE_DRAWING_ITEM:
-        actions.items.endDrawingItem(layerID, x, y, state.additive);
+        actions.items.endDrawingItem(layerID, x, y, state.alterate);
         break;
 
       case constants.MODE_DRAGGING_LINE:
