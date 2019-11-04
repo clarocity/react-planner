@@ -48,8 +48,8 @@ export default @needsContext class PanelGroupEditor extends Component {
 
   shouldComponentUpdate(nextProps /*, nextState */) {
 
-    const [ prevGroupID, prevGroup ] = this.props.state.getIn(['scene', 'groups']).findEntry( g => g.get('selected') );
-    const [ nextGroupID, nextGroup ] =  nextProps.state.getIn(['scene', 'groups']).findEntry( g => g.get('selected') );
+    const [ prevGroupID, prevGroup ] = this.props.state.getIn(['scene', 'groups']).findEntry( g => g.get('selected') ) || [];
+    const [ nextGroupID, nextGroup ] =  nextProps.state.getIn(['scene', 'groups']).findEntry( g => g.get('selected') ) || [];
     if (prevGroupID !== nextGroupID) return true;
     if (prevGroup && nextGroup && prevGroup.hashCode() !== nextGroup.hashCode()) return true;
 
@@ -59,7 +59,7 @@ export default @needsContext class PanelGroupEditor extends Component {
   render() {
 
     const { translator, actions, state } = this.props;
-    const [ groupID, group ] = state.getIn(['scene', 'groups']).findEntry( g => g.get('selected') );
+    const [ groupID, group ] = state.getIn(['scene', 'groups']).findEntry( g => g.get('selected') ) || [];
 
     if (!groupID || !VISIBILITY_MODE[state.mode]) return null;
 

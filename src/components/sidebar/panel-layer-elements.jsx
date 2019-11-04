@@ -55,7 +55,7 @@ const tableSearchStyle = {width: '100%', marginTop: '0.8em'};
 const searchIconStyle = {fontSize: '1.5em'};
 const searchInputStyle = {fontSize: '1em', width: '100%', height: '1em', padding: '1em 0.5em'};
 
-export default @needsContext class PanelLayerElement extends Component {
+export default @needsContext class PanelLayerElements extends Component {
 
   constructor(props) {
     super(props);
@@ -190,6 +190,6 @@ export default @needsContext class PanelLayerElement extends Component {
 
 }
 
-PanelLayerElement.propTypes = {
+PanelLayerElements.propTypes = {
   ...ContextPropTypes,
 };

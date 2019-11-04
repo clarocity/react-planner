@@ -37,6 +37,17 @@ function PanelElementEditor({state, translator}) {
       MODE_DRAGGING_LINE, MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE,
       MODE_ROTATING_ITEM, MODE_UPLOADING_IMAGE, MODE_FITTING_IMAGE].includes(mode)) return null;
 
+  //TODO change in multi-layer check
+  // const selectedLayer = state.getIn(['scene', 'selectedLayer']);
+  // const selected = selectedLayer && state.getIn(['scene', 'layers', selectedLayer, 'selected']);
+
+  // const multiselected = selected &&
+  //   selected.lines.size > 1 ||
+  //   selected.items.size > 1 ||
+  //   selected.holes.size > 1 ||
+  //   selected.areas.size > 1 ||
+  //   selected.lines.size + selected.items.size + selected.holes.size + selected.areas.size > 1;
+
   let layerRenderer = layer => Seq()
     .concat(layer.lines, layer.holes, layer.areas, layer.items)
     .filter(element => element.selected)

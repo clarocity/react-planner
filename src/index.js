@@ -13,6 +13,7 @@ import ReactPlannerClasses from './class/export';
 import ElementsFactories from './catalog/factories/export';
 import ReactPlannerUtils from './utils/export';
 import Buttons from './components/toolbar/buttons';
+import { Panels } from './components/sidebar/export';
 
 export {
   Catalog,
@@ -22,6 +23,7 @@ export {
   ReactPlanner,
   Plugins,
   Buttons,
+  Panels,
   ReactPlannerConstants,
   ReactPlannerSharedStyle,
   ReactPlannerComponents,
