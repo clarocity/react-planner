@@ -25,7 +25,7 @@ class Layer{
   }
 
   static select( state, layerID ) {
-    if( !state.get('alterate') ) state = Project.unselectAll( state ).updatedState;
+    if( !state.get('alternate') ) state = Project.unselectAll( state ).updatedState;
     state = state.setIn(['scene', 'selectedLayer'], layerID);
 
     return { updatedState: state };

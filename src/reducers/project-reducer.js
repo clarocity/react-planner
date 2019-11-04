@@ -26,7 +26,7 @@ import {
   COPY_PROPERTIES,
   PASTE_PROPERTIES,
   PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY,
-  ALTERATE_STATE,
+  ALTERNATE_STATE,
   SET_MODE,
   ADD_HORIZONTAL_GUIDE,
   ADD_VERTICAL_GUIDE,
@@ -124,19 +124,19 @@ export default function (state, action) {
     case PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY:
       return Project.pushLastSelectedCatalogElementToHistory(state, action.element).updatedState;
 
-    case ALTERATE_STATE:
-      return Project.setAlterate( state ).updatedState;
-    
+    case ALTERNATE_STATE:
+      return Project.setAlternate( state ).updatedState;
+
     case SET_MODE:
       return Project.setMode(state, action.mode).updatedState;
-    
+
     case ADD_HORIZONTAL_GUIDE:
       state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
       return Project.addHorizontalGuide(state, action.coordinate).updatedState;
-    
+
     case ADD_VERTICAL_GUIDE:
       return Project.addVerticalGuide(state, action.coordinate).updatedState;
-    
+
     case ADD_CIRCULAR_GUIDE:
       return Project.addCircularGuide(state, action.x, action.y, action.radius).updatedState;
 

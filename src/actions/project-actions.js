@@ -25,7 +25,7 @@ import {
   COPY_PROPERTIES,
   PASTE_PROPERTIES,
   PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY,
-  ALTERATE_STATE,
+  ALTERNATE_STATE,
   SET_MODE,
   ADD_HORIZONTAL_GUIDE,
   ADD_VERTICAL_GUIDE,
@@ -223,9 +223,9 @@ export function pushLastSelectedCatalogElementToHistory( element ) {
   };
 }
 
-export function setAlterateState() {
+export function setAlternateState() {
   return {
-    type: ALTERATE_STATE
+    type: ALTERNATE_STATE
   };
 }
 

@@ -14,7 +14,7 @@ import {
   toggleSnap,
   copyProperties,
   pasteProperties,
-  setAlterateState
+  setAlternateState
 } from '../actions/project-actions';
 
 export default @needsContext class Keyboard extends Component {
@@ -97,7 +97,7 @@ export default @needsContext class Keyboard extends Component {
 
       case 'Control':
       case 'Meta':
-        store.dispatch(setAlterateState());
+        store.dispatch(setAlternateState());
         break;
     }
 
@@ -116,7 +116,7 @@ export default @needsContext class Keyboard extends Component {
 
       case 'Control':
       case 'Meta':
-        store.dispatch(setAlterateState());
+        store.dispatch(setAlternateState());
         break;
     }
   }

@@ -18,8 +18,8 @@ import {
 
 class Project{
 
-  static setAlterate( state ){
-    return { updatedState: state.set('alterate', !state.alterate ) };
+  static setAlternate( state ){
+    return { updatedState: state.set('alternate', !state.alternate ) };
   }
 
   static openCatalog( state ) {

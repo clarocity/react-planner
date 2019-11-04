@@ -93,7 +93,7 @@ Catalog.propTypes = { ...ContextPropTypes };
 
 export const View2D = needsContext(function View2D ({ translator, actions, state }) {
   let mode = state.get('mode');
-  let alterateColor = state.get('alterate') ? SharedStyle.MATERIAL_COLORS[500].orange : '';
+  let alternateColor = state.get('alternate') ? SharedStyle.MATERIAL_COLORS[500].orange : '';
   return (
     <ToolbarButton
       active={[MODE_IDLE].includes(mode)}
@@ -101,8 +101,8 @@ export const View2D = needsContext(function View2D ({ translator, actions, state
       onClick={() => actions.project.setMode( MODE_IDLE )}
     >
       {[MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode)
-        ? <Icon2D style={{color: alterateColor}} />
-        : <FaMousePointer style={{color: alterateColor}} />}
+        ? <Icon2D style={{color: alternateColor}} />
+        : <FaMousePointer style={{color: alternateColor}} />}
     </ToolbarButton>
   );
 });

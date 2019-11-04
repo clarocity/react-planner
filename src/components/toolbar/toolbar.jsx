@@ -15,7 +15,7 @@ export default @needsContext class Toolbar extends Component {
     return this.props.state.mode !== nextProps.state.mode ||
       this.props.height !== nextProps.height ||
       this.props.width !== nextProps.width ||
-      this.props.state.alterate !== nextProps.state.alterate;
+      this.props.state.alternate !== nextProps.state.alternate;
   }
 
   render() {

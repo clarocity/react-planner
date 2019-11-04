@@ -13,7 +13,7 @@ function Vertex({vertex, layer, state}) {
   const STYLE = {
     ...STYLE_DEFAULT,
     ...(vertex.dragging && STYLE_SELECTED),
-    ...(state.alterate && STYLE_ALTERATIVE),
+    ...(state.alternate && STYLE_ALTERATIVE),
   }
   return (
     <g
