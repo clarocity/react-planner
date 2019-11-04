@@ -19,7 +19,6 @@ import {
   UPDATE_MOUSE_COORDS,
   UPDATE_ZOOM_SCALE,
   TOGGLE_SNAP,
-  TOGGLE_ADDITIVE,
   CHANGE_CATALOG_PAGE,
   GO_BACK_TO_CATALOG_PAGE,
   THROW_ERROR,
@@ -109,9 +108,6 @@ export default function (state, action) {
     case TOGGLE_SNAP:
       return Project.toggleSnap(state, action.mask).updatedState;
 
-    case TOGGLE_ADDITIVE:
-      return Project.toggleAdditive(state, action.enabled).updatedState;
-
     case THROW_ERROR:
       return Project.throwError(state, action.error).updatedState;
 
@@ -130,17 +126,17 @@ export default function (state, action) {
 
     case ALTERATE_STATE:
       return Project.setAlterate( state ).updatedState;
-
+    
     case SET_MODE:
       return Project.setMode(state, action.mode).updatedState;
-
+    
     case ADD_HORIZONTAL_GUIDE:
       state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
       return Project.addHorizontalGuide(state, action.coordinate).updatedState;
-
+    
     case ADD_VERTICAL_GUIDE:
       return Project.addVerticalGuide(state, action.coordinate).updatedState;
-
+    
     case ADD_CIRCULAR_GUIDE:
       return Project.addCircularGuide(state, action.x, action.y, action.radius).updatedState;
 

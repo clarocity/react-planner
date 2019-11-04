@@ -307,7 +307,6 @@ export class State extends Record({
   viewer2D: new Map(),
   mouse: new Map({x: 0, y: 0}),
   zoom: 0,
-  additive: false,
   snapMask: SNAP_MASK,
   snapElements: new List(),
   activeSnapElement: null,

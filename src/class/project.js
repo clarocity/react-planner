@@ -178,11 +178,6 @@ class Project{
     return { updatedState: state };
   }
 
-  static toggleAdditive(state, enabled) {
-    state = state.set('additive', enabled);
-    return { updatedState: state };
-  }
-
   static throwError(state, error) {
     state = state.set('errors', state.get('errors').push({
       date: Date.now(),
