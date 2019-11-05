@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import {Map} from 'immutable';
-import { Cursors } from 'react-planner';
+import { Cursors, Context } from 'react-planner';
+import memoize from 'memoize-one';
 
 const grabCircleRadius = 10;
 const hoverCircleRadius = 14;
@@ -37,7 +38,7 @@ const pointsDistance = (x1, y1, x2, y2) => {
   return 0;
 };
 
-export default class ImageFul extends Component {
+export default @Context.needsContext class ImageFul extends Component {
   constructor(props) {
     super(props);
 
@@ -105,11 +106,11 @@ export default class ImageFul extends Component {
 
     if (this.state.handleMouseMove1) {
       let dist = pointsDistance(newX, newY, this.props.x2, this.props.y2);
-      this.context.projectActions.setProperties(new Map({x1: newX, y1: newY, distance: new Map({length: dist})}));
+      this.props.actions.project.setProperties(new Map({x1: newX, y1: newY, distance: new Map({length: dist})}));
     }
     else if (this.state.handleMouseMove2) {
       let dist = pointsDistance(this.props.x1, this.props.y1, newX, newY);
-      this.context.projectActions.setProperties(new Map({x2: newX, y2: newY, distance: new Map({length: dist})}));
+      this.props.actions.project.setProperties(new Map({x2: newX, y2: newY, distance: new Map({length: dist})}));
     }
   }
 
@@ -117,17 +118,7 @@ export default class ImageFul extends Component {
     document.addEventListener('mousedown-planner-event', this.onMouseDown);
     document.addEventListener('mousemove-planner-event', this.onMouseMove);
 
-    if (this.props.imageUri) {
-      let img = new Image;
-      img.src = this.props.imageUri;
-      img.onload = () => {
-        this.setState({imageLoadError: false});
-        this.context.projectActions.setProperties(new Map({width: img.naturalWidth, height: img.naturalHeight}))
-      };
-      img.onerror = () => {
-        this.setState({imageLoadError: true})
-      };
-    }
+    if (this.props.imageUri) this._loadImage(this.props.imageUri);
   }
 
   componentWillUnmount() {
@@ -135,18 +126,21 @@ export default class ImageFul extends Component {
     document.removeEventListener('mousemove-planner-event', this.onMouseMove);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.imageUri !== nextProps.imageUri) {
+  _loadImage(imageUri) {
+    if (!imageUri) return Promise.resolve(null);
+    return new Promise((resolve, reject) => {
       let img = new Image;
-      img.src = nextProps.imageUri;
+      img.src = imageUri;
       img.onload = () => {
         this.setState({imageLoadError: false});
-        this.context.projectActions.setProperties(new Map({width: img.naturalWidth, height: img.naturalHeight}))
+        this.props.actions.project.setProperties(new Map({width: img.naturalWidth, height: img.naturalHeight}));
+        resolve(img);
       };
-      img.onerror = () => {
+      img.onerror = (err) => {
         this.setState({imageLoadError: true})
+        reject(err);
       };
-    }
+    });
   }
 
   toggleHover1(e) {
@@ -158,6 +152,7 @@ export default class ImageFul extends Component {
   }
 
   render() {
+    if (this.props.imageUri) this._loadImage(this.props.imageUri);
     let dist = pointsDistance(this.props.x1, this.props.y1, this.props.x2, this.props.y2);
     let scale = !isNaN(dist) && dist ? (this.props.distance.length / dist) : 0;
     let half_w = this.props.width / 2;
@@ -235,11 +230,6 @@ ImageFul.propTypes = {
   height: PropTypes.number.isRequired,
   imageUri: PropTypes.string.isRequired,
   layer: PropTypes.object.isRequired,
-  scene: PropTypes.object.isRequired
-};
-
-ImageFul.contextTypes = {
-  projectActions: PropTypes.object.isRequired,
-  catalog: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
+  scene: PropTypes.object.isRequired,
+  ...Context.ContextPropTypes,
 };
