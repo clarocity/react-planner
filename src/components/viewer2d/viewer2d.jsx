@@ -23,22 +23,6 @@ function mode2Tool(mode) {
   }
 }
 
-function mode2PointerEvents(mode) {
-  switch (mode) {
-    case constants.MODE_DRAWING_LINE:
-    case constants.MODE_DRAWING_HOLE:
-    case constants.MODE_DRAWING_ITEM:
-    case constants.MODE_DRAGGING_HOLE:
-    case constants.MODE_DRAGGING_ITEM:
-    case constants.MODE_DRAGGING_LINE:
-    case constants.MODE_DRAGGING_VERTEX:
-      return { pointerEvents: 'none' };
-
-    default:
-      return {};
-  }
-}
-
 function mode2Cursor({ mode, alternate }) {
   switch (mode) {
     case constants.MODE_DRAGGING_HOLE:

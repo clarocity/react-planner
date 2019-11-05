@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { ContextPropTypes, needsContext } from './context';
 import {
   MODE_IDLE,
