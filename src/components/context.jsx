@@ -42,13 +42,15 @@ Provider.propTypes = {
 
 export function needsContext (Component) {
   if (!Component) throw new Error('needsContext did not receive a component. Did you use this as a decorator function?');
-  return function ContextWrapper (props) {
+  function ContextWrapper (props) {
     return (
       <Context.Consumer>{(context) => (
         <Component {...props} {...context} />
       )}</Context.Consumer>
     )
   }
+  ContextWrapper.displayName = Component.displayName || Component.name || 'Component';
+  return ContextWrapper;
 }
 
 export default {
