@@ -74,20 +74,15 @@ let toolbarButtons = [
 ReactDOM.render(
   (
     <Provider store={store}>
-      <ContainerDimensions>
-        {({width, height}) =>
-          <ReactPlanner
-            catalog={MyCatalog}
-            width={width}
-            height={height}
-            toolbarButtons={toolbarButtons}
-            stateExtractor={state => state.get('react-planner')}
-          >
-            <Plugins.Autosave storageKey="react-planner_v0" />
-            <Plugins.ConsoleDebugger />
-          </ReactPlanner>
-        }
-      </ContainerDimensions>
+      <ReactPlanner
+        catalog={MyCatalog}
+        toolbarButtons={toolbarButtons}
+        stateExtractor={state => state.get('react-planner')}
+        style={{ position: 'absolute', left: 0, top: 0, right: 0, bottom: 0 }}
+      >
+        <Plugins.Autosave storageKey="react-planner_v0" />
+        <Plugins.ConsoleDebugger />
+      </ReactPlanner>
     </Provider>
   ),
   document.getElementById('app')

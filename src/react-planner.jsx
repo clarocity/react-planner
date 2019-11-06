@@ -23,15 +23,6 @@ const {Toolbar} = ToolbarComponents;
 const {Sidebar} = SidebarComponents;
 const {FooterBar} = FooterBarComponents;
 
-const toolbarW = 50;
-const sidebarW = 300;
-const footerBarH= 20;
-
-const wrapperStyle = {
-  display: 'flex',
-  flexFlow: 'row nowrap'
-};
-
 class ReactPlanner extends Component {
 
   constructor (props) {
@@ -56,42 +47,62 @@ class ReactPlanner extends Component {
   }
 
   render() {
-    let {width, height, state, stateExtractor, children, ...props} = this.props;
-
-    let contentW = width - toolbarW - sidebarW;
-    let toolbarH = height - footerBarH;
-    let contentH = height - footerBarH;
-    let sidebarH = height - footerBarH;
-
+    let {style, state, stateExtractor, children, ...props} = this.props;
     let extractedState = stateExtractor(state);
 
-    return (
-      <div
-        style={{...wrapperStyle, height}}
-        tabIndex={0}
-        ref={this.element}
-        onClick={this.onClick}
-        onKeyDown={this.events.onKeyDown}
-        onKeyUp={this.events.onKeyUp}
-        onKeyPress={this.events.onKeyPress}
-        onFocus={this.events.onFocus}
-        onBlur={this.events.onBlur}
+    // segregate child components by their component's pluginTarget
+    // if there's no target, put it in the root
+    const frames = children.reduce((result, child) => {
+      let target;
+      if (child.type.pluginTarget) {
+        target = result[child.type.pluginTarget];
+      } else {
+        target = 'root';
+      }
 
-      >
-        <Context.Provider state={extractedState} root={this} events={this.events} {...props}>
-          <Toolbar width={toolbarW} height={toolbarH}   {...props} />
-          <Content width={contentW} height={contentH}   {...props} mode={extractedState.get('mode')} onWheel={event => event.preventDefault()} />
-          <Sidebar width={sidebarW} height={sidebarH}   {...props} state={extractedState} />
-          <FooterBar width={width}  height={footerBarH} {...props} />
+      if (result[target]) result[target].push(child);
+      else result[target] = [child];
+
+      return result;
+    }, {});
+
+    return (
+      <Context.Provider state={extractedState} root={this} events={this.events} {...props}>
+        <div
+          style={{ display: 'flex', flexFlow: 'column nowrap', ...style }}
+          tabIndex={0}
+          ref={this.element}
+          onClick={this.onClick}
+          onKeyDown={this.events.onKeyDown}
+          onKeyUp={this.events.onKeyUp}
+          onKeyPress={this.events.onKeyPress}
+          onFocus={this.events.onFocus}
+          onBlur={this.events.onBlur}
+        >
+          <div style={{}}>{frames.top}</div>
+          <div style={{ display: 'flex', flex: 1 }}>
+            {frames.left}
+            <Toolbar {...props} />
+            {frames.leftInside}
+            <Content {...props} mode={extractedState.get('mode')} />
+            {frames.rightInside}
+            <Sidebar {...props} />
+            {frames.right}
+          </div>
+          <div style={{}}>
+            <FooterBar {...props} />
+            {frames.bottom}
+          </div>
           <Keyboard />
-          {children}
-        </Context.Provider>
-      </div>
+          {frames.root}
+        </div>
+      </Context.Provider>
     );
   }
 }
 
 ReactPlanner.propTypes = {
+  style:                   PropTypes.object,
   children:                PropTypes.node,
   state:                   PropTypes.object,
   actions:                 PropTypes.object,
@@ -101,8 +112,6 @@ ReactPlanner.propTypes = {
   plugins:                 PropTypes.arrayOf(PropTypes.func),
   autosaveKey:             PropTypes.string,
   autosaveDelay:           PropTypes.number,
-  width:                   PropTypes.number.isRequired,
-  height:                  PropTypes.number.isRequired,
   stateExtractor:          PropTypes.func.isRequired,
   toolbarButtons:          PropTypes.arrayOf(PropTypes.elementType),
   sidebarPanels:           PropTypes.arrayOf(PropTypes.elementType),

@@ -8,10 +8,21 @@ import { disposeScene } from './three-memory-cleaner';
 import OrbitControls from './libs/orbit-controls';
 import diff from 'immutablediff';
 import * as SharedStyle from '../../shared-style';
-import { ContextPropTypes, needsContext } from '../context';
+import ContainerDimensions from 'react-container-dimensions';
+import { ContextPropTypes, Consumer as ContextConsumer } from '../context';
 import memoize from 'memoize-one';
 
-export default @needsContext class Scene3DViewer extends React.Component {
+export default function Viewer3D (props) {
+  return (
+    <ContainerDimensions>{({ width, height }) =>
+      <ContextConsumer>{(context) =>
+        <Scene3DViewer {...props} {...context} height={height} width={width} />
+      }</ContextConsumer>
+    }</ContainerDimensions>
+  );
+}
+
+class Scene3DViewer extends React.Component {
 
   constructor(props) {
     super(props);

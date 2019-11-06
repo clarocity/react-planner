@@ -11,8 +11,7 @@ import { MdAddCircle, MdWarning } from 'react-icons/md';
 import { VERSION } from '../../version';
 
 const footerBarStyle = {
-  position: 'absolute',
-  bottom: 0,
+  height: '20px',
   lineHeight: '14px',
   fontSize: '12px',
   color: SharedStyle.COLORS.white,
@@ -57,7 +56,7 @@ export default @needsContext class FooterBar extends Component {
   }
 
   render() {
-    let { state: globalState, width, height, translator, actions } = this.props;
+    let { state: globalState, translator, actions } = this.props;
     let { x, y } = globalState.get('mouse').toJS();
     let zoom = globalState.get('zoom');
     let mode = globalState.get('mode');
@@ -79,7 +78,7 @@ export default @needsContext class FooterBar extends Component {
     let updateSnapMask = (val) => actions.project.toggleSnap(globalState.snapMask.merge(val));
 
     return (
-      <div style={{ ...footerBarStyle, width, height }}>
+      <div style={footerBarStyle}>
 
         <If condition={MODE_SNAPPING.includes(mode)}>
           <div style={leftTextStyle}>
@@ -176,8 +175,6 @@ export default @needsContext class FooterBar extends Component {
 
 FooterBar.propTypes = {
   footerbarComponents: PropTypes.array.isRequired,
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
   softwareSignature: PropTypes.string,
 
   ...ContextPropTypes

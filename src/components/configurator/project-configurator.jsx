@@ -40,11 +40,11 @@ export default @needsContext class ProjectConfigurator extends Component {
 
 
   render() {
-    let {width, height, actions, translator} = this.props;
+    let {actions, translator} = this.props;
     let {dataWidth, dataHeight} = this.state;
 
     return (
-      <ContentContainer width={width} height={height}>
+      <ContentContainer>
         <ContentTitle>{translator.t('Project config')}</ContentTitle>
 
         <form onSubmit={e => this.onSubmit(e)}>
@@ -90,8 +90,5 @@ export default @needsContext class ProjectConfigurator extends Component {
 }
 
 ProjectConfigurator.propTypes = {
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
-
   ...ContextPropTypes
 };

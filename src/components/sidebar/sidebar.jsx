@@ -9,14 +9,15 @@ const STYLE = {
   display: 'block',
   overflowY: 'auto',
   overflowX: 'hidden',
-  paddingBottom: '20px'
+  paddingBottom: '20px',
+  width: '300px',
 };
 
-export default function Sidebar({ width, height, sidebarPanels }) {
+export default function Sidebar({ sidebarPanels }) {
 
   return (
     <aside
-      style={{ width, height, ...STYLE }}
+      style={STYLE}
       onKeyDown={event => event.stopPropagation()}
       onKeyUp={event => event.stopPropagation()}
       className="sidebar"
@@ -27,7 +28,5 @@ export default function Sidebar({ width, height, sidebarPanels }) {
 }
 
 Sidebar.propTypes = {
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
   sidebarPanels: PropTypes.arrayOf(PropTypes.elementType),
 };

@@ -9,10 +9,21 @@ import diff from 'immutablediff';
 import {initPointerLock} from "./pointer-lock-navigation";
 import {firstPersonOnKeyDown, firstPersonOnKeyUp} from "./libs/first-person-controls";
 import * as SharedStyle from '../../shared-style';
-import { ContextPropTypes, needsContext } from '../context';
+import ContainerDimensions from 'react-container-dimensions';
+import { ContextPropTypes, Consumer as ContextConsumer } from '../context';
 import memoize from 'memoize-one';
 
-export default @needsContext class Viewer3DFirstPerson extends React.Component {
+export default function Viewer3DFirstPerson (props) {
+  return (
+    <ContainerDimensions>{({ width, height }) =>
+      <ContextConsumer>{(context) =>
+        <Scene3DFirstPerson {...props} {...context} height={height} width={width} />
+      }</ContextConsumer>
+    }</ContainerDimensions>
+  );
+}
+
+class Scene3DFirstPerson extends React.Component {
 
   constructor(props) {
     super(props);
@@ -322,7 +333,7 @@ export default @needsContext class Viewer3DFirstPerson extends React.Component {
   }
 }
 
-Viewer3DFirstPerson.propTypes = {
+Scene3DFirstPerson.propTypes = {
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
   ...ContextPropTypes

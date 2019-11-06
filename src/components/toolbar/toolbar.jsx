@@ -20,13 +20,12 @@ export default @needsContext class Toolbar extends Component {
 
   render() {
 
-    const { width, height, toolbarButtons } = this.props;
+    const { toolbarButtons } = this.props;
 
     const style = {
       backgroundColor: SharedStyle.PRIMARY_COLOR.main,
       padding: '10px',
-      maxWidth: width,
-      maxHeight: height,
+      width: '50px',
     }
 
     return (
@@ -38,8 +37,6 @@ export default @needsContext class Toolbar extends Component {
 }
 
 Toolbar.propTypes = {
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
   toolbarButtons: PropTypes.arrayOf(PropTypes.elementType),
 
   ...ContextPropTypes,

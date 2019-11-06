@@ -10,12 +10,8 @@ import * as SharedStyle from '../../shared-style';
 import { ContextPropTypes, needsContext } from '../context';
 
 const containerStyle = {
-  position: 'fixed',
-  width:'calc( 100% - 51px)',
-  height:'calc( 100% - 20px)',
   backgroundColor:'#FFF',
   padding:'1em',
-  left:50,
   overflowY:'auto',
   overflowX:'hidden',
   zIndex:10
@@ -146,7 +142,7 @@ export default @needsContext class CatalogList extends Component {
   }
 
   render() {
-    const {width, height, style, state: globalState, catalog, actions, translator} = this.props;
+    const {style, state: globalState, catalog, actions, translator} = this.props;
     let page = globalState.catalog.page;
     let currentCategory = catalog.getCategory(page);
     let categoriesToDisplay = currentCategory.categories;
@@ -182,7 +178,7 @@ export default @needsContext class CatalogList extends Component {
     );
 
     return (
-      <ContentContainer width={width} height={height} style={{...containerStyle, ...style}}>
+      <ContentContainer style={{...containerStyle, ...style}}>
         <ContentTitle>{translator.t('Catalog')}</ContentTitle>
         {breadcrumbComponent}
         <div style={searchContainer}>
@@ -212,8 +208,6 @@ export default @needsContext class CatalogList extends Component {
 }
 
 CatalogList.propTypes = {
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
   style: PropTypes.object,
   ...ContextPropTypes,
 };

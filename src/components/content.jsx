@@ -8,16 +8,16 @@ import ProjectConfigurator from './configurator/project-configurator';
 
 import * as constants from '../constants';
 
-export default function Content({mode, width, height, customContents}) {
+function Picker({mode, customContents}) {
   switch (mode) {
     case constants.MODE_3D_VIEW:
-      return <Viewer3D width={width} height={height}/>;
+      return <Viewer3D />;
 
     case constants.MODE_3D_FIRST_PERSON:
-      return <Viewer3DFirstPerson width={width} height={height}/>;
+      return <Viewer3DFirstPerson />;
 
     case constants.MODE_VIEWING_CATALOG:
-      return <CatalogList width={width} height={height}/>;
+      return <CatalogList />;
 
     case constants.MODE_IDLE:
     case constants.MODE_2D_ZOOM_IN:
@@ -32,23 +32,26 @@ export default function Content({mode, width, height, customContents}) {
     case constants.MODE_DRAWING_ITEM:
     case constants.MODE_DRAGGING_HOLE:
     case constants.MODE_ROTATING_ITEM:
-      return <Viewer2D width={width} height={height}/>;
+      return <Viewer2D />;
 
     case constants.MODE_CONFIGURING_PROJECT:
-      return <ProjectConfigurator width={width} height={height}/>;
+      return <ProjectConfigurator />;
 
     default:
       if (customContents.hasOwnProperty(mode)) {
         let CustomContent = customContents[mode];
-        return <CustomContent width={width} height={height}/>
+        return <CustomContent />
       } else {
         throw new Error(`Mode ${mode} doesn't have a mapped content`);
       }
   }
 }
 
+export default function Content (props) {
+  return <div style={{ flex: 1, position: 'relative' }}><Picker {...props} /></div>
+}
+
 Content.propTypes = {
   mode: PropTypes.string.isRequired,
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired
+  customContents: PropTypes.object,
 };
