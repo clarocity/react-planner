@@ -47,8 +47,14 @@ class ReactPlanner extends Component {
   }
 
   render() {
-    let {style, state, stateExtractor, children, ...props} = this.props;
-    let extractedState = stateExtractor(state);
+    const {style, state, stateExtractor, children, omit, ...props} = this.props;
+    const extractedState = stateExtractor(state);
+
+    const show = {
+      toolbar: !(omit && omit.toolbar),
+      footer:  !(omit && omit.footer),
+      sidebar: !(omit && omit.sidebar),
+    };
 
     // segregate child components by their component's pluginTarget
     // if there's no target, put it in the root
@@ -82,15 +88,15 @@ class ReactPlanner extends Component {
           <div style={{}}>{frames.top}</div>
           <div style={{ display: 'flex', flex: 1 }}>
             {frames.left}
-            <Toolbar {...props} />
+            {show.toolbar && <Toolbar {...props} />}
             {frames.leftInside}
             <Content {...props} mode={extractedState.get('mode')} />
             {frames.rightInside}
-            <Sidebar {...props} />
+            {show.sidebar && <Sidebar {...props} />}
             {frames.right}
           </div>
           <div style={{}}>
-            <FooterBar {...props} />
+            {show.footer && <FooterBar {...props} />}
             {frames.bottom}
           </div>
           <Keyboard />
@@ -116,6 +122,11 @@ ReactPlanner.propTypes = {
   toolbarButtons:          PropTypes.arrayOf(PropTypes.elementType),
   sidebarPanels:           PropTypes.arrayOf(PropTypes.elementType),
   footerbarComponents:     PropTypes.array,
+  omit: PropTypes.exact({
+    toolbar: PropTypes.boolean,
+    footer: PropTypes.boolean,
+    sidebar: PropTypes.boolean,
+  }),
   customContents:          PropTypes.object,
   softwareSignature:       PropTypes.string,
 };
