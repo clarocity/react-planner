@@ -36,20 +36,22 @@ const searchContainer = {
   borderRadius: '2px',
   transition: 'all .2s ease-in-out',
   WebkitTransition: 'all .2s ease-in-out',
-  marginBottom: '1em'
+  marginBottom: '1em',
+  display: 'flex',
+  flexFlow: 'row nowrap',
+  alignItems: 'center',
 };
 
 const searchText = {
-  width: '8em',
-  display: 'inline-block'
+  paddingRight: '0.625em'
 };
 
 const searchInput = {
-  width: 'calc( 100% - 10em )',
-  height: '2em',
+  flex: '1',
   margin: '0',
   padding: '0 1em',
-  border: '1px solid #EEE'
+  border: '1px solid #EEE',
+  height: '3em',
 };
 
 const historyContainer = {
