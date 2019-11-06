@@ -12,7 +12,7 @@ const STYLE_RECT_SELECTED = { ...STYLE_RECT, stroke: SharedStyle.LINE_MESH_COLOR
 
 let translator = new Translator();
 
-export default function WallFactory(name, info, textures) {
+export default function WallFactory(name, info, textures, defaults = { height: 300, thickness: 10 }) {
 
   let wallElement = {
     name,
@@ -23,14 +23,14 @@ export default function WallFactory(name, info, textures) {
         label: translator.t('height'),
         type: 'length-measure',
         defaultValue: {
-          length: 300,
+          length: defaults && defaults.height || 300,
         }
       },
       thickness: {
         label: translator.t('thickness'),
         type: 'length-measure',
         defaultValue: {
-          length: 20
+          length: defaults && defaults.thickness || 10
         }
       }
     },
