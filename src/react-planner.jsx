@@ -18,6 +18,7 @@ import Keyboard from './components/keyboard';
 import EventsMediator from './utils/events';
 import {VERSION} from './version';
 import './styles/export';
+import ThemeKit from './themekit';
 
 const {Toolbar} = ToolbarComponents;
 const {Sidebar} = SidebarComponents;
@@ -47,7 +48,7 @@ class ReactPlanner extends Component {
   }
 
   render() {
-    const {style, state, stateExtractor, children, omit, ...props} = this.props;
+    const {style, state, stateExtractor, children, omit, theme, ...props} = this.props;
     const extractedState = stateExtractor(state);
 
     const show = {
@@ -74,6 +75,7 @@ class ReactPlanner extends Component {
 
     return (
       <Context.Provider state={extractedState} root={this} events={this.events} {...props}>
+        <ThemeKit.Provider themekit={theme}>
         <div
           style={{ display: 'flex', flexFlow: 'column nowrap', ...style }}
           tabIndex={0}
@@ -102,6 +104,7 @@ class ReactPlanner extends Component {
           <Keyboard />
           {frames.root}
         </div>
+        </ThemeKit.Provider>
       </Context.Provider>
     );
   }
@@ -129,6 +132,11 @@ ReactPlanner.propTypes = {
   }),
   customContents:          PropTypes.object,
   softwareSignature:       PropTypes.string,
+  theme: PropTypes.oneOfType([
+    PropTypes.instanceOf(ThemeKit),
+    PropTypes.instanceOf(Map),
+    PropTypes.object,
+  ]),
 };
 
 
