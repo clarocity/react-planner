@@ -2,31 +2,38 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { defaultPanels } from './panels';
 
-import * as SharedStyle from '../../shared-style';
+import {themed, StyleVar} from '../../themekit';
 
-const STYLE = {
-  backgroundColor: SharedStyle.PRIMARY_COLOR.main,
-  display: 'block',
-  overflowY: 'auto',
-  overflowX: 'hidden',
-  paddingBottom: '20px',
-  width: '300px',
-};
+class Sidebar extends React.PureComponent {
+  render () {
+    const { styles, sidebarPanels } = this.props;
+    return (
+      <aside
+        style={styles.container}
+        onKeyDown={event => event.stopPropagation()}
+        onKeyUp={event => event.stopPropagation()}
+        className="sidebar"
+      >
+        {(sidebarPanels || defaultPanels).filter(Boolean).map((Panel, i) => <Panel key={i} />)}
+      </aside>
+    );
+  }
+}
 
-export default function Sidebar({ sidebarPanels }) {
-
-  return (
-    <aside
-      style={STYLE}
-      onKeyDown={event => event.stopPropagation()}
-      onKeyUp={event => event.stopPropagation()}
-      className="sidebar"
-    >
-      {(sidebarPanels || defaultPanels).filter(Boolean).map((Panel, i) => <Panel key={i} />)}
-    </aside>
-  );
+Sidebar.styles = {
+  container: {
+    backgroundColor: new StyleVar('chrome.backgroundColor'),
+    display: 'block',
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    paddingBottom: '20px',
+    width: '300px',
+  }
 }
 
 Sidebar.propTypes = {
   sidebarPanels: PropTypes.arrayOf(PropTypes.elementType),
+  styles: PropTypes.object,
 };
+
+export default themed(Sidebar);
