@@ -89,10 +89,10 @@ export function themed (Component) {
   if (!Component) throw new Error('themed did not receive a component. Did you use this as a decorator function?');
   const name = Component.displayName || Component.name || 'UnknownComponent';
   const styleName = Component.styleName || name;
-  const original = Component.styles || {};
   const smap = memoize(mapStyles);
 
   function ThemeKitWrapper (props) {
+    const original = Component.styles || ThemeKitWrapper.styles || {};
     return (
       <ThemeKitConsumer>{(tk) => (
         <Component styles={smap(styleName, original, tk)} {...props} />
