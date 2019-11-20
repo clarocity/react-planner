@@ -2,171 +2,159 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import If from '../../utils/react-if';
 import FooterToggleButton from './footer-toggle-button';
-import FooterContentButton from './footer-content-button';
+import FooterWarnings from './footer-warnings';
 import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_GRID, SNAP_GUIDE } from '../../utils/snap';
 import { MODE_SNAPPING } from '../../constants';
-import * as SharedStyle from '../../shared-style';
 import { ContextPropTypes, needsContext } from '../context';
-import { MdAddCircle, MdWarning } from 'react-icons/md';
 import { VERSION } from '../../version';
 
-const footerBarStyle = {
-  height: '20px',
-  lineHeight: '14px',
-  fontSize: '12px',
-  color: SharedStyle.COLORS.white,
-  backgroundColor: SharedStyle.SECONDARY_COLOR.alt,
-  padding: '3px 1em',
-  margin: 0,
-  boxSizing: 'border-box',
-  cursor: 'default',
-  userSelect: 'none',
-  zIndex: '9001'
-};
+import {themed, StyleVar} from '../../themekit';
 
-export const leftTextStyle = {
-  position: 'relative',
-  borderRight: '1px solid #FFF',
-  float: 'left',
-  padding: '0 1em',
-  display: 'inline-block'
-};
+export default @needsContext @themed class FooterBar extends Component {
 
-export const rightTextStyle = {
-  position: 'relative',
-  borderLeft: '1px solid #FFF',
-  float: 'right',
-  padding: '0 1em',
-  display: 'inline-block'
-};
+  static styles = {
+    container: {
+      height: '20px',
+      lineHeight: '14px',
+      fontSize: '12px',
+      color: 'white',
+      backgroundColor: new StyleVar('chrome.altBackgroundColor'),
+      padding: '3px 1em',
+      margin: 0,
+      boxSizing: 'border-box',
+      cursor: 'default',
+      userSelect: 'none',
+      zIndex: '9001',
+      display: 'flex',
+      flexDirection: 'row',
+    },
 
-const coordStyle = {
-  display: 'inline-block',
-  width: '6em',
-  margin: 0,
-  padding: 0
-};
+    section: {
+      display: 'flex',
+      flexGrow: 0,
+      flexShrink: 1,
+      padding: '0 1em',
+      borderLeft: '1px solid #FFF',
+    },
 
-const appMessageStyle = { borderBottom: '1px solid #555', lineHeight: '1.5em' };
+    'section#fill': {
+      flexGrow: 1,
+    },
 
-export default @needsContext class FooterBar extends Component {
+    appMessage: {
+      borderBottom: '1px solid #555',
+      lineHeight: '1.5em',
+    },
+
+    coordinate: {
+      margin: '0 3px',
+    },
+
+  }
+
   constructor(props) {
     super(props);
     this.state = {};
+    this.updateSnapMask.SNAP_POINT = {
+      on: () => this.updateSnapMask({ SNAP_POINT: true }),
+      off: () => this.updateSnapMask({ SNAP_POINT: false }),
+    };
+    this.updateSnapMask.SNAP_LINE = {
+      on: () => this.updateSnapMask({ SNAP_LINE: true }),
+      off: () => this.updateSnapMask({ SNAP_LINE: false }),
+    };
+    this.updateSnapMask.SNAP_SEGMENT = {
+      on: () => this.updateSnapMask({ SNAP_SEGMENT: true }),
+      off: () => this.updateSnapMask({ SNAP_SEGMENT: false }),
+    };
+    this.updateSnapMask.SNAP_GRID = {
+      on: () => this.updateSnapMask({ SNAP_GRID: true }),
+      off: () => this.updateSnapMask({ SNAP_GRID: false }),
+    };
+    this.updateSnapMask.SNAP_GUIDE = {
+      on: () => this.updateSnapMask({ SNAP_GUIDE: true }),
+      off: () => this.updateSnapMask({ SNAP_GUIDE: false }),
+    };
+  }
+
+  updateSnapMask (val) {
+    this.props.actions.project.toggleSnap(this.props.state.snapMask.merge(val));
   }
 
   render() {
-    let { state: globalState, translator, actions } = this.props;
-    let { x, y } = globalState.get('mouse').toJS();
-    let zoom = globalState.get('zoom');
-    let mode = globalState.get('mode');
-
-    let errors = globalState.get('errors').toArray();
-    let errorsJsx = errors.map((err, ind) =>
-      <div key={ind} style={appMessageStyle}>[ {(new Date(err.date)).toLocaleString()} ] {err.error}</div>
-    );
-    let errorLableStyle = errors.length ? { color: SharedStyle.MATERIAL_COLORS[500].red } : {};
-    let errorIconStyle = errors.length ? { transform: 'rotate(45deg)', color: SharedStyle.MATERIAL_COLORS[500].red } : { transform: 'rotate(45deg)' };
-
-    let warnings = globalState.get('warnings').toArray();
-    let warningsJsx = warnings.map((warn, ind) =>
-      <div key={ind} style={appMessageStyle}>[ {(new Date(warn.date)).toLocaleString()} ] {warn.warning}</div>
-    );
-    let warningLableStyle = warnings.length ? { color: SharedStyle.MATERIAL_COLORS[500].yellow } : {};
-    let warningIconStyle = warningLableStyle;
-
-    let updateSnapMask = (val) => actions.project.toggleSnap(globalState.snapMask.merge(val));
+    let { state, translator, styles } = this.props;
+    let { x, y } = state.get('mouse').toJS();
+    let zoom = state.get('zoom');
+    let mode = state.get('mode');
 
     return (
-      <div style={footerBarStyle}>
+      <div style={styles.container}>
 
         <If condition={MODE_SNAPPING.includes(mode)}>
-          <div style={leftTextStyle}>
-            <div title={translator.t('Mouse X Coordinate')} style={coordStyle}>X : {x.toFixed(3)}</div>
-            <div title={translator.t('Mouse Y Coordinate')} style={coordStyle}>Y : {y.toFixed(3)}</div>
+          <div style={{ ...styles.section, borderLeft: null, paddingLeft: 0 }}>
+            <div title={translator.t('Mouse X Coordinate')} style={styles.coordinate}>X : {x.toFixed(3)}</div>
+            <div title={translator.t('Mouse Y Coordinate')} style={styles.coordinate}>Y : {y.toFixed(3)}</div>
           </div>
 
-          <div style={leftTextStyle} title={translator.t('Scene Zoom Level')}>Zoom: {zoom.toFixed(3)}X</div>
+          <div style={styles.section} title={translator.t('Scene Zoom Level')}>Zoom: {zoom.toFixed(3)}X</div>
 
-          <div style={leftTextStyle}>
+          <div style={styles.section}>
             <FooterToggleButton
-              state={this.state}
-              toggleOn={() => { updateSnapMask({ SNAP_POINT: true }); }}
-              toggleOff={() => { updateSnapMask({ SNAP_POINT: false }); }}
+              toggleOn={this.updateSnapMask.SNAP_POINT.on}
+              toggleOff={this.updateSnapMask.SNAP_POINT.off}
               text="Snap PT"
-              toggleState={globalState.snapMask.get(SNAP_POINT)}
+              toggleState={state.snapMask.get(SNAP_POINT)}
               title={translator.t('Snap to Point')}
             />
             <FooterToggleButton
-              state={this.state}
-              toggleOn={() => { updateSnapMask({ SNAP_LINE: true }); }}
-              toggleOff={() => { updateSnapMask({ SNAP_LINE: false }); }}
+              toggleOn={this.updateSnapMask.SNAP_LINE.on}
+              toggleOff={this.updateSnapMask.SNAP_LINE.off}
               text="Snap LN"
-              toggleState={globalState.snapMask.get(SNAP_LINE)}
+              toggleState={state.snapMask.get(SNAP_LINE)}
               title={translator.t('Snap to Line')}
             />
             <FooterToggleButton
-              state={this.state}
-              toggleOn={() => { updateSnapMask({ SNAP_SEGMENT: true }); }}
-              toggleOff={() => { updateSnapMask({ SNAP_SEGMENT: false }); }}
+              toggleOn={this.updateSnapMask.SNAP_SEGMENT.on}
+              toggleOff={this.updateSnapMask.SNAP_SEGMENT.off}
               text="Snap SEG"
-              toggleState={globalState.snapMask.get(SNAP_SEGMENT)}
+              toggleState={state.snapMask.get(SNAP_SEGMENT)}
               title={translator.t('Snap to Segment')}
             />
             <FooterToggleButton
-              state={this.state}
-              toggleOn={() => { updateSnapMask({ SNAP_GRID: true }); }}
-              toggleOff={() => { updateSnapMask({ SNAP_GRID: false }); }}
+              toggleOn={this.updateSnapMask.SNAP_GRID.on}
+              toggleOff={this.updateSnapMask.SNAP_GRID.off}
               text="Snap GRD"
-              toggleState={globalState.snapMask.get(SNAP_GRID)}
+              toggleState={state.snapMask.get(SNAP_GRID)}
               title={translator.t('Snap to Grid')}
             />
             <FooterToggleButton
-              state={this.state}
-              toggleOn={() => { updateSnapMask({ SNAP_GUIDE: true }); }}
-              toggleOff={() => { updateSnapMask({ SNAP_GUIDE: false }); }}
+              toggleOn={this.updateSnapMask.SNAP_GUIDE.on}
+              toggleOff={this.updateSnapMask.SNAP_GUIDE.off}
               text="Snap GDE"
-              toggleState={globalState.snapMask.get(SNAP_GUIDE)}
+              toggleState={state.snapMask.get(SNAP_GUIDE)}
               title={translator.t('Snap to Guide')}
             />
           </div>
         </If>
 
-        {this.props.footerbarComponents.map((Component, index) => <Component state={globalState} key={index} />)}
+        <div style={{ ...styles.section, ...styles['section#fill'] }}>
+          {this.props.footerbarComponents.map((Component, index) => <Component state={state} key={index} />)}
+        </div>
+
+        <div style={styles.section}>
+          <FooterWarnings state={state} />
+        </div>
 
         {
           this.props.softwareSignature ?
             <div
-              style={rightTextStyle}
+              style={styles.section}
               title={this.props.softwareSignature + (this.props.softwareSignature.includes('React-Planner') ? '' : ` using React-Planner ${VERSION}`)}
             >
               {this.props.softwareSignature}
             </div>
             : null
         }
-
-        <div style={rightTextStyle}>
-          <FooterContentButton
-            state={this.state}
-            icon={MdAddCircle}
-            iconStyle={errorIconStyle}
-            text={errors.length.toString()}
-            textStyle={errorLableStyle}
-            title={`Errors [ ${errors.length} ]`}
-            titleStyle={errorLableStyle}
-            content={[errorsJsx]}
-          />
-          <FooterContentButton
-            state={this.state}
-            icon={MdWarning}
-            iconStyle={warningIconStyle}
-            text={warnings.length.toString()}
-            textStyle={warningLableStyle}
-            title={`Warnings [ ${warnings.length} ]`}
-            titleStyle={warningLableStyle}
-            content={[warningsJsx]}
-          />
-        </div>
 
       </div>
     );

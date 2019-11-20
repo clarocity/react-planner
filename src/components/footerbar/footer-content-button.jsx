@@ -14,7 +14,9 @@ const toggleButtonStyle = {
   color: '#CCC',
   textAlign: 'center',
   cursor: 'pointer',
-  userSelect: 'none'
+  userSelect: 'none',
+  display: 'flex',
+  alignItems: 'center',
 };
 
 const toggleButtonStyleOver = {
@@ -108,7 +110,7 @@ export default class FooterContentButton extends Component {
   toggleOver() { this.setState({ over: true }); }
   toggleOut() { this.setState({ over: false }); }
 
-  toggle() {
+  toggle = () => {
     let isActive = !this.state.active;
     this.setState({ active: isActive });
   }
@@ -137,7 +139,7 @@ export default class FooterContentButton extends Component {
       <div style={labelContainerStyle}>
         <div
           style={s.over || s.active ? toggleButtonStyleOver : toggleButtonStyle}
-          onClick={e => this.toggle(e)}
+          onClick={this.toggle}
           title={p.title}
         >
           <LabelIcon style={{...labelIconStyle, ...iconStyle}}/>
