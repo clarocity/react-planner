@@ -72,6 +72,24 @@ export function map (collection, cb) {
   return mapReduce(collection, (value, key, index) => [ key, cb(value, key, index)]);
 }
 
+export function omit (collection, keys) {
+  if (typeof keys === 'function') {
+    return mapReduce(collection, (value, key, index) =>
+      keys(value, key, index) ? [ key, value ] : [ undefined, undefined ]
+    )
+  }
+
+  if (isString(keys)) {
+    keys = [keys];
+  }
+
+  if (Array.isArray(keys)) {
+    return mapReduce(collection, (value, key) =>
+      keys.includes(key) ? [ key, value ] : [ undefined, undefined ]
+    )
+  }
+}
+
 /**
  * Iterates over a collection and generates an object based on tuple returned from the iteratee.
  * @param  {Object|Array|Map|Set} collection
