@@ -1,4 +1,6 @@
 
+import StyleVar from './var';
+
 const InitialVars = {
   chrome: {
     textColor: 'white',

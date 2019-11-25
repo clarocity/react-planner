@@ -5,7 +5,9 @@ import memoize from 'memoize-one';
 import {isObject, isMappable, merge, get, has, map} from './utils';
 import InitialVars from './initial';
 import Styles from './cstyles';
+import StyleVar from './var';
 
+export { StyleVar };
 
 export const Theme = React.createContext(null);
 
@@ -54,37 +56,6 @@ export function themed (Component) {
   ThemeKitWrapper.displayName = name;
   return ThemeKitWrapper;
 }
-
-
-
-export class StyleVar {
-  constructor (address, def) {
-    this.address = address;
-    this.default = def;
-    this.delimiter = ' ';
-  }
-
-  fetch (tk, key) {
-    if (Array.isArray(this.address)) {
-      return this.address.map((subaddress) => {
-        if (subaddress === key) throw new Error('StyleVar target is same as destination.');
-        if (subaddress instanceof StyleVar) {
-          return subaddress.fetch(tk);
-        }
-        return subaddress;
-      }).join(this.delimiter);
-    }
-
-    if (this.address === key) throw new Error('StyleVar target is same as destination.');
-    const result = tk.lookup(this.address, this.default);
-    if (result instanceof StyleVar) {
-      return result.fetch(tk);
-    }
-    return result;
-  }
-}
-
-
 
 export default class ThemeKit {
 
@@ -164,5 +135,3 @@ ThemeKit.Provider = ThemeKitProvider;
 ThemeKit.Consumer = ThemeKitConsumer;
 ThemeKit.StyleVar = StyleVar;
 ThemeKit.Styles = Styles;
-
-
