@@ -34,7 +34,8 @@ export function merge (...sources) {
 }
 
 export function get (obj, path, defaultValue) {
-  if (isString(path)) path = String.prototype.split.call(path, /[,[\].]+?/);
+  if (typeof path === 'number') path = [String(path)]
+  else if (isString(path)) path = String.prototype.split.call(path, /[,[\].]+?/);
   const result = path
     .filter(Boolean)
     .reduce((res, key) => (res !== null && res !== undefined) ? res[key] : res, obj);
@@ -42,10 +43,12 @@ export function get (obj, path, defaultValue) {
 }
 
 export function has (obj, path) {
-  if (isString(path)) path = String.prototype.split.call(path, /[,[\].]+?/);
+  if (typeof path === 'number') path = [String(path)]
+  else if (isString(path)) path = String.prototype.split.call(path, /[,[\].]+?/);
   let res = obj;
   for (const key of path) {
     if (res === null || res === undefined) return false;
+    if (typeof res !== 'object' && typeof res !== 'function') return false;
     if (!hasOwn(res, key)) return false;
     res = res[key];
   }
