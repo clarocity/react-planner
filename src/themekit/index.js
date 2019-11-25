@@ -5,9 +5,9 @@ import memoize from 'memoize-one';
 import {isObject, isMappable, merge, get, has, map} from './utils';
 import InitialVars from './initial';
 import Styles from './cstyles';
-import StyleVar from './var';
+import { StyleVar, StyleAlias, CompoundStyle } from './var';
 
-export { StyleVar };
+export { StyleVar, StyleAlias, CompoundStyle };
 
 export const Theme = React.createContext(null);
 
@@ -84,16 +84,16 @@ export default class ThemeKit {
       let result = get(this.collection, path);
 
       if (result instanceof StyleVar) {
-        result = result.fetch(this);
+        result = result.resolve(this);
       }
 
-      // if we're fetching an object, and initial vars
+      // if we're resolving an object, and initial vars
       // also has that object, map on top
       if (isObject(result) && has(InitialVars, path)) {
         let source = get(InitialVars, path);
 
         if (source instanceof StyleVar) {
-          source = source.fetch(this);
+          source = source.resolve(this);
         }
 
         if (isObject(source)) {
@@ -122,7 +122,7 @@ export default class ThemeKit {
 
   _resolveVars (source) {
     if (source instanceof StyleVar) {
-      source = source.fetch(this);
+      source = source.resolve(this);
     }
 
     if (!isMappable(source, false)) return source;
@@ -133,5 +133,5 @@ export default class ThemeKit {
 
 ThemeKit.Provider = ThemeKitProvider;
 ThemeKit.Consumer = ThemeKitConsumer;
-ThemeKit.StyleVar = StyleVar;
+ThemeKit.StyleAlias = StyleAlias;
 ThemeKit.Styles = Styles;

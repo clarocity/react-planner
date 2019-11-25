@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import {defaultButtons} from './buttons';
 
 import { ContextPropTypes, needsContext } from '../context';
-import {themed, StyleVar} from '../../themekit';
+import {themed, StyleAlias} from '../../themekit';
 
 export default @needsContext @themed class Toolbar extends Component {
 
   static styles = {
     container: {
-      backgroundColor: new StyleVar('chrome.backgroundColor'),
+      backgroundColor: new StyleAlias('chrome.backgroundColor'),
       padding: '10px 0',
       width: '50px',
       display: 'flex',

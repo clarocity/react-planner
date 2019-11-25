@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {FaTimes as IconClose} from 'react-icons/fa';
-import {themed, StyleVar} from '../../themekit';
+import {themed, StyleAlias, CompoundStyle} from '../../themekit';
 
 export default @themed class FooterContentButton extends Component {
 
@@ -12,7 +12,7 @@ export default @themed class FooterContentButton extends Component {
     },
 
     toggleButton: {
-      color: new StyleVar('footer.textColor'),
+      color: new StyleAlias('footer.textColor'),
       textAlign: 'center',
       cursor: 'pointer',
       userSelect: 'none',
@@ -21,11 +21,11 @@ export default @themed class FooterContentButton extends Component {
     },
 
     'toggleButton#hover': {
-      color: new StyleVar('footer.activeTextColor'),
+      color: new StyleAlias('footer.activeTextColor'),
     },
 
     'toggleButton#active': {
-      color: new StyleVar('footer.activeTextColor'),
+      color: new StyleAlias('footer.activeTextColor'),
     },
 
     content: {
@@ -33,8 +33,8 @@ export default @themed class FooterContentButton extends Component {
       width:'calc( 100% - 2px )',
       left:0,
       bottom:20,
-      backgroundColor: new StyleVar('chrome.backgroundColor'),
-      borderTop: new StyleVar(['1px solid', new StyleVar('footer.borderColor')]),
+      backgroundColor: new StyleAlias('chrome.backgroundColor'),
+      borderTop: new CompoundStyle('1px solid ${footer.borderColor}'),
       zIndex:10000,
       padding:0,
       margin:0,
@@ -56,7 +56,7 @@ export default @themed class FooterContentButton extends Component {
       height:'2em',
       top:0,
       left:0,
-      borderBottom: new StyleVar(['1px solid', new StyleVar('footer.borderColor')]),
+      borderBottom: new CompoundStyle('1px solid ${footer.borderColor}'),
     },
 
     contentTitle: {
@@ -81,12 +81,12 @@ export default @themed class FooterContentButton extends Component {
       right:0,
       top:0,
       padding:'0.5em',
-      borderLeft: new StyleVar(['1px solid', new StyleVar('footer.borderColor')]),
+      borderLeft: new CompoundStyle('1px solid ${footer.borderColor}'),
       cursor:'pointer',
 
       '#hover': {
-        color: new StyleVar('footer.activeTextColor', 'white'),
-        backgroundColor: new StyleVar('footer.alternateBackgroundColor'),
+        color: new StyleAlias('footer.activeTextColor'),
+        backgroundColor: new StyleAlias('footer.alternateBackgroundColor'),
       },
     },
 

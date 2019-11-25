@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { defaultPanels } from './panels';
 
-import {themed, StyleVar} from '../../themekit';
+import {themed, StyleAlias} from '../../themekit';
 
 class Sidebar extends React.PureComponent {
   render () {
@@ -22,7 +22,7 @@ class Sidebar extends React.PureComponent {
 
 Sidebar.styles = {
   container: {
-    backgroundColor: new StyleVar('chrome.backgroundColor'),
+    backgroundColor: new StyleAlias('chrome.backgroundColor'),
     display: 'block',
     overflowY: 'auto',
     overflowX: 'hidden',

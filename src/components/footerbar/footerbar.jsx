@@ -8,17 +8,17 @@ import { MODE_SNAPPING } from '../../constants';
 import { ContextPropTypes, needsContext } from '../context';
 import { VERSION } from '../../version';
 
-import {themed, StyleVar} from '../../themekit';
+import {themed, StyleAlias} from '../../themekit';
 
 export default @needsContext @themed class FooterBar extends Component {
 
   static styles = {
     container: {
-      height: new StyleVar('footer.textColor', '20px'),
+      height: new StyleAlias('footer.textColor', '20px'),
       lineHeight: '14px',
       fontSize: '12px',
-      color: new StyleVar('footer.textColor', 'white'),
-      backgroundColor: new StyleVar('footer.backgroundColor'),
+      color: new StyleAlias('footer.textColor', 'white'),
+      backgroundColor: new StyleAlias('footer.backgroundColor'),
       padding: '3px 1em',
       margin: 0,
       boxSizing: 'border-box',

@@ -4,7 +4,7 @@ import FooterContentButton from './footer-content-button';
 import { MdWarning } from 'react-icons/md';
 import { IoMdCloseCircle } from 'react-icons/io';
 
-import {themed, StyleVar} from '../../themekit';
+import {themed, StyleAlias} from '../../themekit';
 
 export default @themed class FooterWarnings extends Component {
 
@@ -17,10 +17,10 @@ export default @themed class FooterWarnings extends Component {
 
     'error#active': {
       label: {
-        color: new StyleVar('footer.error'),
+        color: new StyleAlias('footer.error'),
       },
       icon: {
-        color: new StyleVar('footer.error'),
+        color: new StyleAlias('footer.error'),
       }
     },
 
@@ -31,10 +31,10 @@ export default @themed class FooterWarnings extends Component {
 
     'warning#active': {
       label: {
-        color: new StyleVar('footer.warning'),
+        color: new StyleAlias('footer.warning'),
       },
       icon: {
-        color: new StyleVar('footer.warning'),
+        color: new StyleAlias('footer.warning'),
       }
     },
 

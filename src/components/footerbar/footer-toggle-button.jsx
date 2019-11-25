@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {themed, StyleVar} from '../../themekit';
+import {themed, StyleAlias, CompoundStyle} from '../../themekit';
 
 
 export default @themed class FooterToggleButton extends Component {
@@ -8,7 +8,7 @@ export default @themed class FooterToggleButton extends Component {
   static styles = {
     root: {
       width: '5.5em',
-      color: new StyleVar('footer.textColor'),
+      color: new StyleAlias('footer.textColor'),
       textAlign: 'center',
       cursor: 'pointer',
       userSelect: 'none',
@@ -17,13 +17,13 @@ export default @themed class FooterToggleButton extends Component {
       borderRadius: '2px',
       display: 'inline-block',
       '#active': {
-        backgroundColor: new StyleVar('footer.activeBackgroundColor'),
-        border: new StyleVar(['1px solid', new StyleVar('footer.borderColor')]),
-        color: new StyleVar('footer.activeTextColor'),
+        backgroundColor: new StyleAlias('footer.activeBackgroundColor'),
+        border: new CompoundStyle('1px solid ${footer.borderColor}'),
+        color: new StyleAlias('footer.activeTextColor'),
       },
 
       '#hover': {
-        border: new StyleVar(['1px solid', new StyleVar('footer.activeBorderColor')]),
+        border: new CompoundStyle('1px solid ${footer.activeBorderColor}'),
       },
     },
 

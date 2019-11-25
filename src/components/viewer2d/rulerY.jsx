@@ -1,79 +1,85 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import * as SharedStyle from '../../shared-style';
+import {themed, StyleAlias, CompoundStyle} from '../../themekit';
 
-export default class RulerY extends Component {
+export default @themed class RulerY extends Component {
 
-  render() {
+  static styles = {
+    root: {
+      backgroundColor: new StyleAlias('rulers.backgroundColor'),
+      position: 'relative',
+      width: '100%',
+      color: new StyleAlias('rulers.textColor'),
+    },
 
-    const { grid, zoom, mouseY, height, sceneHeight, zeroTopPosition } = this.props;
-    const positiveUnitsNumber = Math.ceil( sceneHeight / grid.majorStep ) + 1;
-    const negativeUnitsNumber = 0;
-
-    let elementH = grid.majorStep * zoom;
-
-    let elementStyle = {
+    element: {
       width: '8px',
-      borderBottom: '1px solid ' + this.props.fontColor,
+      borderBottom: new CompoundStyle('1px solid ${rulers.lineColor}'),
       paddingBottom: '0.2em',
       fontSize: '10px',
-      height: elementH,
       textOrientation: 'upright',
       writingMode: 'vertical-lr',
       letterSpacing: '-2px',
       textAlign: 'right'
-    };
+    },
 
-    let insideElementsStyle = {
-      height: Math.floor(grid.step / grid.majorStep * 100) + '%',
+    innerElements: {
       width: '100%',
       textOrientation: 'upright',
       writingMode: 'vertical-lr',
       display: 'inline-block',
       letterSpacing: '-2px',
       textAlign: 'right'
-    };
+    },
 
-    let rulerStyle = {
-      backgroundColor: this.props.backgroundColor,
-      height,
-      width: '100%',
-      color: this.props.fontColor
-    }
-
-    let markerStyle = {
-      position: 'absolute',
-      top: zeroTopPosition - (mouseY * this.props.zoom) - 6.5,
-      left: 8,
-      width: 0,
-      height: 0,
-      borderTop: '5px solid transparent',
-      borderBottom: '5px solid transparent',
-      borderLeft: '8px solid ' + this.props.markerColor,
-      zIndex: 9001
-    };
-
-    let rulerContainer = {
+    elementContainer: {
       position: 'absolute',
       width: '100%',
       display: 'grid',
       gridRowGap: '0',
       gridColumnGap: '0',
       gridTemplateColumns: '100%',
-      grdAutoRows: `${elementH}px`,
       paddingLeft: '5px'
-    };
+    },
+
+    marker: {
+      position: 'absolute',
+      left: 8,
+      width: 0,
+      height: 0,
+      borderTop: '5px solid transparent',
+      borderBottom: '5px solid transparent',
+      borderLeft: new CompoundStyle('8px solid ${rulers.markerColor}'),
+      zIndex: 9001
+    }
+  }
+
+  render() {
+
+    const { styles, grid, zoom, mouseY, height, sceneHeight, zeroTopPosition } = this.props;
+    const positiveUnitsNumber = Math.ceil( sceneHeight / grid.majorStep ) + 1;
+
+    let rulerStyle = styles.compile('root', { height });
+
+    let elementH = grid.majorStep * zoom;
+    let elementStyle = styles.compile('element', { height: elementH })
+
+    let insideElementsStyle = styles.compile('innerElements', {
+      height: Math.floor(grid.step / grid.majorStep * 100) + '%',
+    })
+
+    let markerStyle = styles.compile('marker', {
+      top: zeroTopPosition - (mouseY * this.props.zoom) - 6.5,
+    });
+
+    let rulerContainer = styles.compile('elementContainer', {
+      gridAutoRows: `${elementH}px`
+    });
 
     let positiveRulerContainer = {
       ...rulerContainer,
       top: zeroTopPosition - (positiveUnitsNumber * elementH),
       height: (positiveUnitsNumber * elementH)
-    };
-
-    let negativeRulerContainer = {
-      ...rulerContainer,
-      top: zeroTopPosition + (negativeUnitsNumber * elementH),
-      height: (negativeUnitsNumber * elementH)
     };
 
     let positiveDomElements = [];
@@ -102,7 +108,6 @@ export default class RulerY extends Component {
 
     return <div style={rulerStyle}>
       <div id="verticalMarker" style={markerStyle}></div>
-      <div id="negativeRuler" style={negativeRulerContainer}></div>
       <div id="positiveRuler" style={positiveRulerContainer}>{positiveDomElements}</div>
     </div>;
   }
@@ -110,23 +115,18 @@ export default class RulerY extends Component {
 }
 
 RulerY.propTypes = {
+  styles: PropTypes.object,
   grid: PropTypes.object.isRequired,
   zoom: PropTypes.number.isRequired,
   mouseY: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
   sceneHeight: PropTypes.number.isRequired,
   zeroTopPosition: PropTypes.number.isRequired,
-  backgroundColor: PropTypes.string,
-  fontColor: PropTypes.string,
-  markerColor: PropTypes.string
 };
 
 RulerY.defaultProps = {
   positiveUnitsNumber: 50,
   negativeUnitsNumber: 50,
-  backgroundColor: SharedStyle.PRIMARY_COLOR.main,
-  fontColor: SharedStyle.COLORS.white,
-  markerColor: SharedStyle.SECONDARY_COLOR.main
 }
 
 function range (start, end, step = 1) {
