@@ -77,7 +77,7 @@ class ReactPlanner extends Component {
       <Context.Provider state={extractedState} root={this} events={this.events} {...props}>
         <ThemeKit.Provider themekit={theme}>
         <div
-          style={{ display: 'flex', flexFlow: 'column nowrap', ...style }}
+          style={{ display: 'flex', flexFlow: 'column nowrap', overflow: 'hidden', ...style }}
           tabIndex={0}
           ref={this.element}
           onClick={this.onClick}
