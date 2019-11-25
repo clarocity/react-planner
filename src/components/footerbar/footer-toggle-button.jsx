@@ -1,32 +1,34 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import * as SharedStyle from '../../shared-style';
+import {themed, StyleVar} from '../../themekit';
 
-const BUTTON_STYLE_DEFAULT = {
-  width: '5.5em',
-  color: '#CCC',
-  textAlign: 'center',
-  cursor: 'pointer',
-  userSelect: 'none',
-  border: '1px solid transparent',
-  margin: '-1px 5px 0 5px',
-  borderRadius: '2px',
-  display: 'inline-block'
-};
 
-const BUTTON_STYLE_ACTIVE = {
-  backgroundColor: '#1c82c6',
-  border: SharedStyle.PRIMARY_COLOR.border,
-  color: SharedStyle.COLORS.white,
-}
+export default @themed class FooterToggleButton extends Component {
 
-const BUTTON_STYLE_HOVER = {
-  // backgroundColor: '#1c82c6',
-  border: SharedStyle.SECONDARY_COLOR.border,
-  // color: SharedStyle.COLORS.white,
-};
+  static styles = {
+    root: {
+      width: '5.5em',
+      color: new StyleVar('footer.textColor'),
+      textAlign: 'center',
+      cursor: 'pointer',
+      userSelect: 'none',
+      border: '1px solid transparent',
+      margin: '-1px 5px 0 5px',
+      borderRadius: '2px',
+      display: 'inline-block',
+      '#active': {
+        backgroundColor: new StyleVar('footer.activeBackgroundColor'),
+        border: new StyleVar(['1px solid', new StyleVar('footer.borderColor')]),
+        color: new StyleVar('footer.activeTextColor'),
+      },
 
-export default class FooterToggleButton extends Component {
+      '#hover': {
+        border: new StyleVar(['1px solid', new StyleVar('footer.activeBorderColor')]),
+      },
+    },
+
+  }
+
   constructor(props) {
     super(props);
 
@@ -35,10 +37,9 @@ export default class FooterToggleButton extends Component {
     };
   }
 
-  toggleOver() { this.setState({ over: true }); }
-  toggleOut() { this.setState({ over: false }); }
-
-  toggle() {
+  toggleOver = () => { this.setState({ over: true }); }
+  toggleOut= () => { this.setState({ over: false }); }
+  toggle = () => {
     if (this.props.toggleState) {
       this.props.toggleOff();
     } else {
@@ -55,25 +56,25 @@ export default class FooterToggleButton extends Component {
 
   render() {
 
+    const { styles, toggleState, text, title } = this.props;
+    const { over } = this.state;
+
     return (
       <div
-        style={{
-          ...BUTTON_STYLE_DEFAULT,
-          ...(this.props.toggleState && BUTTON_STYLE_ACTIVE),
-          ...(this.state.over && BUTTON_STYLE_HOVER),
-        }}
-        onMouseOver={e => this.toggleOver(e)}
-        onMouseOut={e => this.toggleOut(e)}
-        onClick={e => this.toggle(e)}
-        title={this.props.title}
+        style={styles.compile('root', toggleState && '#active', over && '#hover')}
+        onMouseOver={this.toggleOver}
+        onMouseOut={this.toggleOut}
+        onClick={this.toggle}
+        title={title}
       >
-        {this.props.text}
+        {text}
       </div>
     );
   }
 }
 
 FooterToggleButton.propTypes = {
+  styles: PropTypes.object,
   toggleOn: PropTypes.func.isRequired,
   toggleOff: PropTypes.func.isRequired,
   text: PropTypes.string.isRequired,

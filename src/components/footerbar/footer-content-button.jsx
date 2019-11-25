@@ -1,102 +1,101 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import * as SharedStyle from '../../shared-style';
 import {FaTimes as IconClose} from 'react-icons/fa';
+import {themed, StyleVar} from '../../themekit';
 
-const labelContainerStyle = {
-  width: 'auto',
-  display: 'inline-block',
-  margin:0,
-  padding:'0px 5px 0px 0px'
-};
+export default @themed class FooterContentButton extends Component {
 
-const toggleButtonStyle = {
-  color: '#CCC',
-  textAlign: 'center',
-  cursor: 'pointer',
-  userSelect: 'none',
-  display: 'flex',
-  alignItems: 'center',
-};
+  static styles = {
+    container: {
+      margin:0,
+      padding:'0px 5px 0px 0px',
+    },
 
-const toggleButtonStyleOver = {
-  ...toggleButtonStyle,
-  color: SharedStyle.COLORS.white
-};
+    toggleButton: {
+      color: new StyleVar('footer.textColor'),
+      textAlign: 'center',
+      cursor: 'pointer',
+      userSelect: 'none',
+      display: 'flex',
+      alignItems: 'center',
+    },
 
-const contentContainerStyleActive = {
-  position:'fixed',
-  width:'calc( 100% - 2px )',
-  height:'40%',
-  left:0,
-  bottom:20,
-  backgroundColor:SharedStyle.PRIMARY_COLOR.alt,
-  borderTop: SharedStyle.PRIMARY_COLOR.border,
-  zIndex:0,
-  padding:0,
-  margin:0,
-  transition:'all 300ms ease'
-};
+    'toggleButton#hover': {
+      color: new StyleVar('footer.activeTextColor'),
+    },
 
-const contentContainerStyleInactive = {
-  ...contentContainerStyleActive,
-  visibility:'hidden',
-  height:0
-};
+    'toggleButton#active': {
+      color: new StyleVar('footer.activeTextColor'),
+    },
 
-const contentHeaderStyle = {
-  position:'relative',
-  width:'100%',
-  height:'2em',
-  top:0,
-  left:0,
-  borderBottom:SharedStyle.PRIMARY_COLOR.border
-};
+    content: {
+      position:'absolute',
+      width:'calc( 100% - 2px )',
+      left:0,
+      bottom:20,
+      backgroundColor: new StyleVar('chrome.backgroundColor'),
+      borderTop: new StyleVar(['1px solid', new StyleVar('footer.borderColor')]),
+      zIndex:10000,
+      padding:0,
+      margin:0,
+      transition:'all 300ms ease',
+      visibility:'hidden',
+      opacity: 0,
+      height:0,
 
-const titleStyle = {
-  position:'relative',
-  height:'2em',
-  lineHeight:'2em',
-  marginLeft:'1em'
-};
+      '#active': {
+        height: '40%',
+        opacity: 1,
+        visibility:'visible',
+      },
+    },
 
-const contentAreaStyle = {
-  position:'relative',
-  width:'100%',
-  height:'calc( 100% - 2em )',
-  padding:'1em',
-  overflowY:'auto'
-};
+    contentHeader: {
+      position:'relative',
+      width:'100%',
+      height:'2em',
+      top:0,
+      left:0,
+      borderBottom: new StyleVar(['1px solid', new StyleVar('footer.borderColor')]),
+    },
 
-const iconCloseStyleOut = {
-  position:'absolute',
-  width:'2em',
-  height:'2em',
-  right:0,
-  top:0,
-  padding:'0.5em',
-  borderLeft:SharedStyle.PRIMARY_COLOR.border,
-  cursor:'pointer'
-};
+    contentTitle: {
+      position:'relative',
+      height:'2em',
+      lineHeight:'2em',
+      marginLeft:'1em',
+    },
 
-const iconCloseStyleOver = {
-  ...iconCloseStyleOut,
-  color:SharedStyle.COLORS.white,
-  backgroundColor:SharedStyle.SECONDARY_COLOR.alt
-};
+    contentArea: {
+      position:'relative',
+      width:'100%',
+      height:'calc( 100% - 2em )',
+      padding:'1em',
+      overflowY:'auto',
+    },
 
-const iconStyle = {
-  width:'15px',
-  height:'15px',
-  marginTop:'-2px',
-  marginRight:'2px'
-};
+    contentClose: {
+      position:'absolute',
+      width:'2em',
+      height:'2em',
+      right:0,
+      top:0,
+      padding:'0.5em',
+      borderLeft: new StyleVar(['1px solid', new StyleVar('footer.borderColor')]),
+      cursor:'pointer',
 
-const textStyle = {
-  position: 'relative'
-}
+      '#hover': {
+        color: new StyleVar('footer.activeTextColor', 'white'),
+        backgroundColor: new StyleVar('footer.alternateBackgroundColor'),
+      },
+    },
 
-export default class FooterContentButton extends Component {
+    icon: {
+      width:'15px',
+      height:'15px',
+    },
+  }
+
   constructor(props) {
     super(props);
 
@@ -107,9 +106,10 @@ export default class FooterContentButton extends Component {
     };
   }
 
-  toggleOver() { this.setState({ over: true }); }
-  toggleOut() { this.setState({ over: false }); }
-
+  toggleOver = () => { this.setState({ over: true }); }
+  toggleOut  = () => { this.setState({ over: false }); }
+  closeOver  = () => { this.setState({ closeOver: true }); }
+  closeOut   = () => { this.setState({ closeOver: false }); }
   toggle = () => {
     let isActive = !this.state.active;
     this.setState({ active: isActive });
@@ -127,36 +127,33 @@ export default class FooterContentButton extends Component {
 
   render() {
 
-    let s = this.state;
-    let p = this.props;
+    const { active, over, closeOver } = this.state;
+    const { styles, title, text, content } = this.props;
 
-    let LabelIcon = p.icon || null;
-    let labelIconStyle = p.iconStyle || {};
-    let labelTextStyle = p.textStyle || {};
-    let inputTitleStyle = p.titleStyle || {};
+    let LabelIcon = this.props.icon || null;
 
     return (
-      <div style={labelContainerStyle}>
+      <div style={styles.compile('container')}>
         <div
-          style={s.over || s.active ? toggleButtonStyleOver : toggleButtonStyle}
+          style={styles.compile('toggleButton', over && '#over', active && '#active')}
           onClick={this.toggle}
-          title={p.title}
+          title={title}
         >
-          <LabelIcon style={{...labelIconStyle, ...iconStyle}}/>
-          <span style={{...textStyle, ...labelTextStyle}}>{p.text}</span>
+          <LabelIcon style={styles.compile('icon', this.props.iconStyle)}/>
+          <span style={styles.compile('toggleText', this.props.textStyle)}>{text}</span>
         </div>
-        <div style={s.active ? contentContainerStyleActive : contentContainerStyleInactive}>
-          <div style={contentHeaderStyle}>
-            <b style={{...titleStyle, ...inputTitleStyle}}>{p.title}</b>
+        <div style={styles.compile('content', active && '#active')}>
+          <div style={styles.compile('contentHeader')}>
+            <b style={styles.compile('contentTitle', this.props.titleStyle)}>{title}</b>
             <IconClose
-              style={ s.closeOver ? iconCloseStyleOver : iconCloseStyleOut}
-              onMouseOver={() => this.setState({closeOver:true})}
-              onMouseOut={() => this.setState({closeOver:false})}
-              onClick={() => this.toggle()}
+              style={styles.compile('contentClose', closeOver && '#hover')}
+              onMouseOver={this.closeOver}
+              onMouseOut={this.closeOut}
+              onClick={this.toggle}
             />
           </div>
-          <div style={contentAreaStyle}>
-            {p.content}
+          <div style={styles.compile('contentArea')}>
+            {content}
           </div>
         </div>
       </div>
@@ -165,6 +162,7 @@ export default class FooterContentButton extends Component {
 }
 
 FooterContentButton.propTypes = {
+  styles: PropTypes.object,
   text: PropTypes.string.isRequired,
   textStyle: PropTypes.object,
   icon: PropTypes.func,

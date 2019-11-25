@@ -14,11 +14,11 @@ export default @needsContext @themed class FooterBar extends Component {
 
   static styles = {
     container: {
-      height: '20px',
+      height: new StyleVar('footer.textColor', '20px'),
       lineHeight: '14px',
       fontSize: '12px',
-      color: 'white',
-      backgroundColor: new StyleVar('chrome.altBackgroundColor'),
+      color: new StyleVar('footer.textColor', 'white'),
+      backgroundColor: new StyleVar('footer.backgroundColor'),
       padding: '3px 1em',
       margin: 0,
       boxSizing: 'border-box',
@@ -47,6 +47,7 @@ export default @needsContext @themed class FooterBar extends Component {
     },
 
     coordinate: {
+      width: '6em',
       margin: '0 3px',
     },
 

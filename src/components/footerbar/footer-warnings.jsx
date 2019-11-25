@@ -17,10 +17,10 @@ export default @themed class FooterWarnings extends Component {
 
     'error#active': {
       label: {
-        color: new StyleVar('chrome.error'),
+        color: new StyleVar('footer.error'),
       },
       icon: {
-        color: new StyleVar('chrome.error'),
+        color: new StyleVar('footer.error'),
       }
     },
 
@@ -31,10 +31,10 @@ export default @themed class FooterWarnings extends Component {
 
     'warning#active': {
       label: {
-        color: new StyleVar('chrome.warning'),
+        color: new StyleVar('footer.warning'),
       },
       icon: {
-        color: new StyleVar('chrome.warning'),
+        color: new StyleVar('footer.warning'),
       }
     },
 

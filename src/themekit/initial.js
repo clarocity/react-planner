@@ -1,9 +1,17 @@
 
 const InitialVars = {
   chrome: {
-    color: 'white',
+    textColor: 'white',
     backgroundColor: '#28292D',
-    altBackgroundColor: '#005FAF',
+  },
+  footer: {
+    textColor: '#CCC',
+    activeTextColor: 'white',
+    backgroundColor: '#005FAF',
+    activeBackgroundColor: '#1c82c6',
+    alternateBackgroundColor: '#005FAF',
+    borderColor: '#555',
+    activeBorderColor: 'white',
     error: '#F44336',
     warning: '#FFEB3B',
   },
