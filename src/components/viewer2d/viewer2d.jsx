@@ -1,11 +1,12 @@
-import React, {Fragment} from 'react';
+import React, {PureComponent, Fragment} from 'react';
 import PropTypes from 'prop-types';
 import ContainerDimensions from 'react-container-dimensions';
 
 import { ReactSVGPanZoom, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT, TOOL_AUTO } from 'react-svg-pan-zoom';
 import * as constants from '../../constants';
 import State from './state';
-import * as SharedStyle from '../../shared-style';
+import {themed, StyleAlias, CompoundStyle} from '../../themekit';
+
 import { RulerX, RulerY } from './export';
 import { ContextPropTypes, needsContext } from '../context';
 
@@ -24,26 +25,7 @@ function mode2Tool(mode) {
   }
 }
 
-function mode2Cursor({ mode, alternate }) {
-  switch (mode) {
-    case constants.MODE_DRAGGING_HOLE:
-    case constants.MODE_DRAGGING_LINE:
-    case constants.MODE_DRAGGING_VERTEX:
-    case constants.MODE_DRAGGING_ITEM:
-      if (alternate) return { cursor: SharedStyle.CURSORS.crosshairAdd };
-      return { cursor: SharedStyle.CURSORS.move };
 
-    case constants.MODE_ROTATING_ITEM:
-      return { cursor: SharedStyle.CURSORS.rotate };
-
-    case constants.MODE_WAITING_DRAWING_LINE:
-    case constants.MODE_DRAWING_LINE:
-      if (alternate) return { cursor: SharedStyle.CURSORS.crosshairAdd };
-      return { cursor: SharedStyle.CURSORS.crosshair };
-    default:
-      return { cursor: SharedStyle.CURSORS.default };
-  }
-}
 
 function mode2DetectAutopan(mode) {
   switch (mode) {
@@ -76,24 +58,161 @@ function extractElementData(node) {
   }
 }
 
-function Viewer2D({ state, catalog, actions }) {
+export default @needsContext @themed class Viewer2D extends PureComponent {
 
-  let { viewer2D, mode, scene } = state;
+  static styles = {
+    root: {
+      margin: 0,
+      padding: 0,
+      display: 'grid',
+      gridRowGap: '0',
+      gridColumnGap: '0',
+      gridTemplateColumns: new CompoundStyle('${rulers.size}px 1fr'),
+      gridTemplateRows: new CompoundStyle('${rulers.size}px 1fr'),
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+    },
 
-  let layerID = scene.selectedLayer;
+    rulerCorner: {
+      width: new CompoundStyle('${rulers.size}px'),
+      height: new CompoundStyle('${rulers.size}px'),
+      gridColumn: 1,
+      gridRow: 1,
+      backgroundColor: new StyleAlias('rulers.backgroundColor'),
+    },
 
-  let mapCursorPosition = ({ x, y }) => {
-    return { x, y: -y + scene.height }
-  };
+    rulerXWrapper: {
+      gridRow: 1,
+      gridColumn: 2,
+      position: 'relative',
+      overflow: 'hidden',
+      backgroundColor: new StyleAlias('rulers.backgroundColor'),
+    },
 
-  let onMouseMove = (viewerEvent) => {
+    rulerYWrapper: {
+      gridColumn: 1,
+      gridRow: 2,
+      position: 'relative',
+      overflow: 'hidden',
+      backgroundColor: new StyleAlias('rulers.backgroundColor'),
+    }
+  }
+
+  render () {
+
+    const { themekit, styles, state, catalog } = this.props;
+    let { viewer2D, mode, scene, alternate } = state;
+
+    let { e, f, SVGWidth, SVGHeight } = state.get('viewer2D').toJS();
+
+    const rulerSize = themekit.resolve('rulers.size');
+    const grids = state.getIn(['scene', 'grids']);
+    const gridY = grids.valueSeq().filter((g) => g.type == 'horizontal-streak').first();
+    const gridX = grids.valueSeq().filter((g) => g.type == 'vertical-streak').first();
+    const sceneWidth = SVGWidth || state.getIn(['scene', 'width']);
+    const sceneHeight = SVGHeight || state.getIn(['scene', 'height']);
+    const sceneZoom = state.zoom || 1;
+
+    let cursor;
+    switch (mode) {
+      case constants.MODE_DRAGGING_HOLE:
+      case constants.MODE_DRAGGING_LINE:
+      case constants.MODE_DRAGGING_VERTEX:
+      case constants.MODE_DRAGGING_ITEM:
+        if (alternate) cursor = { cursor: new StyleAlias('cursors.crosshairAdd') };
+        else cursor = { cursor: new StyleAlias('cursors.move') };
+        break;
+      case constants.MODE_ROTATING_ITEM:
+        cursor = { cursor: new StyleAlias('cursors.rotate') };
+        break;
+      case constants.MODE_WAITING_DRAWING_LINE:
+      case constants.MODE_DRAWING_LINE:
+        if (alternate) return { cursor: new StyleAlias('cursors.crosshairAdd') };
+        cursor = { cursor: new StyleAlias('cursors.crosshair') };
+        break;
+      default:
+        cursor = { cursor: new StyleAlias('cursors.default') };
+    }
+
+    return (
+      <ContainerDimensions>{
+        ({ width, height }) =>
+        <div style={styles.root}>
+            <div style={styles.rulerCorner}></div>
+            <div style={styles.rulerXWrapper} id="rulerX">
+            { gridX && sceneWidth ? <RulerX
+                grid={gridX}
+                zoom={sceneZoom}
+                mouseX={state.mouse.get('x')}
+                sceneWidth={sceneWidth}
+                width={width - rulerSize}
+                zeroLeftPosition={e || 0}
+              /> : null }
+            </div>
+            <div style={styles.rulerYWrapper} id="rulerY">
+              { gridY && sceneHeight ? <RulerY
+                grid={gridY}
+                zoom={sceneZoom}
+                mouseY={state.mouse.get('y')}
+                height={height - rulerSize}
+                sceneHeight={sceneHeight}
+                zeroTopPosition={((sceneHeight * sceneZoom) + f) || 0}
+              /> : null }
+            </div>
+
+            <ReactSVGPanZoom
+              style={{ gridColumn: 2, gridRow: 2 }}
+              width={width - rulerSize}
+              height={height - rulerSize}
+              value={/*viewer2D.isEmpty() ? null : */viewer2D.toJS()}
+              onChangeValue={this.onChangeValue}
+              tool={mode2Tool(mode)}
+              onChangeTool={this.onChangeTool}
+              detectAutoPan={mode2DetectAutopan(mode)}
+              onMouseDown={this.onMouseDown}
+              onMouseMove={this.onMouseMove}
+              onMouseUp={this.onMouseUp}
+              toolbarProps={{ position: "none" }}
+              miniatureProps={{ position: "none" }}
+            >
+
+              <svg width={scene.width} height={scene.height}>
+                <defs>
+                  <pattern id="diagonalFill" patternUnits="userSpaceOnUse" width="4" height="4" fill="#FFF">
+                    <rect x="0" y="0" width="4" height="4" fill="#FFF" />
+                    <path d="M-1,1 l2,-2 M0,4 l4,-4 M3,5 l2,-2" style={{ stroke: '#8E9BA2', strokeWidth: 1 }} />
+                  </pattern>
+                </defs>
+                <g style={cursor}>
+                  <State state={state} catalog={catalog} />
+                </g>
+              </svg>
+
+            </ReactSVGPanZoom>
+        </div>
+      }</ContainerDimensions>
+    );
+  }
+
+
+  mapCursorPosition ({x, y}) {
+    return { x, y: -y + this.props.state.scene.height }
+  }
+
+  onMouseMove = (viewerEvent) => {
+    const { actions, state } = this.props;
+    const { mode, scene } = state;
+    const layerID = scene.selectedLayer;
 
     //workaround that allow imageful component to work
     let evt = new Event('mousemove-planner-event');
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
 
-    let { x, y } = mapCursorPosition(viewerEvent);
+    let { x, y } = this.mapCursorPosition(viewerEvent);
 
     actions.project.updateMouseCoord({ x, y });
 
@@ -132,17 +251,19 @@ function Viewer2D({ state, catalog, actions }) {
     }
 
     viewerEvent.originalEvent.stopPropagation();
-  };
+  }
 
-  let onMouseDown = viewerEvent => {
-    let event = viewerEvent.originalEvent;
+  onMouseDown = (viewerEvent) => {
+    const { actions, state } = this.props;
+    const { mode } = state;
+    const event = viewerEvent.originalEvent;
 
     //workaround that allow imageful component to work
     let evt = new Event('mousedown-planner-event');
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
 
-    let { x, y } = mapCursorPosition(viewerEvent);
+    let { x, y } = this.mapCursorPosition(viewerEvent);
 
     if (mode === constants.MODE_IDLE) {
       let elementData = extractElementData(event.target);
@@ -174,14 +295,17 @@ function Viewer2D({ state, catalog, actions }) {
     event.stopPropagation();
   };
 
-  let onMouseUp = viewerEvent => {
-    let event = viewerEvent.originalEvent;
+  onMouseUp = (viewerEvent) => {
+    const { actions, state } = this.props;
+    const { mode, scene } = state;
+    const event = viewerEvent.originalEvent;
+    const layerID = scene.selectedLayer;
 
     let evt = new Event('mouseup-planner-event');
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
 
-    let { x, y } = mapCursorPosition(viewerEvent);
+    let { x, y } = this.mapCursorPosition(viewerEvent);
 
     switch (mode) {
 
@@ -256,12 +380,13 @@ function Viewer2D({ state, catalog, actions }) {
     event.stopPropagation();
   };
 
-  let onChangeValue = (value) => {
-    actions.project.updateZoomScale(value.a);
-    return actions.viewer2D.updateCameraView(value)
+  onChangeValue = (value) => {
+    this.props.actions.project.updateZoomScale(value.a);
+    return this.props.actions.viewer2D.updateCameraView(value)
   };
 
-  let onChangeTool = (tool) => {
+  onChangeTool = (tool) => {
+    const { actions } = this.props;
     switch (tool) {
       case TOOL_NONE:
         actions.project.selectToolEdit();
@@ -280,103 +405,9 @@ function Viewer2D({ state, catalog, actions }) {
         break;
     }
   };
-
-  let { e, f, SVGWidth, SVGHeight } = state.get('viewer2D').toJS();
-
-  const grids = state.getIn(['scene', 'grids']);
-  const gridY = grids.valueSeq().filter((g) => g.type == 'horizontal-streak').first();
-  const gridX = grids.valueSeq().filter((g) => g.type == 'vertical-streak').first();
-  const sceneWidth = SVGWidth || state.getIn(['scene', 'width']);
-  const sceneHeight = SVGHeight || state.getIn(['scene', 'height']);
-  const sceneZoom = state.zoom || 1;
-
-  let rulerSize = 15; //px
-  let rulerBgColor = SharedStyle.PRIMARY_COLOR.main;
-  let rulerFnColor = SharedStyle.COLORS.white;
-  let rulerMkColor = SharedStyle.SECONDARY_COLOR.main;
-
-  return (
-    <ContainerDimensions>{
-      ({ width, height }) =>
-      <div style={{
-        margin: 0,
-        padding: 0,
-        display: 'grid',
-        gridRowGap: '0',
-        gridColumnGap: '0',
-        gridTemplateColumns: `${rulerSize}px 1fr`,
-        gridTemplateRows: `${rulerSize}px 1fr`,
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-      }}>
-
-          <div style={{ gridColumn: 1, gridRow: 1, backgroundColor: rulerBgColor }}></div>
-          <div style={{ gridRow: 1, gridColumn: 2, position: 'relative', overflow: 'hidden', backgroundColor: rulerBgColor }} id="rulerX">
-          { gridX && sceneWidth ? <RulerX
-              grid={gridX}
-              zoom={sceneZoom}
-              mouseX={state.mouse.get('x')}
-              sceneWidth={sceneWidth}
-              width={width - rulerSize}
-              zeroLeftPosition={e || 0}
-              backgroundColor={rulerBgColor}
-              fontColor={rulerFnColor}
-              markerColor={rulerMkColor}
-            /> : null }
-          </div>
-          <div style={{ gridColumn: 1, gridRow: 2, position: 'relative', overflow: 'hidden', backgroundColor: rulerBgColor }} id="rulerY">
-            { gridY && sceneHeight ? <RulerY
-              grid={gridY}
-              zoom={sceneZoom}
-              mouseY={state.mouse.get('y')}
-              height={height - rulerSize}
-              sceneHeight={sceneHeight}
-              zeroTopPosition={((sceneHeight * sceneZoom) + f) || 0}
-              backgroundColor={rulerBgColor}
-              fontColor={rulerFnColor}
-              markerColor={rulerMkColor}
-            /> : null }
-          </div>
-
-          <ReactSVGPanZoom
-            style={{ gridColumn: 2, gridRow: 2 }}
-            width={width - rulerSize}
-            height={height - rulerSize}
-            value={/*viewer2D.isEmpty() ? null : */viewer2D.toJS()}
-            onChangeValue={onChangeValue}
-            tool={mode2Tool(mode)}
-            onChangeTool={onChangeTool}
-            detectAutoPan={mode2DetectAutopan(mode)}
-            onMouseDown={onMouseDown}
-            onMouseMove={onMouseMove}
-            onMouseUp={onMouseUp}
-            toolbarProps={{ position: "none" }}
-            miniatureProps={{ position: "none" }}
-          >
-
-            <svg width={scene.width} height={scene.height}>
-              <defs>
-                <pattern id="diagonalFill" patternUnits="userSpaceOnUse" width="4" height="4" fill="#FFF">
-                  <rect x="0" y="0" width="4" height="4" fill="#FFF" />
-                  <path d="M-1,1 l2,-2 M0,4 l4,-4 M3,5 l2,-2" style={{ stroke: '#8E9BA2', strokeWidth: 1 }} />
-                </pattern>
-              </defs>
-              <g style={{...mode2Cursor(state) }}>
-                <State state={state} catalog={catalog} />
-              </g>
-            </svg>
-
-          </ReactSVGPanZoom>
-      </div>
-    }</ContainerDimensions>
-  );
 }
 
 Viewer2D.propTypes = {
+  styles: PropTypes.object,
   ...ContextPropTypes
 };
-
-export default needsContext(Viewer2D);
