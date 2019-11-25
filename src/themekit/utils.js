@@ -17,6 +17,7 @@ export function hasOwn (obj, key) {
 export function merge (...sources) {
   const result = {};
   for (const source of sources) {
+    if (!source) continue;
     for (const [key, value] of Object.entries(source)) {
       if (isObject(value)) {
         if (isObject(result[key])) {
