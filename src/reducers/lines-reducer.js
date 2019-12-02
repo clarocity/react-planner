@@ -1,5 +1,5 @@
 import { Line } from '../class/export';
-import { history } from '../utils/export';
+import * as history from '../utils/history';
 import {
   SELECT_TOOL_DRAWING_LINE,
   BEGIN_DRAWING_LINE,

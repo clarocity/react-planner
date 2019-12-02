@@ -5,7 +5,7 @@ import {
   SELECT_TOOL_3D_FIRST_PERSON
 } from '../constants';
 import { Project } from '../class/export';
-import { history } from '../utils/export';
+import * as history from '../utils/history';
 
 export default function (state, action) {
 

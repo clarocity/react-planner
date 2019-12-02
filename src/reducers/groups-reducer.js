@@ -1,6 +1,6 @@
 import { GROUP_ACTIONS } from '../constants';
 import { Group } from '../class/export';
-import { history } from '../utils/export';
+import * as history from '../utils/history';
 
 export default function (state, action) {
 

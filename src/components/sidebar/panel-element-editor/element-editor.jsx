@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import {Map, fromJS} from 'immutable';
 import memoize from 'memoize-one';
 import AttributesEditor from './attributes-editor/attributes-editor';
-import { GeometryUtils, MathUtils } from '../../../utils/export';
+import * as Geometry from '../../../utils/geometry';
+import * as MathUtils from '../../../utils/math';
+
 import * as SharedStyle from '../../../shared-style';
 import convert from 'convert-units';
 import {MdContentCopy, MdContentPaste} from 'react-icons/md';
@@ -82,7 +84,7 @@ export default @needsContext class ElementEditor extends Component {
         let v_a = layer.vertices.get(element.vertices.get(0));
         let v_b = layer.vertices.get(element.vertices.get(1));
 
-        let distance = GeometryUtils.pointsDistance(v_a.x, v_a.y, v_b.x, v_b.y);
+        let distance = Geometry.pointsDistance(v_a.x, v_a.y, v_b.x, v_b.y);
         let _unit = element.misc.get('_unitLength') || catalog.unit;
         let _length = convert(distance).from(catalog.unit).to(_unit);
 
@@ -96,7 +98,7 @@ export default @needsContext class ElementEditor extends Component {
         let line = layer.lines.get(element.line);
         let {x: x0, y: y0} = layer.vertices.get(line.vertices.get(0));
         let {x: x1, y: y1} = layer.vertices.get(line.vertices.get(1));
-        let lineLength = GeometryUtils.pointsDistance(x0, y0, x1, y1);
+        let lineLength = Geometry.pointsDistance(x0, y0, x1, y1);
         let startAt = lineLength * element.offset - element.properties.get('width').get('length') / 2;
 
         let _unitA = element.misc.get('_unitA') || catalog.unit;
@@ -159,9 +161,9 @@ export default @needsContext class ElementEditor extends Component {
             let v_0 = attributesFormData.get('vertexOne');
             let v_1 = attributesFormData.get('vertexTwo');
 
-            let [v_a, v_b] = GeometryUtils.orderVertices([v_0, v_1]);
+            let [v_a, v_b] = Geometry.orderVertices([v_0, v_1]);
 
-            let v_b_new = GeometryUtils.extendLine(v_a.x, v_a.y, v_b.x, v_b.y, value.get('length'), PRECISION);
+            let v_b_new = Geometry.extendLine(v_a.x, v_a.y, v_b.x, v_b.y, value.get('length'), PRECISION);
 
             attributesFormData = attributesFormData.withMutations(attr => {
               attr.set(v_0 === v_a ? 'vertexTwo' : 'vertexOne', v_b.merge(v_b_new));
@@ -175,7 +177,7 @@ export default @needsContext class ElementEditor extends Component {
             attributesFormData = attributesFormData.withMutations(attr => {
               attr.set(attributeName, attr.get(attributeName).merge(value));
 
-              let newDistance = GeometryUtils.verticesDistance(attr.get('vertexOne'), attr.get('vertexTwo'));
+              let newDistance = Geometry.verticesDistance(attr.get('vertexOne'), attr.get('vertexTwo'));
 
               attr.mergeIn(['lineLength'], attr.get('lineLength').merge({
                 'length': newDistance,
@@ -199,15 +201,15 @@ export default @needsContext class ElementEditor extends Component {
           {
             let line = this.props.layer.lines.get(this.props.element.line);
 
-            let orderedVertices = GeometryUtils.orderVertices([
+            let orderedVertices = Geometry.orderVertices([
               this.props.layer.vertices.get(line.vertices.get(0)),
               this.props.layer.vertices.get(line.vertices.get(1))
             ]);
 
             let [ {x: x0, y: y0}, {x: x1, y: y1} ] = orderedVertices;
 
-            let alpha = GeometryUtils.angleBetweenTwoPoints(x0, y0, x1, y1);
-            let lineLength = GeometryUtils.pointsDistance(x0, y0, x1, y1);
+            let alpha = Geometry.angleBetweenTwoPoints(x0, y0, x1, y1);
+            let lineLength = Geometry.pointsDistance(x0, y0, x1, y1);
             let widthLength = this.props.element.properties.get('width').get('length');
             let halfWidthLength = widthLength / 2;
 
@@ -218,7 +220,7 @@ export default @needsContext class ElementEditor extends Component {
             let xp = (lengthValue + halfWidthLength) * Math.cos(alpha) + x0;
             let yp = (lengthValue + halfWidthLength) * Math.sin(alpha) + y0;
 
-            let offset = GeometryUtils.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
+            let offset = Geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
 
             let endAt = MathUtils.toFixedFloat(lineLength - (lineLength * offset) - halfWidthLength, PRECISION);
             let offsetUnit = attributesFormData.getIn(['offsetB', '_unit']);
@@ -245,15 +247,15 @@ export default @needsContext class ElementEditor extends Component {
           {
             let line = this.props.layer.lines.get(this.props.element.line);
 
-            let orderedVertices = GeometryUtils.orderVertices([
+            let orderedVertices = Geometry.orderVertices([
               this.props.layer.vertices.get(line.vertices.get(0)),
               this.props.layer.vertices.get(line.vertices.get(1))
             ]);
 
             let [ {x: x0, y: y0}, {x: x1, y: y1} ] = orderedVertices;
 
-            let alpha = GeometryUtils.angleBetweenTwoPoints(x0, y0, x1, y1);
-            let lineLength = GeometryUtils.pointsDistance(x0, y0, x1, y1);
+            let alpha = Geometry.angleBetweenTwoPoints(x0, y0, x1, y1);
+            let lineLength = Geometry.pointsDistance(x0, y0, x1, y1);
             let widthLength = this.props.element.properties.get('width').get('length');
             let halfWidthLength = widthLength / 2;
 
@@ -264,7 +266,7 @@ export default @needsContext class ElementEditor extends Component {
             let xp = x1 - (lengthValue + halfWidthLength) * Math.cos(alpha);
             let yp = y1 - (lengthValue + halfWidthLength) * Math.sin(alpha);
 
-            let offset = GeometryUtils.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
+            let offset = Geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
 
             let startAt = MathUtils.toFixedFloat((lineLength * offset) - halfWidthLength, PRECISION);
             let offsetUnit = attributesFormData.getIn(['offsetA', '_unit']);

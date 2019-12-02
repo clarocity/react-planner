@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {GeometryUtils} from '../../utils/export';
+import * as Geometry from '../../utils/geometry';
 import Ruler from './ruler';
 import * as SharedStyle from '../../shared-style';
 
@@ -9,7 +9,7 @@ export default function Line({line, layer, scene, catalog}) {
   let vertex0 = layer.vertices.get(line.vertices.get(0));
   let vertex1 = layer.vertices.get(line.vertices.get(1));
 
-  if (vertex0.id === vertex1.id || GeometryUtils.samePoints(vertex0, vertex1)) return null; //avoid 0-length lines
+  if (vertex0.id === vertex1.id || Geometry.samePoints(vertex0, vertex1)) return null; //avoid 0-length lines
 
   let {x: x1, y: y1} = vertex0;
   let {x: x2, y: y2} = vertex1;
@@ -19,8 +19,8 @@ export default function Line({line, layer, scene, catalog}) {
     ({x: x2, y: y2} = vertex0);
   }
 
-  let length = GeometryUtils.pointsDistance(x1, y1, x2, y2);
-  let angle = GeometryUtils.angleBetweenTwoPointsAndOrigin(x1, y1, x2, y2);
+  let length = Geometry.pointsDistance(x1, y1, x2, y2);
+  let angle = Geometry.angleBetweenTwoPointsAndOrigin(x1, y1, x2, y2);
 
   let renderedHoles = line.holes.map(holeID => {
     let hole = layer.holes.get(holeID);

@@ -5,13 +5,14 @@ import {
   Hole,
   Vertex
 } from './export';
-import {
-  IDBroker,
-  NameGenerator,
-  GeometryUtils,
-  SnapUtils,
-  SnapSceneUtils,
-} from '../utils/export';
+
+import IDBroker from '../utils/id-broker';
+import NameGenerator from '../utils/name-generator';
+import * as Geometry from '../utils/geometry';
+import * as SnapUtils from '../utils/snap';
+import * as SnapSceneUtils from '../utils/snap-scene';
+
+
 import {
   MODE_IDLE,
   MODE_WAITING_DRAWING_LINE,
@@ -92,8 +93,8 @@ class Line{
     let { updatedState: stateL2, line: line1 } = Line.create( stateL1, layerID, line.type, x1, y1, x, y, line.get('properties'));
     state = stateL2;
 
-    let splitPointOffset = GeometryUtils.pointPositionOnLineSegment(x0, y0, x1, y1, x, y);
-    let minVertex = GeometryUtils.minVertex(v0, v1);
+    let splitPointOffset = Geometry.pointPositionOnLineSegment(x0, y0, x1, y1, x, y);
+    let minVertex = Geometry.minVertex(v0, v1);
 
     line.holes.forEach(holeID => {
       let hole = state.getIn(['scene', 'layers', layerID, 'holes', holeID]);
@@ -154,9 +155,9 @@ class Line{
         holes.forEach(holeWithOffsetPoint => {
           let {x: xp, y: yp} = holeWithOffsetPoint.offsetPosition;
 
-          if (GeometryUtils.isPointOnLineSegment(x1, y1, x2, y2, xp, yp)) {
+          if (Geometry.isPointOnLineSegment(x1, y1, x2, y2, xp, yp)) {
 
-            let newOffset = GeometryUtils.pointPositionOnLineSegment(x1, y1, x2, y2, xp, yp);
+            let newOffset = Geometry.pointPositionOnLineSegment(x1, y1, x2, y2, xp, yp);
 
             if (newOffset >= 0 && newOffset <= 1) {
               state = Hole.create( state, layerID, holeWithOffsetPoint.hole.type, line.id, newOffset, holeWithOffsetPoint.hole.properties ).updatedState;
@@ -178,24 +179,24 @@ class Line{
       let [v0, v1] = line.vertices.map(vertexID => reducedState.getIn(['scene', 'layers', layerID, 'vertices']).get(vertexID)).toArray();
 
       let hasCommonEndpoint = (
-        GeometryUtils.samePoints(v0, points[0]) ||
-        GeometryUtils.samePoints(v0, points[1]) ||
-        GeometryUtils.samePoints(v1, points[0]) ||
-        GeometryUtils.samePoints(v1, points[1])
+        Geometry.samePoints(v0, points[0]) ||
+        Geometry.samePoints(v0, points[1]) ||
+        Geometry.samePoints(v1, points[0]) ||
+        Geometry.samePoints(v1, points[1])
       );
 
-      let intersection = GeometryUtils.twoLineSegmentsIntersection( points[0], points[1], v0, v1 );
+      let intersection = Geometry.twoLineSegmentsIntersection( points[0], points[1], v0, v1 );
 
       if (intersection.type === 'colinear') {
         if (!oldHoles) { oldHoles = []; }
 
-        let orderedVertices = GeometryUtils.orderVertices(points);
+        let orderedVertices = Geometry.orderVertices(points);
 
         reducedState.getIn(['scene', 'layers', layerID, 'lines', line.id, 'holes']).forEach(holeID => {
           let hole = reducedState.getIn(['scene', 'layers', layerID, 'holes', holeID]);
-          let oldLineLength = GeometryUtils.pointsDistance(v0.x, v0.y, v1.x, v1.y);
-          let offset = GeometryUtils.samePoints( orderedVertices[1], line.vertices.get(1) ) ? ( 1 - hole.offset ) : hole.offset;
-          let offsetPosition = GeometryUtils.extendLine( v0.x, v0.y, v1.x, v1.y, oldLineLength * offset );
+          let oldLineLength = Geometry.pointsDistance(v0.x, v0.y, v1.x, v1.y);
+          let offset = Geometry.samePoints( orderedVertices[1], line.vertices.get(1) ) ? ( 1 - hole.offset ) : hole.offset;
+          let offsetPosition = Geometry.extendLine( v0.x, v0.y, v1.x, v1.y, oldLineLength * offset );
 
           oldHoles.push({hole, offsetPosition});
         });
@@ -253,9 +254,9 @@ class Line{
 
       snapElements = snapElements.withMutations(snapElements => {
         let a, b, c;
-        ({a, b, c} = GeometryUtils.horizontalLine(y));
+        ({a, b, c} = Geometry.horizontalLine(y));
         SnapUtils.addLineSnap(snapElements, a, b, c, 10, 3, null);
-        ({a, b, c} = GeometryUtils.verticalLine(x));
+        ({a, b, c} = Geometry.verticalLine(x));
         SnapUtils.addLineSnap(snapElements, a, b, c, 10, 3, null);
       });
     }
@@ -425,10 +426,10 @@ class Line{
     let vertex0 = layer.vertices.get(line.vertices.get(0));
     let vertex1 = layer.vertices.get(line.vertices.get(1));
 
-    let maxV = GeometryUtils.maxVertex(vertex0, vertex1);
-    let minV = GeometryUtils.minVertex(vertex0, vertex1);
+    let maxV = Geometry.maxVertex(vertex0, vertex1);
+    let minV = Geometry.minVertex(vertex0, vertex1);
 
-    let lineLength = GeometryUtils.verticesDistance(minV,maxV);
+    let lineLength = Geometry.verticesDistance(minV,maxV);
     let alpha = Math.atan2(maxV.y - minV.y, maxV.x - minV.x);
 
     let holesWithOffsetPosition = [];
@@ -494,7 +495,7 @@ class Line{
 
     state = Line.remove( state, layerID, lineID ).updatedState;
 
-    if(!GeometryUtils.samePoints({newVertex0X, newVertex0Y}, {newVertex1X, newVertex1Y})) {
+    if(!Geometry.samePoints({newVertex0X, newVertex0Y}, {newVertex1X, newVertex1Y})) {
       let ret = Line.createAvoidingIntersections(
         state,
         layerID,

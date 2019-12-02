@@ -5,7 +5,9 @@ import {
   MODE_IDLE
 } from '../constants';
 import { State, Catalog } from '../models';
-import { history } from '../utils/export';
+
+import * as history from '../utils/history';
+
 import {
   Layer,
   Group,

@@ -1,8 +1,6 @@
 import { Layer, Group } from './export';
-import {
-  IDBroker,
-  NameGenerator
-} from '../utils/export';
+import IDBroker from '../utils/id-broker';
+import NameGenerator from '../utils/name-generator';
 import { Map, fromJS } from 'immutable';
 
 import {

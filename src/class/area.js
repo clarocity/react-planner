@@ -1,9 +1,7 @@
 import { fromJS } from 'immutable';
 import { Layer, Vertex, Group } from './export';
-import {
-  IDBroker,
-  NameGenerator
-} from '../utils/export';
+import IDBroker from '../utils/id-broker';
+import NameGenerator from '../utils/name-generator';
 
 class Area{
 

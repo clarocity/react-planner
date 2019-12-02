@@ -1,5 +1,5 @@
 import { Layer } from '../class/export';
-import { history } from '../utils/export';
+import * as history from '../utils/history';
 import {
   ADD_LAYER,
   SELECT_LAYER,

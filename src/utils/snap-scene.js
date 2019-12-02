@@ -9,7 +9,7 @@ import {
   addLineSegmentSnap,
   addGridSnap
 } from './snap';
-import { GeometryUtils } from './export';
+import * as Geometry from './geometry';
 import { Map, List } from 'immutable';
 
 export function sceneSnapElements(scene, snapElements = new List(), snapMask = new Map()) {
@@ -29,9 +29,9 @@ export function sceneSnapElements(scene, snapElements = new List(), snapMask = n
         }
 
         if (snapMask.get(SNAP_LINE)) {
-          ({ a, b, c } = GeometryUtils.horizontalLine(y));
+          ({ a, b, c } = Geometry.horizontalLine(y));
           addLineSnap(snapElements, a, b, c, 10, 1, vertexID);
-          ({ a, b, c } = GeometryUtils.verticalLine(x));
+          ({ a, b, c } = Geometry.verticalLine(x));
           addLineSnap(snapElements, a, b, c, 10, 1, vertexID);
         }
 

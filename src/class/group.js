@@ -9,7 +9,8 @@ import {
 } from './export';
 import { Map, List } from 'immutable';
 import { Group as GroupModel } from '../models';
-import { IDBroker, GeometryUtils } from '../utils/export';
+import IDBroker from '../utils/id-broker';
+import * as Geometry from '../utils/geometry';
 
 class Group{
 
@@ -120,7 +121,7 @@ class Group{
 
         let { x: x1, y: y1 } = vertices.get(0);
         let { x: x2, y: y2 } = vertices.get(1);
-        let { x: xM, y: yM } = GeometryUtils.midPoint( x1, y1, x2, y2 );
+        let { x: xM, y: yM } = Geometry.midPoint( x1, y1, x2, y2 );
 
         xBar += xM;
         yBar += yM;
@@ -133,7 +134,7 @@ class Group{
           .map( vID => state.getIn(['scene', 'layers', groupLayerID, 'vertices', vID]) );
         let { x: x1, y: y1 } = lineVertices.get(0);
         let { x: x2, y: y2 } = lineVertices.get(1);
-        let { x, y } = GeometryUtils.extendLine( x1, y1, x2, y2, hole.offset * GeometryUtils.pointsDistance( x1, y1, x2, y2 ) );
+        let { x, y } = Geometry.extendLine( x1, y1, x2, y2, hole.offset * Geometry.pointsDistance( x1, y1, x2, y2 ) );
 
         xBar += x;
         yBar += y;
@@ -151,7 +152,7 @@ class Group{
       if( areas ) areas.forEach( areaID => {
         let areaVertices = state.getIn(['scene', 'layers', groupLayerID, 'areas', areaID, 'vertices'])
           .map( vID => state.getIn(['scene', 'layers', groupLayerID, 'vertices', vID]) ).toJS();
-        let { x, y } = GeometryUtils.verticesMidPoint( areaVertices );
+        let { x, y } = Geometry.verticesMidPoint( areaVertices );
 
         xBar += x;
         yBar += y;
@@ -305,7 +306,7 @@ class Group{
 
         for( let vertexID in vertices ) {
           let { x: xV, y: yV } = vertices[ vertexID ];
-          let { x: newX, y: newY } = GeometryUtils.rotatePointAroundPoint( xV, yV, barX, barY, alpha );
+          let { x: newX, y: newY } = Geometry.rotatePointAroundPoint( xV, yV, barX, barY, alpha );
           state = Vertex.setAttributes( state, groupLayerID, vertexID, new Map({ x: newX, y: newY }) ).updatedState;
         }
         //need to be separated from setAttributes cycle
@@ -320,7 +321,7 @@ class Group{
         .reduce( ( newState, item ) => {
           let { x: xI, y: yI, rotation: rI } = item;
 
-          let { x: newX, y: newY } = GeometryUtils.rotatePointAroundPoint( xI, yI, barX, barY, alpha );
+          let { x: newX, y: newY } = Geometry.rotatePointAroundPoint( xI, yI, barX, barY, alpha );
 
           return Item.setAttributes( newState, groupLayerID, item.id, new Map({ x: newX, y: newY, rotation: rI + alpha }) ).updatedState;
         }, state );

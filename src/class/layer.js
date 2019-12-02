@@ -1,10 +1,9 @@
 import { List } from 'immutable';
 import { Project, Area, Line, Hole, Item, Vertex } from './export';
-import {
-  GraphInnerCycles,
-  GeometryUtils,
-  IDBroker
-} from '../utils/export';
+import IDBroker from '../utils/id-broker';
+import * as Geometry from '../utils/geometry';
+import * as GraphInnerCycles from '../utils/graph-inner-cycles';
+
 import { Layer as LayerModel } from '../models';
 
 const sameSet = (set1, set2) => set1.size === set2.size && set1.isSuperset(set2) && set1.isSubset(set2);
@@ -149,7 +148,7 @@ class Layer{
       let areaVerticesList = verticesCoordsForArea[i].vertices.flatten().toArray();
       for (j = 0; j < verticesCoordsForArea.length; j++) {
         if (i !== j) {
-          let isHole = GeometryUtils.ContainsPoint(areaVerticesList,
+          let isHole = Geometry.ContainsPoint(areaVerticesList,
             verticesCoordsForArea[j].vertices.get(0).get(0),
             verticesCoordsForArea[j].vertices.get(0).get(1));
           if (isHole) {
@@ -189,7 +188,7 @@ class Layer{
         let v0 = newState.getIn(['scene', 'layers', layerID, 'vertices', v_id0]);
         let v1 = newState.getIn(['scene', 'layers', layerID, 'vertices', v_id1]);
 
-        if( GeometryUtils.verticesDistance( v0, v1 ) === 0 )
+        if( Geometry.verticesDistance( v0, v1 ) === 0 )
         {
           newState = Line.remove( newState, layerID, line.id ).updatedState;
         }
@@ -210,7 +209,7 @@ class Layer{
       .filter(v => {
         return (
           v.id !== vertexID &&
-          GeometryUtils.samePoints(vertex, v)// &&
+          Geometry.samePoints(vertex, v)// &&
           //!v.lines.contains( vertexID ) &&
           //!v.areas.contains( vertexID )
         );

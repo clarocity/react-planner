@@ -1,4 +1,4 @@
-import { history } from '../utils/export';
+import * as history from '../utils/history';
 import {
   LOAD_PROJECT,
   NEW_PROJECT,

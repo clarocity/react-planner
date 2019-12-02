@@ -11,7 +11,6 @@ import ReactPlannerActions from './actions/export';
 import ReactPlannerReducers from './reducers/export';
 import ReactPlannerClasses from './class/export';
 import ElementsFactories from './catalog/factories/export';
-import ReactPlannerUtils from './utils/export';
 import Buttons from './components/toolbar/buttons';
 import { Panels } from './components/sidebar/export';
 
@@ -31,7 +30,6 @@ export {
   ReactPlannerReducers,
   ReactPlannerClasses,
   ElementsFactories,
-  ReactPlannerUtils
 };
 
 export const Context = ReactPlannerComponents.Context;

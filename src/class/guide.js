@@ -1,4 +1,4 @@
-import { IDBroker } from '../utils/export';
+import IDBroker from '../utils/id-broker';
 
 class HorizontalGuide {
   static create(state, coordinate) {

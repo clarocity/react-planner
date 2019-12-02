@@ -1,5 +1,5 @@
 import { Hole } from '../class/export';
-import { history } from '../utils/export';
+import * as history from '../utils/history';
 import {
   SELECT_TOOL_DRAWING_HOLE,
   UPDATE_DRAWING_HOLE,

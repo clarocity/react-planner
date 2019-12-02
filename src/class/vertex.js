@@ -1,11 +1,10 @@
 import { Map, List } from 'immutable';
 import { Vertex as VertexModel } from '../models';
-import {
-  IDBroker,
-  GeometryUtils,
-  SnapSceneUtils,
-  SnapUtils
-} from '../utils/export';
+import IDBroker from '../utils/id-broker';
+import * as Geometry from '../utils/geometry';
+import * as SnapUtils from '../utils/snap';
+import * as SnapSceneUtils from '../utils/snap-scene';
+
 import {
   MODE_DRAGGING_VERTEX
 } from '../constants';
@@ -15,7 +14,7 @@ class Vertex{
 
   static add( state, layerID, x, y, relatedPrototype, relatedID ) {
 
-    let vertex = state.getIn(['scene', 'layers', layerID, 'vertices']).find(vertex => GeometryUtils.samePoints(vertex, {x, y}));
+    let vertex = state.getIn(['scene', 'layers', layerID, 'vertices']).find(vertex => Geometry.samePoints(vertex, {x, y}));
 
     if (vertex) {
       vertex = vertex.update(relatedPrototype, related => related.push(relatedID));
@@ -151,15 +150,15 @@ class Vertex{
 
           let oldHoles = [];
 
-          let orderedVertices = GeometryUtils.orderVertices([oldVertex, vertex]);
+          let orderedVertices = Geometry.orderVertices([oldVertex, vertex]);
 
           reducedState
             .getIn(['scene', 'layers', layerID, 'lines', lineID, 'holes'])
             .forEach(holeID => {
               let hole = reducedState.getIn(['scene', 'layers', layerID, 'holes', holeID]);
-              let oldLineLength = GeometryUtils.pointsDistance(oldVertex.x, oldVertex.y, vertex.x, vertex.y);
-              let offset = GeometryUtils.samePoints( orderedVertices[1], reducedState.getIn(['scene', 'layers', layerID, 'lines', lineID, 'vertices', 1]) ) ? ( 1 - hole.offset ) : hole.offset;
-              let offsetPosition = GeometryUtils.extendLine( oldVertex.x, oldVertex.y, vertex.x, vertex.y, oldLineLength * offset );
+              let oldLineLength = Geometry.pointsDistance(oldVertex.x, oldVertex.y, vertex.x, vertex.y);
+              let offset = Geometry.samePoints( orderedVertices[1], reducedState.getIn(['scene', 'layers', layerID, 'lines', lineID, 'vertices', 1]) ) ? ( 1 - hole.offset ) : hole.offset;
+              let offsetPosition = Geometry.extendLine( oldVertex.x, oldVertex.y, vertex.x, vertex.y, oldLineLength * offset );
 
               oldHoles.push({hole, offsetPosition});
             });
@@ -177,7 +176,7 @@ class Vertex{
           reducedState = Layer.mergeEqualsVertices( reducedState, layerID, vertexID ).updatedState;
           reducedState = Line.remove( reducedState, layerID, lineID ).updatedState;
 
-          if (!GeometryUtils.samePoints(oldVertex, vertex)) {
+          if (!Geometry.samePoints(oldVertex, vertex)) {
             let ret = Line.createAvoidingIntersections(
               reducedState,
               layerID,
