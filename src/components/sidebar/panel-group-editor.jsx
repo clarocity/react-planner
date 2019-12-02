@@ -3,7 +3,7 @@ import Panel from './panel';
 import * as SharedStyle from '../../shared-style';
 import { FormNumberInput, FormTextInput } from '../style/export';
 import { Map } from 'immutable';
-import { ContextPropTypes, needsContext } from '../context';
+import { ContextPropTypes, needsLimitedContext } from '../context';
 
 import {FaUnlink} from 'react-icons/fa';
 
@@ -43,7 +43,9 @@ const tablegroupStyle = {
 
 const iconColStyle = {width: '2em'};
 
-export default @needsContext class PanelGroupEditor extends Component {
+export default
+@needsLimitedContext('state', 'actions', 'translator')
+class PanelGroupEditor extends Component {
 
   shouldComponentUpdate(nextProps /*, nextState */) {
 
@@ -175,5 +177,8 @@ export default @needsContext class PanelGroupEditor extends Component {
 }
 
 PanelGroupEditor.propTypes = {
-  ...ContextPropTypes,
+  state: ContextPropTypes.state,
+  actions: ContextPropTypes.actions,
+  translator: ContextPropTypes.translator,
+  // styles: ContextPropTypes.styles,
 };

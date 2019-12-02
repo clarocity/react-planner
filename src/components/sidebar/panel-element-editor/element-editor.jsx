@@ -9,7 +9,7 @@ import * as MathUtils from '../../../utils/math';
 import * as SharedStyle from '../../../shared-style';
 import convert from 'convert-units';
 import {MdContentCopy, MdContentPaste} from 'react-icons/md';
-import { ContextPropTypes, needsContext } from '../../context';
+import { ContextPropTypes, needsLimitedContext } from '../../context';
 
 const PRECISION = 2;
 
@@ -35,7 +35,9 @@ const iconHeadStyle = {
   fontSize:'1.4em'
 };
 
-export default @needsContext class ElementEditor extends Component {
+export default
+@needsLimitedContext('catalog', 'translator', 'actions', 'state')
+class ElementEditor extends Component {
 
   constructor(props) {
     super(props);
@@ -355,23 +357,22 @@ export default @needsContext class ElementEditor extends Component {
   render() {
 
     const {propertiesFormData, attributesFormData} = this.derivedState;
-    const {state: appState, element, catalog, translator} = this.props;
+    const {state, element, catalog, translator} = this.props;
 
     return (
       <div>
-
         <AttributesEditor
           element={element}
           onUpdate={this.updateAttribute}
           attributeFormData={attributesFormData}
-          state={appState}
+          state={state}
         />
 
         <div style={attrPorpSeparatorStyle}>
           <div style={headActionStyle}>
             <div title={translator.t('Copy')} style={iconHeadStyle} onClick={ () => this.copyProperties(element.properties) }><MdContentCopy /></div>
             {
-              appState.get('clipboardProperties') && appState.get('clipboardProperties').size ?
+              state.get('clipboardProperties') && state.get('clipboardProperties').size ?
                 <div title={translator.t('Paste')} style={iconHeadStyle} onClick={ () => this.pasteProperties() }><MdContentPaste /></div> : null
             }
           </div>
@@ -390,7 +391,7 @@ export default @needsContext class ElementEditor extends Component {
               value={currentValue}
               configs={configs}
               onUpdate={value => this.updateProperty(propertyName, value)}
-              state={appState}
+              state={state}
               sourceElement={element}
               internalState={{propertiesFormData, attributesFormData}}
             />
@@ -403,8 +404,11 @@ export default @needsContext class ElementEditor extends Component {
 }
 
 ElementEditor.propTypes = {
-  state: PropTypes.object.isRequired,
   element: PropTypes.object.isRequired,
   layer: PropTypes.object.isRequired,
-  ...ContextPropTypes,
+
+  state: ContextPropTypes.state,
+  catalog: ContextPropTypes.catalog,
+  translator: ContextPropTypes.translator,
+  actions: ContextPropTypes.actions
 };

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {themed, StyleAlias, CompoundStyle} from '../../themekit';
+import { ContextPropTypes, needsLimitedContext } from '../context';
+import {StyleAlias, CompoundStyle} from '../../themekit';
 
-export default @themed class RulerY extends Component {
+export default @needsLimitedContext('styles') class RulerY extends Component {
 
   static styles = {
     root: {
@@ -115,7 +116,7 @@ export default @themed class RulerY extends Component {
 }
 
 RulerY.propTypes = {
-  styles: PropTypes.object,
+  styles: ContextPropTypes.styles,
   grid: PropTypes.object.isRequired,
   zoom: PropTypes.number.isRequired,
   mouseY: PropTypes.number.isRequired,

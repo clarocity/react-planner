@@ -1,14 +1,13 @@
-import React, {PureComponent, Fragment} from 'react';
-import PropTypes from 'prop-types';
+import React, {PureComponent} from 'react';
 import ContainerDimensions from 'react-container-dimensions';
 
 import { ReactSVGPanZoom, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT, TOOL_AUTO } from 'react-svg-pan-zoom';
 import * as constants from '../../constants';
 import State from './state';
-import {themed, StyleAlias, CompoundStyle} from '../../themekit';
+import {StyleAlias, CompoundStyle} from '../../themekit';
 
 import { RulerX, RulerY } from './export';
-import { ContextPropTypes, needsContext } from '../context';
+import { ContextPropTypes, needsLimitedContext } from '../context';
 
 function mode2Tool(mode) {
   switch (mode) {
@@ -24,8 +23,6 @@ function mode2Tool(mode) {
       return TOOL_NONE;
   }
 }
-
-
 
 function mode2DetectAutopan(mode) {
   switch (mode) {
@@ -58,7 +55,9 @@ function extractElementData(node) {
   }
 }
 
-export default @needsContext @themed class Viewer2D extends PureComponent {
+export default
+@needsLimitedContext('themekit', 'styles', 'actions', 'state', 'catalog')
+class Viewer2D extends PureComponent {
 
   static styles = {
     root: {
@@ -408,6 +407,9 @@ export default @needsContext @themed class Viewer2D extends PureComponent {
 }
 
 Viewer2D.propTypes = {
-  styles: PropTypes.object,
-  ...ContextPropTypes
+  themekit: ContextPropTypes.themekit,
+  styles: ContextPropTypes.styles,
+  actions: ContextPropTypes.actions,
+  state: ContextPropTypes.state,
+  catalog: ContextPropTypes.catalog,
 };

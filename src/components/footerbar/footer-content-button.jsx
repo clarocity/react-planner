@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {FaTimes as IconClose} from 'react-icons/fa';
-import {themed, StyleAlias, CompoundStyle} from '../../themekit';
 
-export default @themed class FooterContentButton extends Component {
+import { ContextPropTypes, needsLimitedContext } from '../context';
+import {StyleAlias, CompoundStyle} from '../../themekit';
+
+export default @needsLimitedContext('styles') class FooterContentButton extends Component {
 
   static styles = {
     container: {
@@ -162,7 +164,8 @@ export default @themed class FooterContentButton extends Component {
 }
 
 FooterContentButton.propTypes = {
-  styles: PropTypes.object,
+  styles: ContextPropTypes.styles,
+
   text: PropTypes.string.isRequired,
   textStyle: PropTypes.object,
   icon: PropTypes.func,

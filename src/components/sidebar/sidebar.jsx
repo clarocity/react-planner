@@ -1,8 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { defaultPanels } from './panels';
 
-import {themed, StyleAlias} from '../../themekit';
+import { ContextPropTypes, needsLimitedContext } from '../context';
+import {StyleAlias} from '../../themekit';
 
 class Sidebar extends React.PureComponent {
   render () {
@@ -32,8 +32,8 @@ Sidebar.styles = {
 }
 
 Sidebar.propTypes = {
-  sidebarPanels: PropTypes.arrayOf(PropTypes.elementType),
-  styles: PropTypes.object,
+  sidebarPanels: ContextPropTypes.sidebarPanels,
+  styles: ContextPropTypes.styles,
 };
 
-export default themed(Sidebar);
+export default needsLimitedContext('sidebarPanels', 'styles')(Sidebar);

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {themed, StyleAlias, CompoundStyle} from '../../themekit';
+import { ContextPropTypes, needsLimitedContext } from '../context';
+import {StyleAlias, CompoundStyle} from '../../themekit';
 
-
-export default @themed class FooterToggleButton extends Component {
+export default @needsLimitedContext('styles') class FooterToggleButton extends Component {
 
   static styles = {
     root: {
@@ -74,7 +74,8 @@ export default @themed class FooterToggleButton extends Component {
 }
 
 FooterToggleButton.propTypes = {
-  styles: PropTypes.object,
+  styles: ContextPropTypes.styles,
+
   toggleOn: PropTypes.func.isRequired,
   toggleOff: PropTypes.func.isRequired,
   text: PropTypes.string.isRequired,

@@ -5,12 +5,14 @@ import FooterToggleButton from './footer-toggle-button';
 import FooterWarnings from './footer-warnings';
 import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_GRID, SNAP_GUIDE } from '../../utils/snap';
 import { MODE_SNAPPING } from '../../constants';
-import { ContextPropTypes, needsContext } from '../context';
+import { ContextPropTypes, needsLimitedContext } from '../context';
 import { VERSION } from '../../version';
 
-import {themed, StyleAlias} from '../../themekit';
+import {StyleAlias} from '../../themekit';
 
-export default @needsContext @themed class FooterBar extends Component {
+export default
+@needsLimitedContext('translator', 'styles', 'state', 'actions')
+class FooterBar extends Component {
 
   static styles = {
     container: {
@@ -166,5 +168,8 @@ FooterBar.propTypes = {
   footerbarComponents: PropTypes.array.isRequired,
   softwareSignature: PropTypes.string,
 
-  ...ContextPropTypes
+  state: ContextPropTypes.state,
+  actions: ContextPropTypes.actions,
+  translator: ContextPropTypes.translator,
+  styles: ContextPropTypes.styles,
 };

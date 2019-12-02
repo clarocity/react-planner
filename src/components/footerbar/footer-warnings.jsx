@@ -4,9 +4,10 @@ import FooterContentButton from './footer-content-button';
 import { MdWarning } from 'react-icons/md';
 import { IoMdCloseCircle } from 'react-icons/io';
 
-import {themed, StyleAlias} from '../../themekit';
+import { needsLimitedContext } from '../context';
+import {StyleAlias} from '../../themekit';
 
-export default @themed class FooterWarnings extends Component {
+export default @needsLimitedContext('styles') class FooterWarnings extends Component {
 
   static styles = {
 

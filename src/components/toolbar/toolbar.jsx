@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import {defaultButtons} from './buttons';
 
-import { ContextPropTypes, needsContext } from '../context';
-import {themed, StyleAlias} from '../../themekit';
+import { ContextPropTypes, needsLimitedContext } from '../context';
+import {StyleAlias} from '../../themekit';
 
-export default @needsContext @themed class Toolbar extends Component {
+export default @needsLimitedContext('toolbarButtons', 'styles') class Toolbar extends Component {
 
   static styles = {
     container: {
@@ -42,7 +41,6 @@ export default @needsContext @themed class Toolbar extends Component {
 
 
 Toolbar.propTypes = {
-  toolbarButtons: PropTypes.arrayOf(PropTypes.elementType),
-
-  ...ContextPropTypes,
+  toolbarButtons: ContextPropTypes.toolbarButtons,
+  styles: ContextPropTypes.styles,
 };
