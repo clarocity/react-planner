@@ -1,20 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import If from '../../utils/react-if';
-import * as SharedStyles from '../../shared-style';
 import { ContextPropTypes, needsContext } from '../context';
+import {StyleAlias} from '../../themekit';
 
 const cx = 0;
 const cy = 0;
 const radius = 5;
 
-const STYLE_CIRCLE = {
-  fill: SharedStyles.MATERIAL_COLORS[500].orange,
-  stroke: SharedStyles.MATERIAL_COLORS[500].orange,
-  cursor: 'default'
-};
 
-function Group({ layer, group, translator}) {
+function Group({ styles, layer, group, translator}) {
   return (
     <g
       data-element-root
@@ -22,7 +17,7 @@ function Group({ layer, group, translator}) {
       data-id={group.id}
       data-selected={group.selected}
       data-layer={layer.id}
-      style={group.selected ? { cursor: SharedStyles.CURSORS.drag } : {}}
+      style={group.selected ? styles.selected : {}}
       transform={`translate(${group.x},${group.y}) rotate(${group.rotation})`}
     >
       <If condition={group.selected}>
@@ -34,7 +29,7 @@ function Group({ layer, group, translator}) {
           data-layer={layer.id}
           data-part="rotation-anchor"
         >
-          <circle cx={cx} cy={cy} r={radius} style={STYLE_CIRCLE}>
+          <circle cx={cx} cy={cy} r={radius} style={styles.circle}>
             <title>{translator.t('Group\'s Barycenter')}</title>
           </circle>
         </g>
@@ -43,11 +38,24 @@ function Group({ layer, group, translator}) {
   )
 }
 
+Group.styles = {
+  circle: {
+    fill: new StyleAlias('group.select'),
+    stroke: new StyleAlias('group.select'),
+    cursor: new StyleAlias('cursors.default'),
+  },
+
+  selected: {
+    cursor: new StyleAlias('cursors.drag'),
+  }
+}
+
 Group.propTypes = {
   group: PropTypes.object.isRequired,
   layer: PropTypes.object.isRequired,
   scene: PropTypes.object.isRequired,
+  styles: ContextPropTypes.styles,
   translator: ContextPropTypes.translator
 };
 
-export default needsContext('translator')(Group);
+export default needsContext('translator', 'styles')(Group);

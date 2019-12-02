@@ -33,6 +33,9 @@ const InitialVars = {
       backgroundColor: new StyleAlias('chrome.target'),
     }
   },
+  group: {
+    select: '#FF9800',
+  },
 
   cursors: {
     default: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACbklEQVRYw+2WTYhSURTHfdkkVlMxfVNEUVEMDEGl0MJlguCmVQQpRNskRBy3bsWF6DJcuHiLoUVJCdJKEcwPBC1UBE0XblTIRT0/Fr73OudxhJnJJkefF4IO/OG+y3v3/M7H1aPRaDQc6CjoGEmrYWzo/BToEukMgTCz46Brg8GgXqvVeFhvgs6xhMDoN2WyUqn0AZ63WEJgyu+j89FopEAUi8WPLCEQ4CE6TiaTcjabZQ6xB8BgMDCH+A2ANcRMAJYQfwRgBXEgAAuIvwKsGmIugFVCzA2wKohDARiNRtUh5gZA51PNgDgLWmMGsBuiUqm8gzNugE7QfKE+QKfTEeUDLJfLbdM/6xFVAFwulxyLxWSTyaRE2263pclkIsbj8U+JROJ9Op1+m8lkdgqFAl8ul9/4/f5HcM5JVTLgdrtlQRCUiMPhsALA87wSqdfr9cH7JhpcboKugy6DTi/aiHsAps5BA5DQarUkBDCbzfJwOBQbjUYB3n8AukDTlG7XLMktBVCtVhXn4Eiw2WzbkO4o7iMUQqRSKVmSJNFutz+Bby7SPLm0YeruTZsJpqKfTqfzBewZLRbLUxEMaq0AOBwOBJDy+fwOdb1ODQBsnNsY2Xg8/uHxeJ7T4VjXrXq9/hn2RavVqkA0m00JBtjv+A2VYGnDKM7DnX7t8/kew/oqQelBV0Kh0CvMDKY/Go3K4Fzs9XpfCVKvBoCWDsI7vE5rLd1n3LvT7Xa/TEvU7/e/BQKBZwi96C/fLOPIIbevk9HBhk6nuxWJRF4Gg0EbPN+lBtQv2vWHBVujkmyQ1unardz5fhBuRob+279vvwBaC6MkVJrDhAAAAABJRU5ErkJggg==) 7 5, default',
