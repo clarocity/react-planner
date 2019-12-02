@@ -5,13 +5,13 @@ import FooterToggleButton from './footer-toggle-button';
 import FooterWarnings from './footer-warnings';
 import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_GRID, SNAP_GUIDE } from '../../utils/snap';
 import { MODE_SNAPPING } from '../../constants';
-import { ContextPropTypes, needsLimitedContext } from '../context';
+import { ContextPropTypes, needsContext } from '../context';
 import { VERSION } from '../../version';
 
 import {StyleAlias} from '../../themekit';
 
 export default
-@needsLimitedContext('translator', 'styles', 'state', 'actions')
+@needsContext('translator', 'styles', 'state', 'actions')
 class FooterBar extends Component {
 
   static styles = {

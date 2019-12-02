@@ -75,7 +75,9 @@ ItemAttributesEditor.propTypes = {
   element: PropTypes.object.isRequired,
   onUpdate: PropTypes.func.isRequired,
   attributeFormData: PropTypes.object.isRequired,
-  ...ContextPropTypes
+
+  translator: ContextPropTypes.translator,
+  state: ContextPropTypes.state,
 };
 
-export default needsContext(ItemAttributesEditor);
+export default needsContext('translator', 'state')(ItemAttributesEditor);

@@ -21,7 +21,8 @@ function ToolbarLoadButton({actions, translator}) {
 }
 
 ToolbarLoadButton.propTypes = {
-  ...ContextPropTypes,
+  actions: ContextPropTypes.actions,
+  translator: ContextPropTypes.translator,
 };
 
-export default needsContext(ToolbarLoadButton);
+export default needsContext('actions', 'translator')(ToolbarLoadButton);

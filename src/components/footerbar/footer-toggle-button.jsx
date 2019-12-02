@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ContextPropTypes, needsLimitedContext } from '../context';
+import { ContextPropTypes, needsContext } from '../context';
 import {StyleAlias, CompoundStyle} from '../../themekit';
 
-export default @needsLimitedContext('styles') class FooterToggleButton extends Component {
+export default @needsContext('styles') class FooterToggleButton extends Component {
 
   static styles = {
     root: {

@@ -21,7 +21,8 @@ function ToolbarSaveButton({state, translator}) {
 }
 
 ToolbarSaveButton.propTypes = {
-  ...ContextPropTypes
+  state: ContextPropTypes.state,
+  translator: ContextPropTypes.translator,
 };
 
-export default needsContext(ToolbarSaveButton);
+export default needsContext('state', 'translator')(ToolbarSaveButton);

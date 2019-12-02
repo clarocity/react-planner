@@ -7,7 +7,7 @@ import State from './state';
 import {StyleAlias, CompoundStyle} from '../../themekit';
 
 import { RulerX, RulerY } from './export';
-import { ContextPropTypes, needsLimitedContext } from '../context';
+import { ContextPropTypes, needsContext } from '../context';
 
 function mode2Tool(mode) {
   switch (mode) {
@@ -56,7 +56,7 @@ function extractElementData(node) {
 }
 
 export default
-@needsLimitedContext('themekit', 'styles', 'actions', 'state', 'catalog')
+@needsContext('themekit', 'styles', 'actions', 'state', 'catalog')
 class Viewer2D extends PureComponent {
 
   static styles = {

@@ -74,7 +74,9 @@ const historyElementStyle = {
   padding: '0 1em'
 };
 
-export default @needsContext class CatalogList extends Component {
+export default
+@needsContext('state', 'translator', 'catalog', 'actions')
+class CatalogList extends Component {
 
   constructor(props) {
     super(props);
@@ -144,8 +146,8 @@ export default @needsContext class CatalogList extends Component {
   }
 
   render() {
-    const {style, state: globalState, catalog, actions, translator} = this.props;
-    let page = globalState.catalog.page;
+    const {style, state, catalog, actions, translator} = this.props;
+    let page = state.catalog.page;
     let currentCategory = catalog.getCategory(page);
     let categoriesToDisplay = currentCategory.categories;
     let elementsToDisplay = currentCategory.elements.filter(element => element.info.visibility ? element.info.visibility.catalog : true );
@@ -156,7 +158,7 @@ export default @needsContext class CatalogList extends Component {
 
       let breadcrumbsNames = [];
 
-      globalState.catalog.path.forEach(pathName => {
+      state.catalog.path.forEach(pathName => {
         breadcrumbsNames.push({
           name: catalog.getCategory(pathName).label,
           action: () => actions.project.goBackToCatalogPage(pathName)
@@ -168,13 +170,13 @@ export default @needsContext class CatalogList extends Component {
       breadcrumbComponent = (<CatalogBreadcrumb names={breadcrumbsNames}/>);
     }
 
-    let pathSize = globalState.catalog.path.size;
+    let pathSize = state.catalog.path.size;
 
     let turnBackButton = pathSize > 0 ? (
-      <CatalogTurnBackPageItem key={pathSize} page={catalog.categories[globalState.catalog.path.get(pathSize - 1)]}/>) : null;
+      <CatalogTurnBackPageItem key={pathSize} page={catalog.categories[state.catalog.path.get(pathSize - 1)]}/>) : null;
 
 
-    let selectedHistory = globalState.get('selectedElementsHistory');
+    let selectedHistory = state.get('selectedElementsHistory');
     let selectedHistoryElements = selectedHistory.map( ( el, ind ) =>
       <div key={ind} style={historyElementStyle} title={el.name} onClick={() => this.select(el) }>{el.name}</div>
     );
@@ -211,5 +213,9 @@ export default @needsContext class CatalogList extends Component {
 
 CatalogList.propTypes = {
   style: PropTypes.object,
-  ...ContextPropTypes,
+
+  state: ContextPropTypes.state,
+  translator: ContextPropTypes.translator,
+  catalog: ContextPropTypes.catalog,
+  actions: ContextPropTypes.actions,
 };

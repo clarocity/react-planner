@@ -48,7 +48,7 @@ const STYLE_CONFIRM_DIFFERENT = {
   opacity: 1,
 }
 
-export default @needsContext class FormNumberInput extends Component {
+export default @needsContext('translator') class FormNumberInput extends Component {
 
   constructor(props) {
     super(props);
@@ -203,7 +203,7 @@ FormNumberInput.propTypes = {
   max: PropTypes.number,
   precision: PropTypes.number,
   placeholder: PropTypes.string,
-  ...ContextPropTypes,
+  translator: ContextPropTypes.translator
 };
 
 FormNumberInput.defaultProps = {

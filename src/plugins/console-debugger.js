@@ -3,7 +3,7 @@ import { ContextPropTypes, needsContext } from '../components/context';
 import actions from '../actions/export';
 
 
-export default @needsContext class ConsoleDebugger extends Component {
+export default @needsContext('store', 'state', 'events') class ConsoleDebugger extends Component {
 
   store = null;
   hook = null;
@@ -63,5 +63,7 @@ export default @needsContext class ConsoleDebugger extends Component {
 
 
 ConsoleDebugger.propTypes = {
-  ...ContextPropTypes,
+  store: ContextPropTypes.store,
+  state: ContextPropTypes.state,
+  events: ContextPropTypes.events,
 }

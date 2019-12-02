@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import {Map} from 'immutable';
 import { Cursors, Context } from 'react-planner';
 import memoize from 'memoize-one';
+const { needsContext, ContextPropTypes} = Context;
 
 const grabCircleRadius = 10;
 const hoverCircleRadius = 14;
@@ -38,7 +39,7 @@ const pointsDistance = (x1, y1, x2, y2) => {
   return 0;
 };
 
-export default @Context.needsContext class ImageFul extends Component {
+export default @needsContext('actions') class ImageFul extends Component {
   constructor(props) {
     super(props);
 
@@ -231,5 +232,6 @@ ImageFul.propTypes = {
   imageUri: PropTypes.string.isRequired,
   layer: PropTypes.object.isRequired,
   scene: PropTypes.object.isRequired,
-  ...Context.ContextPropTypes,
+
+  actions: ContextPropTypes.actions,
 };

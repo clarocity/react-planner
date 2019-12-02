@@ -98,7 +98,9 @@ LineAttributesEditor.propTypes = {
   onUpdate: PropTypes.func.isRequired,
   onValid: PropTypes.func,
   attributeFormData: PropTypes.object.isRequired,
-  ...ContextPropTypes
+
+  state: ContextPropTypes.state,
+  translator: ContextPropTypes.translator,
 };
 
-export default needsContext(LineAttributesEditor);
+export default needsContext('state', 'translator')(LineAttributesEditor);

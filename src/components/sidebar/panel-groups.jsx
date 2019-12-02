@@ -4,7 +4,7 @@ import * as SharedStyle from '../../shared-style';
 import {TiPlus} from 'react-icons/ti';
 import {FaTrash, FaEye, FaLink, FaUnlink} from 'react-icons/fa';
 import { Map } from 'immutable';
-import { ContextPropTypes, needsLimitedContext } from '../context';
+import { ContextPropTypes, needsContext } from '../context';
 
 import {
   MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON,
@@ -47,7 +47,7 @@ const newLayerLableStyle = {fontSize: '1.3em', cursor: 'pointer', textAlign: 'ce
 const newLayerLableHoverStyle = {...newLayerLableStyle, ...styleHoverColor};
 
 export default
-@needsLimitedContext('state', 'actions', 'translator')
+@needsContext('state', 'actions', 'translator')
 class PanelGroups extends Component {
 
   constructor(props) {

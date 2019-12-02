@@ -1,6 +1,7 @@
 import React from 'react';
 import { MdCamera } from 'react-icons/md'
 import {ReactPlannerComponents, ReactPlannerConstants, Context} from 'react-planner';
+const { needsContext, ContextPropTypes} = Context;
 
 const {
   MODE_IDLE,
@@ -125,7 +126,8 @@ function TakeScreenshot({state, translator}) {
 }
 
 TakeScreenshot.propTypes = {
-  ...Context.ContextPropTypes,
+  translator: ContextPropTypes.translator,
+  state: ContextPropTypes.state,
 };
 
-export default Context.needsContext(TakeScreenshot)
+export default needsContext('translator', 'state')(TakeScreenshot)

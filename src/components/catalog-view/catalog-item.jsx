@@ -104,7 +104,7 @@ const STYLE_TAG = {
   borderRadius: '3px'
 };
 
-export default @needsContext class CatalogItem extends Component {
+export default @needsContext('actions') class CatalogItem extends Component {
 
   constructor(props) {
     super(props);
@@ -157,5 +157,5 @@ export default @needsContext class CatalogItem extends Component {
 
 CatalogItem.propTypes = {
   element: PropTypes.object.isRequired,
-  ...ContextPropTypes,
+  actions: ContextPropTypes.actions,
 };

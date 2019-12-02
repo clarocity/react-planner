@@ -63,9 +63,10 @@ Item.propTypes = {
   layer: PropTypes.object.isRequired,
   scene: PropTypes.object.isRequired,
   catalog: PropTypes.object.isRequired,
-  ...ContextPropTypes,
+
+  state: ContextPropTypes.state,
 };
 
-export default needsContext(Item);
+export default needsContext('state')(Item);
 
 

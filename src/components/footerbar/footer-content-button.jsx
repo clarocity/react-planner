@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {FaTimes as IconClose} from 'react-icons/fa';
 
-import { ContextPropTypes, needsLimitedContext } from '../context';
+import { ContextPropTypes, needsContext } from '../context';
 import {StyleAlias, CompoundStyle} from '../../themekit';
 
-export default @needsLimitedContext('styles') class FooterContentButton extends Component {
+export default @needsContext('styles') class FooterContentButton extends Component {
 
   static styles = {
     container: {

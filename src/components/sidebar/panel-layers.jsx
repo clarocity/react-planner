@@ -62,7 +62,7 @@ const newLayerLableHoverStyle = {...newLayerLableStyle, ...styleHoverColor};
 const layerInputTableStyle = {width: '100%', borderSpacing: '2px 0', padding: '5px 15px'};
 const inputTableButtonStyle = {float: 'right', marginTop: '0.5em', borderSpacing: '0'};
 
-export default @needsContext class PanelLayers extends Component {
+export default @needsContext('state', 'actions', 'translator') class PanelLayers extends Component {
   constructor(props) {
     super(props);
 
@@ -273,6 +273,7 @@ export default @needsContext class PanelLayers extends Component {
 }
 
 PanelLayers.propTypes = {
-  state: PropTypes.object.isRequired,
-  ...ContextPropTypes,
+  state: ContextPropTypes.state,
+  actions: ContextPropTypes.actions,
+  translator: ContextPropTypes.translator,
 };

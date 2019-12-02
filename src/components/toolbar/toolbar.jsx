@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import {defaultButtons} from './buttons';
 
-import { ContextPropTypes, needsLimitedContext } from '../context';
+import { ContextPropTypes, needsContext } from '../context';
 import {StyleAlias} from '../../themekit';
 
-export default @needsLimitedContext('toolbarButtons', 'styles') class Toolbar extends Component {
+export default @needsContext('toolbarButtons', 'styles') class Toolbar extends Component {
 
   static styles = {
     container: {

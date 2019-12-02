@@ -1,7 +1,7 @@
 import React from 'react';
 import { defaultPanels } from './panels';
 
-import { ContextPropTypes, needsLimitedContext } from '../context';
+import { ContextPropTypes, needsContext } from '../context';
 import {StyleAlias} from '../../themekit';
 
 class Sidebar extends React.PureComponent {
@@ -36,4 +36,4 @@ Sidebar.propTypes = {
   styles: ContextPropTypes.styles,
 };
 
-export default needsLimitedContext('sidebarPanels', 'styles')(Sidebar);
+export default needsContext('sidebarPanels', 'styles')(Sidebar);

@@ -23,7 +23,7 @@ const tableTabStyle = {
   textAlign: 'center'
 };
 
-export default @needsContext class PanelGuides extends Component {
+export default @needsContext('state', 'actions', 'translator') class PanelGuides extends Component {
   constructor(props) {
     super(props);
 
@@ -181,5 +181,7 @@ export default @needsContext class PanelGuides extends Component {
 }
 
 PanelGuides.propTypes = {
-  ...ContextPropTypes
+  state: ContextPropTypes.state,
+  actions: ContextPropTypes.actions,
+  translator: ContextPropTypes.translator,
 };

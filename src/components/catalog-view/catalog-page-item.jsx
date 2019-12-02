@@ -62,16 +62,19 @@ const CONTAINER_DIV = {
   justifyContent: 'center'
 };
 
-export default @needsContext class CatalogPageItem extends Component {
+export default @needsContext('actions') class CatalogPageItem extends Component {
 
   constructor(props) {
     super(props);
     this.state = {hover: false};
   }
 
-  changePage(newPage) {
-    this.props.actions.project.changeCatalogPage(newPage, this.props.oldPage.name)
+  changePage = () => {
+    this.props.actions.project.changeCatalogPage(this.props.page.name, this.props.oldPage.name)
   }
+
+  onMouseEnter = () => this.setState({hover: true})
+  onMouseLeave  = () => this.setState({hover: false})
 
   render() {
     let page = this.props.page;
@@ -80,9 +83,9 @@ export default @needsContext class CatalogPageItem extends Component {
     return (
       <div
         style={hover ? STYLE_BOX_HOVER : STYLE_BOX}
-        onClick={() => this.changePage(page.name)}
-        onMouseEnter={() => this.setState({hover: true})}
-        onMouseLeave={() => this.setState({hover: false})}
+        onClick={this.changePage}
+        onMouseEnter={this.onMouseEnter}
+        onMouseLeave={this.onMouseLeave}
       >
         {hover ?
           <div style={CONTAINER_DIV}>
@@ -102,5 +105,5 @@ export default @needsContext class CatalogPageItem extends Component {
 CatalogPageItem.propTypes = {
   page: PropTypes.object.isRequired,
   oldPage: PropTypes.object.isRequired,
-  ...ContextPropTypes,
+  actions: ContextPropTypes.actions,
 };

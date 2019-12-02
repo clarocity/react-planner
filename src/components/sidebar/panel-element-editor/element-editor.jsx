@@ -9,7 +9,7 @@ import * as MathUtils from '../../../utils/math';
 import * as SharedStyle from '../../../shared-style';
 import convert from 'convert-units';
 import {MdContentCopy, MdContentPaste} from 'react-icons/md';
-import { ContextPropTypes, needsLimitedContext } from '../../context';
+import { ContextPropTypes, needsContext } from '../../context';
 
 const PRECISION = 2;
 
@@ -36,7 +36,7 @@ const iconHeadStyle = {
 };
 
 export default
-@needsLimitedContext('catalog', 'translator', 'actions', 'state')
+@needsContext('catalog', 'translator', 'actions', 'state')
 class ElementEditor extends Component {
 
   constructor(props) {

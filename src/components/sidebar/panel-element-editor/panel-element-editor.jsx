@@ -59,7 +59,8 @@ function PanelElementEditor({state, translator}) {
 }
 
 PanelElementEditor.propTypes = {
-  ...ContextPropTypes,
+  state: ContextPropTypes.state,
+  translator: ContextPropTypes.translator,
 };
 
-export default needsContext(PanelElementEditor);
+export default needsContext('state', 'translator')(PanelElementEditor);

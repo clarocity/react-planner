@@ -32,7 +32,8 @@ function Vertex({vertex, layer, state}) {
 Vertex.propTypes = {
   vertex: PropTypes.object.isRequired,
   layer: PropTypes.object.isRequired,
-  ...ContextPropTypes,
+
+  state: ContextPropTypes.state,
 };
 
-export default needsContext(Vertex);
+export default needsContext('state')(Vertex);

@@ -60,7 +60,7 @@ Provider.propTypes = {
   ...ContextPropTypes,
 }
 
-export function needsContext (Component) {
+export function needsFullContext (Component) {
   if (!Component) throw new Error('needsContext did not receive a component. Did you use this as a decorator function?');
 
   const resolver = memoize((tk) => {
@@ -79,8 +79,8 @@ export function needsContext (Component) {
   return ContextWrapper;
 }
 
-export function needsLimitedContext (...propNames) {
-  if (!propNames.length || typeof propNames[0] !== 'string') throw new Error('needsLimitedContext did not receive a list of props to include');
+export function needsContext (...propNames) {
+  if (!propNames.length || typeof propNames[0] !== 'string') throw new Error('needsContext did not receive a list of props to include');
 
   const needsStyles = propNames.includes('styles');
 
@@ -110,5 +110,6 @@ export default {
   ContextPropTypes,
   Consumer,
   Provider,
+  needsFullContext,
   needsContext,
 };

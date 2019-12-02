@@ -17,7 +17,7 @@ import {
   setAlternateState
 } from '../actions/project-actions';
 
-export default @needsContext class Keyboard extends Component {
+export default @needsContext('store', 'state', 'events') class Keyboard extends Component {
 
   componentDidMount () {
     this.mediator = this.props.events;
@@ -125,5 +125,7 @@ export default @needsContext class Keyboard extends Component {
 }
 
 Keyboard.propTypes = {
-  ...ContextPropTypes,
+  store: ContextPropTypes.store,
+  state: ContextPropTypes.state,
+  events: ContextPropTypes.events,
 }

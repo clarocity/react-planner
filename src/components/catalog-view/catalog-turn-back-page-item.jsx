@@ -47,7 +47,7 @@ const CONTAINER_DIV = {
   justifyContent: 'center'
 };
 
-export default @needsContext class CatalogTurnBackPageItem extends Component {
+export default @needsContext('actions') class CatalogTurnBackPageItem extends Component {
 
   constructor(props) {
     super(props);
@@ -80,5 +80,5 @@ export default @needsContext class CatalogTurnBackPageItem extends Component {
 
 CatalogTurnBackPageItem.propTypes = {
   page: PropTypes.object.isRequired,
-  ...ContextPropTypes
+  actions: ContextPropTypes.actions,
 };

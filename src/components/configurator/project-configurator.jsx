@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {
   ContentTitle,
   ContentContainer,
@@ -11,8 +10,9 @@ import {
 } from '../style/export';
 import { ContextPropTypes, needsContext } from '../context';
 
-
-export default @needsContext class ProjectConfigurator extends Component {
+export default
+@needsContext('translator','actions','state')
+class ProjectConfigurator extends Component {
 
   constructor(props) {
     super(props);
@@ -90,5 +90,7 @@ export default @needsContext class ProjectConfigurator extends Component {
 }
 
 ProjectConfigurator.propTypes = {
-  ...ContextPropTypes
+  translator: ContextPropTypes.translator,
+  actions: ContextPropTypes.actions,
+  state: ContextPropTypes.state,
 };

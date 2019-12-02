@@ -7,7 +7,7 @@ import { loadProject } from '../actions/project-actions';
 
 const TIMEOUT_DELAY = 500;
 
-export default @needsContext class AutoSave extends Component {
+export default @needsContext('state', 'store') class AutoSave extends Component {
 
   store = null;
   hook = null;
@@ -47,5 +47,7 @@ export default @needsContext class AutoSave extends Component {
 AutoSave.propTypes = {
   storageKey: PropTypes.string.isRequired,
   delay: PropTypes.number,
-  ...ContextPropTypes,
+
+  state: ContextPropTypes.state,
+  store: ContextPropTypes.store,
 }

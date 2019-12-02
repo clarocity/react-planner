@@ -47,7 +47,7 @@ Group.propTypes = {
   group: PropTypes.object.isRequired,
   layer: PropTypes.object.isRequired,
   scene: PropTypes.object.isRequired,
-  ...ContextPropTypes
+  translator: ContextPropTypes.translator
 };
 
-export default needsContext(Group);
+export default needsContext('translator')(Group);

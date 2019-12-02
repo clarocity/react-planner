@@ -62,7 +62,7 @@ Spacer.propTypes = {
   style: PropTypes.object,
 };
 
-export const New = needsContext(function New ({ translator, actions }) {
+export const New = needsContext('state', 'actions', 'translator')(function New ({ translator, actions }) {
   return (
     <ToolbarButton
       active={false}
@@ -74,9 +74,13 @@ export const New = needsContext(function New ({ translator, actions }) {
   );
 });
 
-New.propTypes = { ...ContextPropTypes };
+New.propTypes = {
+  state: ContextPropTypes.state,
+  actions: ContextPropTypes.actions,
+  translator: ContextPropTypes.translator,
+}
 
-export const Catalog = needsContext(function Catalog ({ translator, actions, state }) {
+export const Catalog = needsContext('state', 'actions', 'translator')(function Catalog ({ translator, actions, state }) {
   let mode = state.get('mode');
   return (
     <ToolbarButton
@@ -89,9 +93,13 @@ export const Catalog = needsContext(function Catalog ({ translator, actions, sta
   );
 });
 
-Catalog.propTypes = { ...ContextPropTypes };
+Catalog.propTypes = {
+  state: ContextPropTypes.state,
+  actions: ContextPropTypes.actions,
+  translator: ContextPropTypes.translator,
+}
 
-export const View2D = needsContext(function View2D ({ translator, actions, state }) {
+export const View2D = needsContext('state', 'actions', 'translator')(function View2D ({ translator, actions, state }) {
   let mode = state.get('mode');
   let alternateColor = state.get('alternate') ? SharedStyle.MATERIAL_COLORS[500].orange : '';
   return (
@@ -107,9 +115,13 @@ export const View2D = needsContext(function View2D ({ translator, actions, state
   );
 });
 
-View2D.propTypes = { ...ContextPropTypes };
+View2D.propTypes = {
+  state: ContextPropTypes.state,
+  actions: ContextPropTypes.actions,
+  translator: ContextPropTypes.translator,
+}
 
-export const View3D = needsContext(function View3D ({ translator, actions, state }) {
+export const View3D = needsContext('state', 'actions', 'translator')(function View3D ({ translator, actions, state }) {
   let mode = state.get('mode');
   return (
     <ToolbarButton
@@ -124,7 +136,7 @@ export const View3D = needsContext(function View3D ({ translator, actions, state
 
 View3D.propTypes = { ...ContextPropTypes };
 
-export const ViewFirstPerson = needsContext(function ViewFirstPerson ({ translator, actions, state }) {
+export const ViewFirstPerson = needsContext('state', 'actions', 'translator')(function ViewFirstPerson ({ translator, actions, state }) {
   let mode = state.get('mode');
   return (
     <ToolbarButton
@@ -137,9 +149,13 @@ export const ViewFirstPerson = needsContext(function ViewFirstPerson ({ translat
   );
 });
 
-ViewFirstPerson.propTypes = { ...ContextPropTypes };
+ViewFirstPerson.propTypes = {
+  state: ContextPropTypes.state,
+  actions: ContextPropTypes.actions,
+  translator: ContextPropTypes.translator,
+}
 
-export const Undo = needsContext(function Undo ({ translator, actions }) {
+export const Undo = needsContext('state', 'actions', 'translator')(function Undo ({ translator, actions }) {
   return (
     <ToolbarButton
       active={false}
@@ -151,9 +167,13 @@ export const Undo = needsContext(function Undo ({ translator, actions }) {
   );
 });
 
-Undo.propTypes = { ...ContextPropTypes };
+Undo.propTypes = {
+  state: ContextPropTypes.state,
+  actions: ContextPropTypes.actions,
+  translator: ContextPropTypes.translator,
+}
 
-export const Configure = needsContext(function Configure ({ translator, actions, state }) {
+export const Configure = needsContext('state', 'actions', 'translator')(function Configure ({ translator, actions, state }) {
   let mode = state.get('mode');
   return (
     <ToolbarButton
@@ -166,7 +186,11 @@ export const Configure = needsContext(function Configure ({ translator, actions,
   );
 });
 
-Configure.propTypes = { ...ContextPropTypes };
+Configure.propTypes = {
+  state: ContextPropTypes.state,
+  actions: ContextPropTypes.actions,
+  translator: ContextPropTypes.translator,
+}
 
 
 export const defaultButtons = [

@@ -12,7 +12,7 @@ import { ContextPropTypes, needsContext } from '../../context';
 const tableStyle = { width: '100%' };
 const firstTdStyle = { width: '6em' };
 
-export default @needsContext class PanelMultiElementsEditor extends Component {
+export default @needsContext('state', 'actions') class PanelMultiElementsEditor extends Component {
 
   constructor(props) {
     super(props);
@@ -85,5 +85,6 @@ export default @needsContext class PanelMultiElementsEditor extends Component {
 }
 
 PanelMultiElementsEditor.propTypes = {
-  ...ContextPropTypes
+  state: ContextPropTypes.state,
+  actions: ContextPropTypes.actions,
 };
