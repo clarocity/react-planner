@@ -96,6 +96,8 @@ export default @needsContext('styles') class FooterContentButton extends Compone
       width:'15px',
       height:'15px',
     },
+
+    label: {}
   }
 
   constructor(props) {
@@ -142,7 +144,7 @@ export default @needsContext('styles') class FooterContentButton extends Compone
           title={title}
         >
           <LabelIcon style={styles.compile('icon', this.props.iconStyle)}/>
-          <span style={styles.compile('toggleText', this.props.textStyle)}>{text}</span>
+          <span style={styles.compile('label', this.props.textStyle)}>{text}</span>
         </div>
         <div style={styles.compile('content', active && '#active')}>
           <div style={styles.compile('contentHeader')}>
