@@ -19,6 +19,10 @@ ComponentStyles.prototype = {
   compileRaw (...directives) {
     let result = this._root;
 
+    let target = '';
+    let previous = result;
+    let current = result;
+
     for (let directive of directives.filter(Boolean)) {
       if (isObject(directive)) {
         result = merge(result, directive);
@@ -27,9 +31,6 @@ ComponentStyles.prototype = {
 
       if (isString(directive)) directive = directive.split(/\.|(?=#)/);
 
-      let target = '';
-      let current = result;
-
       for (let alias of directive) {
         // wut u doin?
         if (!alias || !isString(alias)) continue;
@@ -37,10 +38,14 @@ ComponentStyles.prototype = {
         if (alias[0] === '#') {
           if (current[alias]) result = merge(result, current[alias]);
           if (current[target + alias]) result = merge(result, current[target + alias]);
+          if (previous[target + alias]) result = merge(result, previous[target + alias]);
           continue;
         }
 
+        if (!result[alias]) throw new Error(`ComponentStyles could not locate styles for "${alias}"`);
+
         target = alias;
+        previous = current;
         result = current = result[alias];
       }
     }
