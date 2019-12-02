@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import Translator from './translator/translator';
 import Catalog from './catalog/catalog';
 import Actions from './actions/export';
-import {objectsMap} from './utils/objects-utils';
+import {map} from './utils';
 import {
   ToolbarComponents,
   Content,
@@ -158,7 +158,7 @@ function mapStateToProps(reduxState) {
 }
 
 function mapDispatchToProps(dispatch) {
-  const actions = objectsMap(Actions, (creators) => bindActionCreators(creators, dispatch));
+  const actions = map(Actions, (creators) => bindActionCreators(creators, dispatch));
   return { actions }
 }
 
