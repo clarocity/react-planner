@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import memoize from 'memoize-one';
-import {isObject, isMappable, merge, get, has, map} from './utils';
+import {isObject, isMappable, merge, get, has, map} from '../utils';
 import InitialVars from './initial';
 import Styles from './cstyles';
 import { StyleVar, StyleAlias, CompoundStyle } from './var';

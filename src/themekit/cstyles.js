@@ -1,5 +1,5 @@
 
-import {isObject, isString, merge, get, omit} from './utils';
+import {isObject, isString, merge, get, omit} from '../utils';
 
 export default function ComponentStyles (resolved) {
   const result = Object.create(resolved);
