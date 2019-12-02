@@ -1,61 +1,10 @@
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import memoize from 'memoize-one';
 import {isObject, isMappable, merge, get, has, map} from '../utils';
 import InitialVars from './initial';
 import Styles from './cstyles';
 import { StyleVar, StyleAlias, CompoundStyle } from './var';
 
 export { StyleVar, StyleAlias, CompoundStyle };
-
-export const Theme = React.createContext(null);
-
-export const ThemeKitConsumer = Theme.Consumer;
-ThemeKitConsumer.displayName = 'ThemeConsumer';
-
-export class ThemeKitProvider extends React.PureComponent {
-
-  // Memoizing this so that it doesn't make a new ThemeKit object every render and break
-  // memoization further down the component tree
-  tk = memoize((t) => new ThemeKit(t))
-
-  render () {
-    const themekit = this.tk(this.props.themekit);
-    return (
-      <Theme.Provider value={themekit}>{this.props.children}</Theme.Provider>
-    );
-  }
-}
-
-ThemeKitProvider.propTypes = {
-  children: PropTypes.node,
-  themekit: PropTypes.oneOfType([
-    PropTypes.instanceOf(ThemeKit),
-    PropTypes.instanceOf(Map),
-    PropTypes.object,
-  ]),
-}
-
-export function themed (Component) {
-  if (!Component) throw new Error('themed did not receive a component. Did you use this as a decorator function?');
-  const name = Component.displayName || Component.name || 'UnknownComponent';
-  const resolver = memoize((tk) => {
-    return tk.resolveComponent(Component);
-  });
-
-  function ThemeKitWrapper (props) {
-    return (
-      <ThemeKitConsumer>{(tk) => {
-        const styles = resolver(tk);
-        return <Component themekit={tk} styles={styles} {...props} />
-      }}</ThemeKitConsumer>
-    );
-  }
-
-  ThemeKitWrapper.displayName = name;
-  return ThemeKitWrapper;
-}
 
 export default class ThemeKit {
 
@@ -131,7 +80,5 @@ export default class ThemeKit {
   }
 }
 
-ThemeKit.Provider = ThemeKitProvider;
-ThemeKit.Consumer = ThemeKitConsumer;
 ThemeKit.StyleAlias = StyleAlias;
 ThemeKit.Styles = Styles;

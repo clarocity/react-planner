@@ -74,8 +74,7 @@ class ReactPlanner extends Component {
     }, {});
 
     return (
-      <Context.Provider state={extractedState} root={this} events={this.events} {...props}>
-        <ThemeKit.Provider themekit={theme}>
+      <Context.Provider theme={theme} state={extractedState} root={this} events={this.events} {...props}>
         <div
           style={{ display: 'flex', flexFlow: 'column nowrap', overflow: 'hidden', ...style }}
           tabIndex={0}
@@ -104,7 +103,6 @@ class ReactPlanner extends Component {
           <Keyboard />
           {frames.root}
         </div>
-        </ThemeKit.Provider>
       </Context.Provider>
     );
   }
