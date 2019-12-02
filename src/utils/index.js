@@ -89,13 +89,12 @@ export function omit (collection, keys) {
     keys = [keys];
   }
 
-  if (Array.isArray(keys)) {
-    return mapReduce(collection, (value, key) =>
-      keys.includes(key)
-        ? [ undefined, undefined ]
-        : [ key, value ]
-    )
-  }
+  if (!Array.isArray(keys)) throw new Error('pick requires a string or array of strings');
+  return mapReduce(collection, (value, key) =>
+    keys.includes(key)
+      ? [ undefined, undefined ]
+      : [ key, value ]
+  )
 }
 
 export function pick (collection, keys) {
@@ -111,13 +110,13 @@ export function pick (collection, keys) {
     keys = [keys];
   }
 
-  if (Array.isArray(keys)) {
-    return mapReduce(collection, (value, key) =>
-      keys.includes(key)
-        ? [ key, value ]
-        : [ undefined, undefined ]
-    )
-  }
+  if (!Array.isArray(keys)) throw new Error('pick requires a string or array of strings');
+  return keys.reduce((obj, key) => {
+    if (collection && hasOwn(collection, key)) {
+      obj[key] = collection[key];
+    }
+    return obj;
+  }, {});
 }
 
 /**
