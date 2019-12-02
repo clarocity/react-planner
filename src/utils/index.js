@@ -79,7 +79,9 @@ export function map (collection, cb) {
 export function omit (collection, keys) {
   if (typeof keys === 'function') {
     return mapReduce(collection, (value, key, index) =>
-      keys(value, key, index) ? [ key, value ] : [ undefined, undefined ]
+      keys(value, key, index)
+        ? [ undefined, undefined ]
+        : [ key, value ]
     )
   }
 
@@ -89,7 +91,31 @@ export function omit (collection, keys) {
 
   if (Array.isArray(keys)) {
     return mapReduce(collection, (value, key) =>
-      keys.includes(key) ? [ key, value ] : [ undefined, undefined ]
+      keys.includes(key)
+        ? [ undefined, undefined ]
+        : [ key, value ]
+    )
+  }
+}
+
+export function pick (collection, keys) {
+  if (typeof keys === 'function') {
+    return mapReduce(collection, (value, key, index) =>
+      keys(value, key, index)
+        ? [ key, value ]
+        : [ undefined, undefined ]
+    )
+  }
+
+  if (isString(keys)) {
+    keys = [keys];
+  }
+
+  if (Array.isArray(keys)) {
+    return mapReduce(collection, (value, key) =>
+      keys.includes(key)
+        ? [ key, value ]
+        : [ undefined, undefined ]
     )
   }
 }

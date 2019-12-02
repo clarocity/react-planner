@@ -1,5 +1,5 @@
 
-import {isObject, isString, merge, get, omit} from '../utils';
+import {isObject, isString, merge, get, pick} from '../utils';
 
 export default function ComponentStyles (resolved) {
   const result = Object.create(resolved);
@@ -13,7 +13,7 @@ ComponentStyles.prototype = {
   constructor: ComponentStyles,
 
   compile (...directives) {
-    return omit(this.compileRaw(...directives), isValidCss);
+    return pick(this.compileRaw(...directives), isValidCss);
   },
 
   compileRaw (...directives) {
