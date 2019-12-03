@@ -6,77 +6,79 @@ import CatalogPageItem from './catalog-page-item';
 import CatalogTurnBackPageItem from './catalog-turn-back-page-item';
 import ContentContainer from '../style/content-container';
 import ContentTitle from '../style/content-title';
-import * as SharedStyle from '../../shared-style';
 import { ContextPropTypes, needsContext } from '../context';
-
-const containerStyle = {
-  backgroundColor:'#FFF',
-  padding:'1em',
-  overflowY:'auto',
-  overflowX:'hidden',
-  zIndex:10
-};
-
-const itemsStyle = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(14em, 1fr))',
-  gridGap: '10px',
-  marginTop: '1em'
-};
-
-const searchContainer = {
-  width: '100%',
-  height: '3em',
-  padding: '0.625em',
-  background: '#f7f7f9',
-  border: '1px solid #e1e1e8',
-  cursor: 'pointer',
-  position: 'relative',
-  boxShadow: '0 1px 6px 0 rgba(0, 0, 0, 0.11), 0 1px 4px 0 rgba(0, 0, 0, 0.11)',
-  borderRadius: '2px',
-  transition: 'all .2s ease-in-out',
-  WebkitTransition: 'all .2s ease-in-out',
-  marginBottom: '1em',
-  display: 'flex',
-  flexFlow: 'row nowrap',
-  alignItems: 'center',
-};
-
-const searchText = {
-  paddingRight: '0.625em'
-};
-
-const searchInput = {
-  flex: '1',
-  margin: '0',
-  padding: '0 1em',
-  border: '1px solid #EEE',
-  height: '3em',
-};
-
-const historyContainer = {
-  ...searchContainer,
-  padding: '0.2em 0.625em'
-};
-
-const historyElementStyle = {
-  width: 'auto',
-  height: '2em',
-  lineHeight: '2em',
-  textAlign:'center',
-  borderRadius: '1em',
-  display: 'inline-block',
-  cursor: 'pointer',
-  backgroundColor: SharedStyle.PRIMARY_COLOR.alt,
-  color: SharedStyle.PRIMARY_COLOR.text_main,
-  textTransform: 'capitalize',
-  margin: '0.25em',
-  padding: '0 1em'
-};
+import {StyleAlias, BorderStyle} from '../../themekit';
 
 export default
-@needsContext('state', 'translator', 'catalog', 'actions')
+@needsContext('styles', 'state', 'translator', 'catalog', 'actions')
 class CatalogList extends Component {
+
+  static styles = {
+    root: {
+      backgroundColor: new StyleAlias('catalog.backgroundColor'),
+      color: new StyleAlias('catalog.textColor'),
+      padding:'1em',
+      overflowY:'auto',
+      overflowX:'hidden',
+      zIndex:10
+    },
+
+    items: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(14em, 1fr))',
+      gridGap: '10px',
+      marginTop: '1em'
+    },
+
+    listContainer: {
+      width: '100%',
+      height: '3em',
+      padding: '0.625em',
+      background: new StyleAlias('catalog.item.backgroundColor'),
+      border: new BorderStyle({ color: '$catalog.item.borderColor' }),
+      cursor: 'pointer',
+      position: 'relative',
+      boxShadow: '0 1px 6px 0 rgba(0, 0, 0, 0.11), 0 1px 4px 0 rgba(0, 0, 0, 0.11)',
+      borderRadius: '2px',
+      transition: 'all .2s ease-in-out',
+      WebkitTransition: 'all .2s ease-in-out',
+      marginBottom: '1em',
+      display: 'flex',
+      flexFlow: 'row nowrap',
+      alignItems: 'center',
+
+      '#history': {
+        padding: '0.2em 0.625em'
+      }
+    },
+
+    searchText: {
+      width: '8em',
+    },
+
+    searchInput: {
+      flex: '1',
+      margin: '0',
+      padding: '0 1em',
+      border: new BorderStyle({ color: '$catalog.borderColor' }),
+      height: '3em',
+    },
+
+    historyElement: {
+      width: 'auto',
+      height: '2em',
+      lineHeight: '2em',
+      textAlign:'center',
+      borderRadius: '1em',
+      display: 'inline-block',
+      cursor: 'pointer',
+      backgroundColor: new StyleAlias('chrome.alternateBackgroundColor'),
+      color: new StyleAlias('chrome.textColor'),
+      textTransform: 'capitalize',
+      margin: '0.25em',
+      padding: '0 1em'
+    }
+  }
 
   constructor(props) {
     super(props);
@@ -146,7 +148,7 @@ class CatalogList extends Component {
   }
 
   render() {
-    const {style, state, catalog, actions, translator} = this.props;
+    const {style, styles, state, catalog, actions, translator} = this.props;
     let page = state.catalog.page;
     let currentCategory = catalog.getCategory(page);
     let categoriesToDisplay = currentCategory.categories;
@@ -178,25 +180,25 @@ class CatalogList extends Component {
 
     let selectedHistory = state.get('selectedElementsHistory');
     let selectedHistoryElements = selectedHistory.map( ( el, ind ) =>
-      <div key={ind} style={historyElementStyle} title={el.name} onClick={() => this.select(el) }>{el.name}</div>
+      <div key={ind} style={styles.historyElement} title={el.name} onClick={() => this.select(el) }>{el.name}</div>
     );
 
     return (
-      <ContentContainer style={{...containerStyle, ...style}}>
+      <ContentContainer style={styles.compile('root', style)}>
         <ContentTitle>{translator.t('Catalog')}</ContentTitle>
         {breadcrumbComponent}
-        <div style={searchContainer}>
-          <span style={searchText}>{translator.t('Search Element')}</span>
-          <input type="text" style={searchInput} onChange={( e ) => { this.matcharray( e.target.value ); } }/>
+        <div style={styles.listContainer}>
+          <span style={styles.searchText}>{translator.t('Search Element')}</span>
+          <input type="text" style={styles.searchInput} onChange={( e ) => { this.matcharray( e.target.value ); } }/>
         </div>
         { selectedHistory.size ?
-          <div style={historyContainer}>
-            <span>{translator.t('Last Selected')}</span>
+          <div style={styles.listContainer}>
+            <span style={styles.searchText}>{translator.t('Last Selected')}</span>
             {selectedHistoryElements}
           </div> :
           null
         }
-        <div style={itemsStyle}>
+        <div style={styles.items}>
           {
             this.state.matchString === '' ? [
               turnBackButton,
@@ -214,6 +216,7 @@ class CatalogList extends Component {
 CatalogList.propTypes = {
   style: PropTypes.object,
 
+  styles: ContextPropTypes.styles,
   state: ContextPropTypes.state,
   translator: ContextPropTypes.translator,
   catalog: ContextPropTypes.catalog,

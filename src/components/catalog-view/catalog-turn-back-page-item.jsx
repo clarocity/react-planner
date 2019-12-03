@@ -1,76 +1,75 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {MdNavigateBefore} from 'react-icons/md';
-import * as SharedStyle from '../../shared-style';
 import { ContextPropTypes, needsContext } from '../context';
+import {StyleAlias, BorderStyle} from '../../themekit';
 
-const STYLE_BOX = {
-  width: '14em',
-  height: '14em',
-  padding: '0.625em',
-  background: '#f7f7f9',
-  border: '1px solid #e1e1e8',
-  margin: '0.3em',
-  cursor: 'pointer',
-  position: 'relative',
-  boxShadow: '0 1px 6px 0 rgba(0, 0, 0, 0.11), 0 1px 4px 0 rgba(0, 0, 0, 0.11)',
-  borderRadius: '2px',
-  transition: 'all .2s ease-in-out',
-  WebkitTransition: 'all .2s ease-in-out'
-};
 
-const STYLE_BOX_HOVER = {
-  ...STYLE_BOX,
-  background: SharedStyle.SECONDARY_COLOR.main
-};
+export default @needsContext('actions', 'styles') class CatalogTurnBackPageItem extends Component {
 
-const STYLE_BACK = {
-  position: 'absolute',
-  color: SharedStyle.COLORS.black,
-  fontSize: '5em',
-  width: '100%'
-};
 
-const STYLE_BACK_HOVER = {
-  ...STYLE_BACK,
-  color: SharedStyle.SECONDARY_COLOR.main
-};
+  static styles = {
+    root: {
+      width: '14em',
+      height: '14em',
+      padding: '0.625em',
+      backgroundColor: new StyleAlias('catalog.item.backgroundColor'),
+      border: new BorderStyle({ color: '$catalog.item.borderColor' }),
+      cursor: 'pointer',
+      position: 'relative',
+      boxShadow: '0 1px 6px 0 rgba(0, 0, 0, 0.11), 0 1px 4px 0 rgba(0, 0, 0, 0.11)',
+      borderRadius: '2px',
+      transition: 'all .2s ease-in-out',
+      WebkitTransition: 'backgroundColor .2s ease-in-out',
+      alignSelf: 'center',
+      justifySelf: 'center',
 
-const CONTAINER_DIV = {
-  background: SharedStyle.COLORS.white,
-  marginBottom: '5px',
-  border: 'solid 1px #e6e6e6',
-  width: '100%',
-  height: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center'
-};
+      '#hover': {
+        backgroundColor: new StyleAlias('catalog.item.backgroundHover'),
+        color: new StyleAlias('catalog.item.backgroundHover'),
+      },
+    },
 
-export default @needsContext('actions') class CatalogTurnBackPageItem extends Component {
+    glyph: {
+      fontSize: '5em',
+    },
+
+    wrap: {
+      background: new StyleAlias('catalog.backgroundColor'),
+      marginBottom: '5px',
+      border: new BorderStyle({ color: '$catalog.borderColor' }),
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }
+  }
 
   constructor(props) {
     super(props);
     this.state = {hover: false};
   }
 
-  changePage(newPage) {
-    this.props.actions.project.goBackToCatalogPage(newPage)
+  changePage = () => {
+    this.props.actions.project.goBackToCatalogPage(this.props.page.name)
   }
+  onMouseEnter = () => this.setState({hover: true})
+  onMouseLeave = () => this.setState({hover: false})
 
   render() {
-    let page = this.props.page;
-    let hover = this.state.hover;
+    const {styles} = this.props;
+    const hover = this.state.hover;
 
     return (
       <div
-        style={hover ? STYLE_BOX_HOVER : STYLE_BOX}
-        onClick={() => this.changePage(page.name)}
-        onMouseEnter={() => this.setState({hover: true})}
-        onMouseLeave={() => this.setState({hover: false})}
+        style={styles.compile('root', hover && '#hover')}
+        onClick={this.changePage}
+        onMouseEnter={this.onMouseEnter}
+        onMouseLeave={this.onMouseLeave}
       >
-        <div style={CONTAINER_DIV}>
-          <MdNavigateBefore style={ !hover ? STYLE_BACK : STYLE_BACK_HOVER}/>
+        <div style={styles.wrap}>
+          <MdNavigateBefore style={styles.compile('glyph', hover && '#hover')}/>
         </div>
 
       </div>
@@ -81,4 +80,5 @@ export default @needsContext('actions') class CatalogTurnBackPageItem extends Co
 CatalogTurnBackPageItem.propTypes = {
   page: PropTypes.object.isRequired,
   actions: ContextPropTypes.actions,
+  styles: ContextPropTypes.styles,
 };

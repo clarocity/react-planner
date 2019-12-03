@@ -3,8 +3,9 @@ import { StyleAlias } from './var';
 
 const InitialVars = {
   chrome: {
-    textColor: 'white',
+    textColor: '#FFF',
     backgroundColor: '#28292D',
+    alternateBackgroundColor: '#2E2F33',
     target: '#1CA6FC',
   },
   footer: {
@@ -27,11 +28,22 @@ const InitialVars = {
     markerColor: new StyleAlias('chrome.target'),
   },
   catalog: {
+    backgroundColor: '#fff',
+    borderColor: '#eee',
+    textColor: '#000',
+
     item: {
       backgroundColor: '#f7f7f9',
+      backgroundHover: new StyleAlias('chrome.target'),
+      textColor: new StyleAlias('catalog.textColor'),
+      borderColor: '#e1e1e8',
+      imageBorder: '#e6e6e6',
+      imageBackground: '#fff',
     },
-    'item#hover': {
-      backgroundColor: new StyleAlias('chrome.target'),
+
+    tag: {
+      backgroundColor: '#337ab7',
+      textColor: '#fff',
     }
   },
   group: {
