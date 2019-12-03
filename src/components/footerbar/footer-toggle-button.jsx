@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { ContextPropTypes, needsContext } from '../context';
-import {StyleAlias, CompoundStyle} from '../../themekit';
+import {StyleAlias, BorderStyle} from '../../themekit';
 
 export default @needsContext('styles') class FooterToggleButton extends Component {
 
@@ -18,12 +18,12 @@ export default @needsContext('styles') class FooterToggleButton extends Componen
       display: 'inline-block',
       '#active': {
         backgroundColor: new StyleAlias('footer.activeBackgroundColor'),
-        border: new CompoundStyle('1px solid ${footer.borderColor}'),
+        border: new BorderStyle({ color: '$footer.borderColor' }),
         color: new StyleAlias('footer.activeTextColor'),
       },
 
       '#hover': {
-        border: new CompoundStyle('1px solid ${footer.activeBorderColor}'),
+        border: new BorderStyle({ color: '$footer.activeBorderColor'}),
       },
     },
 

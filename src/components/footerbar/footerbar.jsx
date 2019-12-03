@@ -8,7 +8,7 @@ import { MODE_SNAPPING } from '../../constants';
 import { ContextPropTypes, needsContext } from '../context';
 import { VERSION } from '../../version';
 
-import {StyleAlias} from '../../themekit';
+import {StyleAlias, BorderStyle} from '../../themekit';
 
 export default
 @needsContext('translator', 'styles', 'state', 'actions')
@@ -36,7 +36,7 @@ class FooterBar extends Component {
       flexGrow: 0,
       flexShrink: 1,
       padding: '0 1em',
-      borderLeft: '1px solid #FFF',
+      borderRight: new BorderStyle({ color: '$footer.dividerColor' }),
     },
 
     'section#fill': {
@@ -44,7 +44,7 @@ class FooterBar extends Component {
     },
 
     appMessage: {
-      borderBottom: '1px solid #555',
+      borderBottom: new BorderStyle({ color: '$footer.borderColor' }),
       lineHeight: '1.5em',
     },
 
@@ -94,7 +94,7 @@ class FooterBar extends Component {
       <div style={styles.container}>
 
         <If condition={MODE_SNAPPING.includes(mode)}>
-          <div style={{ ...styles.section, borderLeft: null, paddingLeft: 0 }}>
+          <div style={{ ...styles.section, paddingLeft: 0 }}>
             <div title={translator.t('Mouse X Coordinate')} style={styles.coordinate}>X : {x.toFixed(3)}</div>
             <div title={translator.t('Mouse Y Coordinate')} style={styles.coordinate}>Y : {y.toFixed(3)}</div>
           </div>
@@ -151,7 +151,7 @@ class FooterBar extends Component {
         {
           this.props.softwareSignature ?
             <div
-              style={styles.section}
+              style={{ ...styles.section, borderRight: null }}
               title={this.props.softwareSignature + (this.props.softwareSignature.includes('React-Planner') ? '' : ` using React-Planner ${VERSION}`)}
             >
               {this.props.softwareSignature}

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {FaTimes as IconClose} from 'react-icons/fa';
 
 import { ContextPropTypes, needsContext } from '../context';
-import {StyleAlias, CompoundStyle} from '../../themekit';
+import {StyleAlias, BorderStyle} from '../../themekit';
 
 export default @needsContext('styles') class FooterContentButton extends Component {
 
@@ -36,7 +36,7 @@ export default @needsContext('styles') class FooterContentButton extends Compone
       left:0,
       bottom:20,
       backgroundColor: new StyleAlias('chrome.backgroundColor'),
-      borderTop: new CompoundStyle('1px solid ${footer.borderColor}'),
+      borderTop: new BorderStyle({ color: '$footer.borderColor' }),
       zIndex:10000,
       padding:0,
       margin:0,
@@ -58,7 +58,7 @@ export default @needsContext('styles') class FooterContentButton extends Compone
       height:'2em',
       top:0,
       left:0,
-      borderBottom: new CompoundStyle('1px solid ${footer.borderColor}'),
+      borderBottom: new BorderStyle({ color: '$footer.borderColor' }),
     },
 
     contentTitle: {
@@ -83,7 +83,7 @@ export default @needsContext('styles') class FooterContentButton extends Compone
       right:0,
       top:0,
       padding:'0.5em',
-      borderLeft: new CompoundStyle('1px solid ${footer.borderColor}'),
+      borderLeft: new BorderStyle({ color: '$footer.borderColor' }),
       cursor:'pointer',
 
       '#hover': {
