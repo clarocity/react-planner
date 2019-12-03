@@ -73,6 +73,7 @@ class Viewer2D extends PureComponent {
       left: 0,
       right: 0,
       bottom: 0,
+      cursor: new StyleAlias('cursors.default'),
     },
 
     rulerCorner: {
