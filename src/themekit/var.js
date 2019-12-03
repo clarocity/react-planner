@@ -36,8 +36,15 @@ class StyleAlias extends StyleVar {
 class CompoundStyle extends StyleVar {
   constructor (template, def) {
     super();
-    this.template = template;
+    this.template = Array.isArray(template) ? this.parseArray(template) : template;
     this.default = def;
+  }
+
+  parseArray (input) {
+    return input.map((part) => {
+      if (part[0] === '$' && part[1] !== '{') return '${' + part.slice(1) + '}';
+      return part;
+    }).join(' ');
   }
 
   resolve (tk, key) {
@@ -50,14 +57,22 @@ class CompoundStyle extends StyleVar {
   }
 }
 
+function BorderStyle ({ width = '1px', style = 'solid', color = '#000'}) {
+  return new CompoundStyle([width, style, color]);
+}
+
+CompoundStyle.Border = BorderStyle;
+
 export default {
   StyleVar,
   StyleAlias,
-  CompoundStyle
+  CompoundStyle,
+  BorderStyle,
 }
 
 export {
   StyleVar,
   StyleAlias,
-  CompoundStyle
+  CompoundStyle,
+  BorderStyle,
 }

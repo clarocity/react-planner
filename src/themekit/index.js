@@ -2,9 +2,9 @@
 import {isObject, isMappable, merge, get, has, map} from '../utils';
 import InitialVars from './initial';
 import Styles from './cstyles';
-import { StyleVar, StyleAlias, CompoundStyle } from './var';
+import { StyleVar, StyleAlias, CompoundStyle, BorderStyle } from './var';
 
-export { StyleVar, StyleAlias, CompoundStyle };
+export { StyleVar, StyleAlias, CompoundStyle, BorderStyle };
 
 export default class ThemeKit {
 
