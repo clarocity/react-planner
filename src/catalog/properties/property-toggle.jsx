@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormLabel, Button } from '../../components/style/export';
-import PropertyStyle from './shared-property-style';
+import { ContextPropTypes, needsContext } from '../../components/context';
+import {StyleMerge} from '../../themekit';
 
-
-export default function PropertyToggle({value, onUpdate, configs, sourceElement, internalState, state}) {
+function PropertyToggle({styles, value, onUpdate, configs, sourceElement, internalState, state}) {
 
   let update = (val) => {
 
@@ -18,17 +18,19 @@ export default function PropertyToggle({value, onUpdate, configs, sourceElement,
   };
 
   return (
-    <table className="PropertyToggle" style={PropertyStyle.tableStyle}>
-      <tbody>
-      <tr>
-        <td style={PropertyStyle.firstTdStyle}><FormLabel>{configs.label}</FormLabel></td>
-        <td>
-          <Button onClick={() => update(!value)} size="small">{configs.actionName}</Button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+    <div style={styles.root} className="PropertyToggle">
+      <div style={styles.label}><FormLabel style={{marginBottom: null}}>{configs.label}</FormLabel></div>
+      <div style={styles.input}>
+        <Button onClick={() => update(!value)} size="small">{configs.actionName}</Button>
+      </div>
+    </div>
   );
+}
+
+PropertyToggle.styles = {
+  root:  new StyleMerge('sidebar.property.row'),
+  label: new StyleMerge('sidebar.property.label'),
+  input: new StyleMerge('sidebar.property.mainInput'),
 }
 
 PropertyToggle.propTypes = {
@@ -37,5 +39,10 @@ PropertyToggle.propTypes = {
   configs: PropTypes.object.isRequired,
   sourceElement: PropTypes.object,
   internalState: PropTypes.object,
-  state: PropTypes.object.isRequired
+  state: PropTypes.object.isRequired,
+
+  styles: ContextPropTypes.styles,
 };
+
+export default needsContext('styles')(PropertyToggle);
+

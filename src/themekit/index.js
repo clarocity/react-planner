@@ -2,9 +2,10 @@
 import {isObject, isMappable, merge, get, has, map} from '../utils';
 import InitialVars from './initial';
 import Styles from './cstyles';
-import { StyleVar, StyleAlias, CompoundStyle, BorderStyle } from './var';
+import { StyleVar, StyleAlias, CompoundStyle, BorderStyle, StyleMerge } from './var';
+const { isStyleVar } = StyleVar;
 
-export { StyleVar, StyleAlias, CompoundStyle, BorderStyle };
+export { StyleVar, StyleAlias, CompoundStyle, BorderStyle, StyleMerge };
 
 export default class ThemeKit {
 
@@ -32,7 +33,7 @@ export default class ThemeKit {
     if (this.collection && has(this.collection, path)) {
       let result = get(this.collection, path);
 
-      if (result instanceof StyleVar) {
+      if (isStyleVar(result)) {
         result = result.resolve(this);
       }
 
@@ -41,7 +42,7 @@ export default class ThemeKit {
       if (isObject(result) && has(InitialVars, path)) {
         let source = get(InitialVars, path);
 
-        if (source instanceof StyleVar) {
+        if (isStyleVar(source)) {
           source = source.resolve(this);
         }
 

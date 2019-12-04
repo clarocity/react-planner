@@ -1,21 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormLabel } from '../../components/style/export';
-import PropertyStyle from './shared-property-style';
+import { ContextPropTypes, needsContext } from '../../components/context';
+import {StyleMerge} from '../../themekit';
 
-export default function PropertyReadOnly({value, configs}) {
+function PropertyReadOnly({styles, value, configs}) {
   return (
-    <table className="PropertyReadOnly" style={PropertyStyle.tableStyle}>
-      <tbody>
-      <tr>
-        <td style={PropertyStyle.firstTdStyle}><FormLabel>{configs.label}</FormLabel></td>
-        <td>
-          <div>{value}</div>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+    <div style={styles.root} className="PropertyToggle">
+      <div style={styles.label}><FormLabel style={{marginBottom: null}}>{configs.label}</FormLabel></div>
+      <div style={styles.input}>
+        {value}
+      </div>
+    </div>
   );
+}
+
+PropertyReadOnly.styles = {
+  root:  new StyleMerge('sidebar.property.row'),
+  label: new StyleMerge('sidebar.property.label'),
+  input: new StyleMerge('sidebar.property.mainInput'),
 }
 
 PropertyReadOnly.propTypes = {
@@ -24,5 +27,9 @@ PropertyReadOnly.propTypes = {
   configs: PropTypes.object.isRequired,
   sourceElement: PropTypes.object,
   internalState: PropTypes.object,
-  state: PropTypes.object.isRequired
+  state: PropTypes.object.isRequired,
+
+  styles: ContextPropTypes.styles,
 };
+
+export default needsContext('styles')(PropertyReadOnly);

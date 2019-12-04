@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormLabel, FormColorInput } from '../../components/style/export';
-import PropertyStyle from './shared-property-style';
+import { ContextPropTypes, needsContext } from '../../components/context';
+import {StyleMerge} from '../../themekit';
 
-export default function PropertyColor({value, onUpdate, configs, sourceElement, internalState, state}) {
+function PropertyColor({styles, value, onUpdate, configs, sourceElement, internalState, state}) {
 
   let update = (val) => {
 
@@ -17,19 +18,19 @@ export default function PropertyColor({value, onUpdate, configs, sourceElement, 
   };
 
   return (
-    <table className="PropertyColor" style={PropertyStyle.tableStyle}>
-      <tbody>
-      <tr>
-        <td style={PropertyStyle.firstTdStyle}>
-          <FormLabel>{configs.label}</FormLabel>
-        </td>
-        <td>
-          <FormColorInput value={value} onChange={event => update(event.target.value)}/>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+    <div style={styles.root} className="PropertyString">
+      <div style={styles.label}><FormLabel style={{marginBottom: null}}>{configs.label}</FormLabel></div>
+      <div style={styles.input}>
+        <FormColorInput value={value} onChange={event => update(event.target.value)}/>
+      </div>
+    </div>
   );
+}
+
+PropertyColor.styles = {
+  root:  new StyleMerge('sidebar.property.row'),
+  label: new StyleMerge('sidebar.property.label'),
+  input: new StyleMerge('sidebar.property.mainInput'),
 }
 
 PropertyColor.propTypes = {
@@ -38,5 +39,10 @@ PropertyColor.propTypes = {
   configs: PropTypes.object.isRequired,
   sourceElement: PropTypes.object,
   internalState: PropTypes.object,
-  state: PropTypes.object.isRequired
+  state: PropTypes.object.isRequired,
+
+  styles: ContextPropTypes.styles,
 };
+
+
+export default needsContext('styles')(PropertyColor);

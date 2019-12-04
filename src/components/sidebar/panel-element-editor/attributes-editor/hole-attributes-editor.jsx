@@ -12,7 +12,7 @@ export default function HoleAttributesEditor({element, onUpdate, attributeFormDa
     <PropertyString
       value={name}
       onUpdate={mapped => onUpdate('name', mapped)}
-      configs={{label: 'Nome'}}
+      configs={{label: 'Name'}}
       state={state}
       {...rest}
     />

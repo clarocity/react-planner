@@ -1,12 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormNumberInput, FormTextInput } from '../../../style/export';
-import { PropertyLengthMeasure } from '../../../../catalog/properties/export';
+import PropertyLengthMeasure from '../../../../catalog/properties/property-length-measure';
+import PropertyNumber from '../../../../catalog/properties/property-number';
+import PropertyString from '../../../../catalog/properties/property-string';
 import { ContextPropTypes, needsContext } from '../../../context';
-
-const tableStyle = { width: '100%' };
-const firstTdStyle = { width: '6em' };
-const inputStyle = { textAlign: 'left' };
 
 function LineAttributesEditor({element, onUpdate, attributeFormData, state, translator, ...rest}) {
 
@@ -17,72 +14,41 @@ function LineAttributesEditor({element, onUpdate, attributeFormData, state, tran
 
   return (
     <div>
-      <table style={tableStyle}>
-        <tbody>
-          <tr>
-            <td style={firstTdStyle}>{translator.t('Name')}</td>
-            <td>
-              <FormTextInput
-                value={name}
-                onChange={event => onUpdate('name', event.target.value)}
-                style={inputStyle}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td style={firstTdStyle}>X1</td>
-            <td>
-              <FormNumberInput
-                value={vertexOne.get('x')}
-                onChange={event => onUpdate('vertexOne', {'x': event.target.value})}
-                style={inputStyle}
-                state={state}
-                precision={2}
-                {...rest}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td style={firstTdStyle}>Y1</td>
-            <td>
-              <FormNumberInput
-                value={vertexOne.get('y')}
-                onChange={event => onUpdate('vertexOne', {'y': event.target.value})}
-                style={inputStyle}
-                state={state}
-                precision={2}
-                {...rest}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td style={firstTdStyle}>X2</td>
-            <td>
-              <FormNumberInput
-                value={vertexTwo.get('x')}
-                onChange={event => onUpdate('vertexTwo', {'x': event.target.value})}
-                style={inputStyle}
-                state={state}
-                precision={2}
-                {...rest}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td style={firstTdStyle}>Y2</td>
-            <td>
-              <FormNumberInput
-                value={vertexTwo.get('y')}
-                onChange={event => onUpdate('vertexTwo', {'y': event.target.value})}
-                style={inputStyle}
-                state={state}
-                precision={2}
-                {...rest}
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <PropertyString
+        value={name}
+        onUpdate={v => onUpdate('name', v)}
+        configs={{label: translator.t('Name')}}
+        state={state}
+        {...rest}
+      />
+      <PropertyNumber
+        value={vertexOne.get('x')}
+        onUpdate={v => onUpdate('vertextOne', { x: v })}
+        configs={{label: 'X1', min: 0, max: Infinity, precision: 2}}
+        state={state}
+        {...rest}
+      />
+      <PropertyNumber
+        value={vertexOne.get('y')}
+        onUpdate={v => onUpdate('vertextOne', { y: v })}
+        configs={{label: 'Y1', min: 0, max: Infinity, precision: 2}}
+        state={state}
+        {...rest}
+      />
+      <PropertyNumber
+        value={vertexTwo.get('x')}
+        onUpdate={v => onUpdate('vertextTwo', { x: v })}
+        configs={{label: 'X2', min: 0, max: Infinity, precision: 2}}
+        state={state}
+        {...rest}
+      />
+      <PropertyNumber
+        value={vertexTwo.get('y')}
+        onUpdate={v => onUpdate('vertextTwo', { y: v })}
+        configs={{label: 'Y2', min: 0, max: Infinity, precision: 2}}
+        state={state}
+        {...rest}
+      />
       <PropertyLengthMeasure
         value={ lineLength }
         onUpdate={mapped => onUpdate('lineLength', mapped)}

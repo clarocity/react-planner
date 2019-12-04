@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormLabel } from '../../components/style/export';
-import PropertyStyle from './shared-property-style';
+import { ContextPropTypes, needsContext } from '../../components/context';
+import {StyleMerge, StyleAlias} from '../../themekit';
 
-const checkboxStyle = {margin: 0};
-
-export default function PropertyCheckbox({value, onUpdate, configs, sourceElement, internalState, state}) {
+function PropertyCheckbox({styles, value, onUpdate, configs, sourceElement, internalState, state}) {
 
   let update = (val) => {
 
@@ -19,17 +17,29 @@ export default function PropertyCheckbox({value, onUpdate, configs, sourceElemen
   };
 
   return (
-    <table className="PropertyCheckbox" style={PropertyStyle.tableStyle}>
-      <tbody>
-      <tr>
-        <td style={PropertyStyle.firstTdStyle}><FormLabel>{configs.label}</FormLabel></td>
-        <td>
-          <input style={checkboxStyle} type="checkbox" checked={value} onChange={() => update(!value)}/>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+    <div style={styles.root} className="PropertyCheckbox">
+      <label style={styles.label}>
+        <span style={styles.labelSpan}>{configs.label}</span>
+        <input style={styles.checkbox} type="checkbox" checked={value} onChange={() => update(!value)}/>
+      </label>
+    </div>
   );
+}
+
+PropertyCheckbox.styles = {
+  root:  new StyleMerge('sidebar.property.row'),
+  label: {
+    flexGrow: 1,
+    display: 'flex',
+    alignItems: 'center',
+  },
+  labelSpan: {
+    display: 'block',
+    width: new StyleAlias('sidebar.property.label.width'),
+  },
+  checkbox: {
+    margin: 0,
+  }
 }
 
 PropertyCheckbox.propTypes = {
@@ -38,5 +48,9 @@ PropertyCheckbox.propTypes = {
   configs: PropTypes.object.isRequired,
   sourceElement: PropTypes.object,
   internalState: PropTypes.object,
-  state: PropTypes.object.isRequired
+  state: PropTypes.object.isRequired,
+
+  styles: ContextPropTypes.styles,
 };
+
+export default needsContext('styles')(PropertyCheckbox);

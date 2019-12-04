@@ -5,13 +5,10 @@ import convert from 'convert-units';
 import { FormLabel, FormNumberInput, FormSelect } from '../../components/style/export';
 import {Map} from 'immutable';
 import {toFixedFloat} from '../../utils/math';
-import PropertyStyle from './shared-property-style';
+import { ContextPropTypes, needsContext } from '../../components/context';
+import {StyleMerge} from '../../themekit';
 
-const internalTableStyle = {borderCollapse: 'collapse'};
-const secondTdStyle = {padding: 0};
-const unitContainerStyle = {width: '5em'};
-
-export default function PropertyLengthMeasure({value, onUpdate, onValid, configs, sourceElement, internalState, state}) {
+function PropertyLengthMeasure({styles, value, onUpdate, onValid, configs, sourceElement, internalState, state}) {
 
   let length = value.get('length') || 0;
   let _length = value.get('_length') || length;
@@ -37,38 +34,32 @@ export default function PropertyLengthMeasure({value, onUpdate, onValid, configs
   };
 
   return (
-    <table className="PropertyLengthMeasure" style={PropertyStyle.tableStyle}>
-      <tbody>
-      <tr>
-        <td style={PropertyStyle.firstTdStyle}><FormLabel>{label}</FormLabel></td>
-        <td style={secondTdStyle}>
-          <table style={internalTableStyle}>
-            <tbody>
-            <tr>
-              <td>
-                <FormNumberInput
-                  value={_length}
-                  onChange={event => update(event.target.value, _unit)}
-                  onValid={onValid}
-                  {...configRest}
-                />
-              </td>
-              <td style={unitContainerStyle}>
-                <FormSelect value={_unit} onChange={event => update(_length, event.target.value) }>
-                  {
-                    UNITS_LENGTH.map(el => <option key={el} value={el}>{el}</option>)
-                  }
-                </FormSelect>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+    <div style={styles.root} className="PropertyLengthMeasure">
+      <div style={styles.label}><FormLabel style={{marginBottom: null}}>{label}</FormLabel></div>
+      <div style={styles.input}>
+        <FormNumberInput
+          value={_length}
+          onChange={event => update(event.target.value, _unit)}
+          onValid={onValid}
+          {...configRest}
+        />
+      </div>
+      <div style={styles.unit}>
+        <FormSelect value={_unit} onChange={event => update(_length, event.target.value) }>
+          {
+            UNITS_LENGTH.map(el => <option key={el} value={el}>{el}</option>)
+          }
+        </FormSelect>
+      </div>
+    </div>
   );
+}
 
+PropertyLengthMeasure.styles = {
+  root:  new StyleMerge('sidebar.property.row'),
+  label: new StyleMerge('sidebar.property.label'),
+  input: new StyleMerge('sidebar.property.mainInput'),
+  unit:  new StyleMerge('sidebar.property.subInput'),
 }
 
 PropertyLengthMeasure.propTypes = {
@@ -78,5 +69,9 @@ PropertyLengthMeasure.propTypes = {
   configs: PropTypes.object.isRequired,
   sourceElement: PropTypes.object,
   internalState: PropTypes.object,
-  state: PropTypes.object.isRequired
+  state: PropTypes.object.isRequired,
+
+  styles: ContextPropTypes.styles,
 };
+
+export default needsContext('styles')(PropertyLengthMeasure);

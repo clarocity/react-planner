@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormLabel, FormNumberInput } from '../../components/style/export';
-import PropertyStyle from './shared-property-style';
+import { ContextPropTypes, needsContext } from '../../components/context';
+import {StyleMerge} from '../../themekit';
 
-export default function PropertyNumber({value, onUpdate, onValid, configs, sourceElement, internalState, state}) {
+function PropertyNumber({styles, value, onUpdate, onValid, configs, sourceElement, internalState, state}) {
 
   let update = (val) => {
     let number = parseFloat(val);
@@ -22,23 +23,25 @@ export default function PropertyNumber({value, onUpdate, onValid, configs, sourc
   };
 
   return (
-    <table className="PropertyNumber" style={PropertyStyle.tableStyle}>
-      <tbody>
-      <tr>
-        <td style={PropertyStyle.firstTdStyle}><FormLabel>{configs.label}</FormLabel></td>
-        <td>
-          <FormNumberInput
-            value={value}
-            onChange={event => update(event.target.value)}
-            onValid={onValid}
-            min={configs.min}
-            max={configs.max}/>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+    <div style={styles.root} className="PropertyNumber">
+      <div style={styles.label}><FormLabel style={{marginBottom: null}}>{configs.label}</FormLabel></div>
+      <div style={styles.input}>
+        <FormNumberInput
+          value={value}
+          onChange={event => update(event.target.value)}
+          onValid={onValid}
+          min={configs.min}
+          max={configs.max}
+        />
+      </div>
+    </div>
   );
+}
 
+PropertyNumber.styles = {
+  root:  new StyleMerge('sidebar.property.row'),
+  label: new StyleMerge('sidebar.property.label'),
+  input: new StyleMerge('sidebar.property.mainInput'),
 }
 
 PropertyNumber.propTypes = {
@@ -48,5 +51,9 @@ PropertyNumber.propTypes = {
   configs: PropTypes.object.isRequired,
   sourceElement: PropTypes.object,
   internalState: PropTypes.object,
-  state: PropTypes.object.isRequired
+  state: PropTypes.object.isRequired,
+
+  styles: ContextPropTypes.styles,
 };
+
+export default needsContext('styles')(PropertyNumber);

@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Seq} from 'immutable';
 import { FormLabel, FormSelect } from '../../components/style/export';
-import PropertyStyle from './shared-property-style';
+import { ContextPropTypes, needsContext } from '../../components/context';
+import {StyleMerge} from '../../themekit';
 
-export default function PropertyEnum({value, onUpdate, configs, sourceElement, internalState, state}) {
+function PropertyEnum({styles, value, onUpdate, configs, sourceElement, internalState, state}) {
 
   let update = (val) => {
 
@@ -18,21 +19,23 @@ export default function PropertyEnum({value, onUpdate, configs, sourceElement, i
   };
 
   return (
-    <table className="PropertyEnum" style={PropertyStyle.tableStyle}>
-      <tbody>
-      <tr>
-        <td style={PropertyStyle.firstTdStyle}><FormLabel>{configs.label}</FormLabel></td>
-        <td>
-          <FormSelect value={value} onChange={event => update(event.target.value)}>
-            {Seq(configs.values)
-              .entrySeq()
-              .map(([key, value]) => <option key={key} value={key}>{value}</option>)}
-          </FormSelect>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+    <div style={styles.root} className="PropertyString">
+      <div style={styles.label}><FormLabel style={{marginBottom: null}}>{configs.label}</FormLabel></div>
+      <div style={styles.input}>
+        <FormSelect value={value} onChange={event => update(event.target.value)}>
+          {Seq(configs.values)
+            .entrySeq()
+            .map(([key, value]) => <option key={key} value={key}>{value}</option>)}
+        </FormSelect>
+      </div>
+    </div>
   );
+}
+
+PropertyEnum.styles = {
+  root:  new StyleMerge('sidebar.property.row'),
+  label: new StyleMerge('sidebar.property.label'),
+  input: new StyleMerge('sidebar.property.mainInput'),
 }
 
 PropertyEnum.propTypes = {
@@ -41,5 +44,10 @@ PropertyEnum.propTypes = {
   configs: PropTypes.object.isRequired,
   sourceElement: PropTypes.object,
   internalState: PropTypes.object,
-  state: PropTypes.object.isRequired
+  state: PropTypes.object.isRequired,
+
+  styles: ContextPropTypes.styles,
 };
+
+
+export default needsContext('styles')(PropertyEnum);

@@ -7,7 +7,7 @@ const BASE_STYLE = {
 };
 
 export default function FormLabel({children, style, ...rest}) {
-  return <label style={{...BASE_STYLE, style}} {...rest}>{children}</label>
+  return <label style={{...BASE_STYLE, ...style}} {...rest}>{children}</label>
 }
 
 FormLabel.propTypes = {
