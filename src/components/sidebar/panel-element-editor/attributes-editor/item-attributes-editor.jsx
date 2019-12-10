@@ -1,57 +1,77 @@
-import React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import PropertyMultiNumber from '../../../../catalog/properties/property-multi-number';
 import PropertyNumber from '../../../../catalog/properties/property-number';
 import PropertyString from '../../../../catalog/properties/property-string';
 import { ContextPropTypes, needsContext } from '../../../context';
+import {Map} from 'immutable';
 
-function ItemAttributesEditor({element, onUpdate, attributeFormData, state, translator, ...rest}) {
-  let name = attributeFormData.has('name') ? attributeFormData.get('name') : element.name;
-  let renderedX = attributeFormData.has('x') ? attributeFormData.get('x') : element.x;
-  let renderedY = attributeFormData.has('y') ? attributeFormData.get('y') : element.y;
-  let renderedR = attributeFormData.has('rotation') ? attributeFormData.get('rotation') : element.rotation;
+export default
+@needsContext('state', 'translator', 'actions')
+class ItemAttributesEditor extends Component {
 
-  return (
-    <div>
-      <PropertyString
-        value={name}
-        onUpdate={v => onUpdate('name', v)}
-        configs={{label: translator.t('Name')}}
-        state={state}
-        {...rest}
-      />
-      <PropertyMultiNumber
-        value={{ x: renderedX, y: renderedY }}
-        onUpdate={(key, val) => onUpdate(key, val)}
-        configs={{
-          labels: [ 'X', 'Y' ],
-          targets: [ 'x', 'y' ],
-          min: 0,
-          max: Infinity,
-          precision: 2
-        }}
-        state={state}
-        {...rest}
-      />
-      <PropertyNumber
-        value={renderedR}
-        onUpdate={v => onUpdate('rotation', v)}
-        configs={{label: translator.t('Rotation'), min: 0, max: Infinity, precision: 3}}
-        state={state}
-        {...rest}
-      />
-    </div>
-  );
+  shouldComponentUpdate(nextProps) {
+    if(
+      this.props.layer.hashCode() !== nextProps.layer.hashCode() ||
+      this.props.element.hashCode() !== nextProps.element.hashCode()
+    ) return true;
 
+    return false;
+  }
+
+
+  update (key, value) {
+    let attributes = Map(this.props.element);
+
+    attributes = attributes.set(key, value);
+
+    this.props.actions.project.setItemsAttributes(attributes);
+  }
+
+  render () {
+    const { element, state, translator, ...rest } = this.props;
+    const { name, x, y, rotation } = element;
+
+    return (
+      <div>
+        <PropertyString
+          value={name}
+          onUpdate={v => this.update('name', v)}
+          configs={{label: translator.t('Name')}}
+          state={state}
+          {...rest}
+        />
+        <PropertyMultiNumber
+          value={{ x, y }}
+          onUpdate={(key, val) => this.update(key, val)}
+          configs={{
+            labels: [ 'X', 'Y' ],
+            targets: [ 'x', 'y' ],
+            min: 0,
+            max: Infinity,
+            precision: 2
+          }}
+          state={state}
+          {...rest}
+        />
+        <PropertyNumber
+          value={rotation}
+          onUpdate={v => this.update('rotation', v)}
+          configs={{label: translator.t('Rotation'), min: 0, max: Infinity, precision: 3}}
+          state={state}
+          {...rest}
+        />
+      </div>
+    );
+  }
 }
 
 ItemAttributesEditor.propTypes = {
   element: PropTypes.object.isRequired,
-  onUpdate: PropTypes.func.isRequired,
-  attributeFormData: PropTypes.object.isRequired,
+  layer: PropTypes.object.isRequired,
 
-  translator: ContextPropTypes.translator,
   state: ContextPropTypes.state,
+  translator: ContextPropTypes.translator,
+  actions: ContextPropTypes.actions,
 };
 
-export default needsContext('translator', 'state')(ItemAttributesEditor);

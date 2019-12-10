@@ -1,6 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Panel from '../panel';
+import AttributesEditor from './attributes-editor';
+import PropertiesEditor from './properties-editor'
+import PropertiesClipboard from './properties-clipboard';
 import {Seq} from 'immutable';
 import {
   MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON,
@@ -8,24 +10,11 @@ import {
   MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE, MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE,
   MODE_ROTATING_ITEM
 } from '../../../constants';
-import ElementEditor from './element-editor';
 import { ContextPropTypes, needsContext } from '../../context';
+import {BorderStyle} from '../../../themekit';
 
-function LayerPanel ({ element, layer, translator }) {
-  return (
-    <Panel name={translator.t('Properties: [{0}] {1}', element.type, element.id)} opened={true}>
-      <ElementEditor element={element} layer={layer}/>
-    </Panel>
-  );
-}
 
-LayerPanel.propTypes = {
-  element: PropTypes.object.isRequired,
-  layer: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
-}
-
-function PanelElementEditor({state, translator}) {
+function PanelElementEditor({styles, state, translator}) {
 
   let {scene, mode} = state;
 
@@ -35,30 +24,44 @@ function PanelElementEditor({state, translator}) {
       MODE_DRAGGING_LINE, MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE,
       MODE_ROTATING_ITEM, MODE_UPLOADING_IMAGE, MODE_FITTING_IMAGE].includes(mode)) return null;
 
-  //TODO change in multi-layer check
-  // const selectedLayer = state.getIn(['scene', 'selectedLayer']);
-  // const selected = selectedLayer && state.getIn(['scene', 'layers', selectedLayer, 'selected']);
 
-  // const multiselected = selected &&
-  //   selected.lines.size > 1 ||
-  //   selected.items.size > 1 ||
-  //   selected.holes.size > 1 ||
-  //   selected.areas.size > 1 ||
-  //   selected.lines.size + selected.items.size + selected.holes.size + selected.areas.size > 1;
+  let layers = scene.layers.valueSeq().map(
+    (layer) => Seq()
+      .concat(layer.lines, layer.holes, layer.areas, layer.items)
+      .filter(element => element.selected)
+      .map(element => (
+        <Panel key={element.id} name={translator.t('Properties: [{0}] {1}', element.type, element.id)} opened={true}>
+          <div style={{padding: '10px 15px 0'}}>
+            <AttributesEditor
+              element={element}
+              layer={layer}
+            />
+            <div style={styles.divider} />
+            <PropertiesEditor element={element} />
+            <PropertiesClipboard element={element} />
+          </div>
+        </Panel>
+      ))
+      .valueSeq()
+  );
 
-  let layerRenderer = layer => Seq()
-    .concat(layer.lines, layer.holes, layer.areas, layer.items)
-    .filter(element => element.selected)
-    .map(element => <LayerPanel key={element.id} element={element} layer={layer} translator={translator} />)
-    .valueSeq();
-
-  return <div className='PanelElementEditor'>{scene.layers.valueSeq().map(layerRenderer)}</div>
+  return <div className='PanelElementEditor'>{layers}</div>
 
 }
 
+PanelElementEditor.styles = {
+  divider: {
+    height: '1px',
+    margin: '1em 0',
+    borderTop: new BorderStyle({ color: '$sidebar.panel.borderTopColor'}),
+    borderBottom: new BorderStyle({ color: '$sidebar.panel.borderBottomColor'})
+  },
+}
+
 PanelElementEditor.propTypes = {
+  styles: ContextPropTypes.styles,
   state: ContextPropTypes.state,
   translator: ContextPropTypes.translator,
 };
 
-export default needsContext('state', 'translator')(PanelElementEditor);
+export default needsContext('styles', 'state', 'translator')(PanelElementEditor);

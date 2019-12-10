@@ -75,10 +75,14 @@ const InitialVars = {
       },
       subLabel: {
         width: 'auto',
-        padding: '0 1em 0 3em',
+        minWidth: '5em',
+        maxWidth: '8em',
+        padding: '0 1em',
         flexGrow: 1,
-        flexShrink: 1,
+        flexShrink: 0,
         textTransform:'capitalize',
+        whiteSpace: 'nowrap',
+        textAlign: 'right',
       },
       mainInput: {
         flexGrow: 1,
