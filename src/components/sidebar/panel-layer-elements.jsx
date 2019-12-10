@@ -25,7 +25,6 @@ const contentArea = {
   overflowY: 'auto',
   padding: '0.25em 1.15em',
   cursor: 'pointer',
-  marginBottom: '1em',
   userSelect: 'none'
 };
 

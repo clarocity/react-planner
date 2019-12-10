@@ -24,7 +24,8 @@ const STYLE_CONTENT = {
   border: '1px solid #222',
   padding: '0px',
   backgroundColor: SharedStyle.PRIMARY_COLOR.alt,
-  textShadow: '-1px -1px 2px rgba(0, 0, 0, 1)'
+  textShadow: '-1px -1px 2px rgba(0, 0, 0, 1)',
+  boxShadow: 'inset 0px 3px 3px 0px rgba(0,0,0,0.5)',
 };
 const STYLE_ARROW = {
   float: 'right'
