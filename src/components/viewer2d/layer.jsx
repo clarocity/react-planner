@@ -11,7 +11,9 @@ import {
 export default function Layer({ layer, scene, catalog }) {
 
   let { unit, groups } = scene;
-  let { lines, areas, vertices, id: layerID, items, opacity } = layer;
+  let { lines, areas, vertices, id: layerID, items, opacity, visible } = layer;
+
+  if (!visible) opacity = Math.min(opacity, 0.35);
 
   return (
     <g opacity={opacity}>
