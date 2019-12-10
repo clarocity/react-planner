@@ -1,18 +1,14 @@
-import React, {Component} from 'react';
+import React, {Component, PureComponent, Fragment} from 'react';
 import PropTypes from 'prop-types';
-import { Map } from 'immutable';
 import Panel from './panel';
-import {TiPlus, TiDelete} from 'react-icons/ti';
-import {FaPencilAlt, FaTrash, FaEye} from 'react-icons/fa';
-import {
-  FormTextInput,
-  FormNumberInput,
-  FormSubmitButton,
-  FormSlider,
-  CancelButton
-} from '../style/export';
-import { ContextPropTypes, needsContext } from '../context';
+import {TiPlus} from 'react-icons/ti';
+import { FaTrash, FaEye, FaEyeSlash} from 'react-icons/fa';
 
+import PropertyNumber from '../../catalog/properties/property-number';
+import PropertyString from '../../catalog/properties/property-string';
+import PropertyRange from '../../catalog/properties/property-range';
+import { ContextPropTypes, needsContext } from '../context';
+import {StyleAlias} from '../../themekit';
 
 import {
   MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON,
@@ -20,7 +16,6 @@ import {
   MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE, MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE,
   MODE_ROTATING_ITEM
 } from '../../constants';
-import * as SharedStyle from '../../shared-style';
 
 const VISIBILITY_MODE = {
   MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN,
@@ -30,244 +25,169 @@ const VISIBILITY_MODE = {
   MODE_ROTATING_ITEM, MODE_UPLOADING_IMAGE, MODE_FITTING_IMAGE
 };
 
-const styleEditButton = {
-  cursor: 'pointer',
-  marginLeft: '5px',
-  border: '0px',
-  background: 'none',
-  color: SharedStyle.COLORS.white,
-  fontSize: '14px',
-  outline: '0px'
-};
+class LayerRow extends PureComponent {
 
-const tableLayerStyle = {
-  width: '100%',
-  cursor: 'pointer',
-  overflowY: 'auto',
-  maxHeight: '20em',
-  display: 'block',
-  padding: '0 1em',
-  marginLeft: '1px'
-};
-
-const iconColStyle = {width: '2em'};
-const styleHoverColor = {color: SharedStyle.SECONDARY_COLOR.main};
-const styleEditButtonHover = {...styleEditButton, ...styleHoverColor};
-const styleAddLabel = {fontSize: '10px', marginLeft: '5px'};
-const styleEyeVisible = {fontSize: '1.25em'};
-const styleEyeHidden = {...styleEyeVisible, color: '#a5a1a1'};
-const firstTdStyle = {width: '6em'};
-const newLayerLableStyle = {margin: '0.5em 0', fontSize: '1.3em', cursor: 'pointer', textAlign: 'center'};
-const newLayerLableHoverStyle = {...newLayerLableStyle, ...styleHoverColor};
-const layerInputTableStyle = {width: '100%', borderSpacing: '2px 0', padding: '5px 15px'};
-const inputTableButtonStyle = {float: 'right', marginTop: '0.5em', borderSpacing: '0'};
-
-export default @needsContext('state', 'actions', 'translator') class PanelLayers extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      headHovered: false,
-      layerAddUIVisible: false,
-      editingLayer: new Map()
-    };
+  static propTypes = {
+    layerID: PropTypes.string.isRequired,
+    layer: PropTypes.object.isRequired,
+    isCurrentLayer: PropTypes.bool,
+    isOnlyLayer: PropTypes.bool,
+    translator: ContextPropTypes.translator,
+    styles: ContextPropTypes.styles,
+    actions: ContextPropTypes.actions,
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  onSelect = () => {
+    this.props.actions.scene.selectLayer(this.props.layerID);
+  }
+
+  onVisible = () => {
+    this.props.actions.scene.setLayerProperties(this.props.layerID, {visible: !this.props.layer.visible});
+  }
+
+  onRemove = () => {
+    this.props.actions.scene.removeLayer(this.props.layerID);
+  }
+
+
+  render () {
+    const { styles, isCurrentLayer, isOnlyLayer, layer, translator } = this.props;
+
+    const cellStyle = styles.compile('rowCell', isCurrentLayer && '#active');
+    return (
+      <Fragment>
+        <span style={cellStyle}>
+          {!isOnlyLayer && (layer.visible
+            ? <FaEye onClick={this.onVisible} style={styles.icon} />
+            : <FaEyeSlash onClick={this.onVisible} style={styles.icon} />
+          )}
+        </span>
+        <span style={cellStyle} onClick={this.onSelect}>{layer.name}</span>
+        <span style={cellStyle} onClick={this.onSelect}>{layer.altitude}</span>
+        <span style={cellStyle}>
+          {!isOnlyLayer &&
+            <FaTrash
+              onClick={this.onRemove}
+              style={styles.icon}
+              title={translator.t('Delete layer')}
+            />
+          }
+        </span>
+      </Fragment>
+    );
+  }
+}
+
+export default @needsContext('styles', 'state', 'actions', 'translator') class PanelLayers extends Component {
+
+  static styles = {
+    list: {
+      display: 'grid',
+      gridTemplateColumns: '3em 2fr 1fr 3em',
+      gridAutoRows: '20px',
+      gridRowGap: '5px',
+      padding: '10px 15px',
+    },
+
+    rowCell: {
+      display: 'flex',
+      alignItems: 'center',
+      cursor: 'pointer',
+      // padding: '0 5px',
+
+      '#active': {
+        color: new StyleAlias('sidebar.targetColor'),
+      }
+    },
+
+    icon: {
+      cursor: 'pointer',
+      marginLeft: '5px',
+      border: '0px',
+      background: 'none',
+      fontSize: '14px',
+      outline: '0px',
+    }
+  }
+
+  shouldComponentUpdate(nextProps) {
     if(
-      this.props.state.scene.layers.size !== nextProps.state.scene.layers.size ||
-      nextState.layerAddUIVisible != this.state.layerAddUIVisible ||
-      this.state.editingLayer.hashCode() !== nextState.editingLayer.hashCode() ||
-      this.props.state.sceneHistory.hashCode() !== nextProps.state.sceneHistory.hashCode()
+      this.props.state.scene.layers.hashCode() !== nextProps.state.scene.layers.hashCode() ||
+      this.props.state.sceneHistory.hashCode() !== nextProps.state.sceneHistory.hashCode() ||
+      this.props.state.scene.selectedLayer !== nextProps.state.scene.selectedLayer
     ) return true;
 
     return false;
   }
 
-  addLayer(e) {
-    e.stopPropagation();
-    if (!this.state.layerAddUIVisible) {
-      this.props.actions.scene.addLayer('', 0);
-      this.setState({layerAddUIVisible: false});
-    }
-    else this.setState({layerAddUIVisible: !this.state.layerAddUIVisible});
+  addLayer = () => {
+    this.props.actions.scene.addLayer('', 0);
   }
 
-  resetLayerMod(e) {
-    e.stopPropagation();
-    this.setState({layerAddUIVisible: false, editingLayer: new Map()});
-  }
-
-  updateLayer(e, layerData) {
-    e.stopPropagation();
-    let {id, name, opacity, altitude, order} = layerData.toJS();
-
-    altitude = parseInt(altitude);
-
-    this.props.actions.scene.setLayerProperties(id, {name, opacity, altitude, order});
-    this.setState({layerAddUIVisible: false, editingLayer: new Map()});
-  }
-
-  delLayer(e, layerID) {
-    e.stopPropagation();
-    this.props.actions.scene.removeLayer(layerID);
-    this.setState({layerAddUIVisible: false, editingLayer: new Map()});
+  updateSelectedLayer = (layerData) => {
+    this.props.actions.scene.setLayerProperties(this.props.state.scene.selectedLayer, layerData);
   }
 
   render() {
-    const { translator, actions, state } = this.props;
+    const { styles, translator, actions, state } = this.props;
     if (!VISIBILITY_MODE[state.mode]) return null;
 
-    let scene = state.scene;
-    let isLastLayer = scene.layers.size === 1;
+    const scene = state.scene;
+    const isOnlyLayer = scene.layers.size === 1;
+    const selectedLayer = scene.layers.get(scene.selectedLayer);
 
     return (
-      <Panel name={translator.t('Layers')}>
-        <table style={tableLayerStyle}>
-          <thead>
-            <tr>
-              <th colSpan='3'></th>
-              <th>{translator.t('Altitude')}</th>
-              <th>{translator.t('Name')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              scene.layers.entrySeq().map(([layerID, layer]) => {
+      <Fragment>
+        <Panel name={translator.t('Layers')}>
+          <div style={styles.list}>
+            <span></span>
+            <span style={styles.rowCell}>{translator.t('Name')}</span>
+            <span style={styles.rowCell}>{translator.t('Altitude')}</span>
+            <span></span>
 
-                let selectClick = () => actions.scene.selectLayer(layerID);
-                let configureClick = () => this.setState({editingLayer: layer, layerAddUIVisible: true});
-
-                let swapVisibility = e => {
-                  e.stopPropagation();
-                  actions.scene.setLayerProperties(layerID, {visible: !layer.visible});
-                };
-
-                let isCurrentLayer = layerID === scene.selectedLayer;
-
-                return (
-                  <tr
-                    key={layerID}
-                    onClick={selectClick}
-                    onDoubleClick={configureClick}
-                    style={!isCurrentLayer ? null : styleHoverColor}
-                  >
-                    <td style={iconColStyle}>
-                      {
-                        !isCurrentLayer ?
-                          <FaEye
-                            onClick={swapVisibility}
-                            style={!layer.visible ? styleEyeHidden : styleEyeVisible}
-                          />
-                          : null
-                      }
-                    </td>
-                    <td style={iconColStyle}>
-                      <FaPencilAlt
-                        onClick={configureClick}
-                        style={!isCurrentLayer ? styleEditButton : styleEditButtonHover}
-                        title={translator.t('Configure layer')}
-                      />
-                    </td>
-                    <td style={iconColStyle}>
-                      {
-                        !isLastLayer ?
-                          <FaTrash
-                            onClick={ e => this.delLayer(e, layerID) }
-                            style={!isCurrentLayer ? styleEditButton : styleEditButtonHover}
-                            title={translator.t('Delete layer')}
-                          />
-                          : null
-                      }
-                    </td>
-                    <td style={{width: '6em', textAlign: 'center'}}>
-                      [ h : {layer.altitude} ]
-                    </td>
-                    <td>
-                      {layer.name}
-                    </td>
-                  </tr>
-                );
-
-              })
-            }
-          </tbody>
-        </table>
-        <p
-          style={ !this.state.headHovered ? newLayerLableStyle : newLayerLableHoverStyle }
-          onMouseOver={ () => this.setState({headHovered: true}) }
-          onMouseOut={ () => this.setState({headHovered: false}) }
-          onClick={ (e) => this.addLayer(e) }
-        >
-          { !this.state.layerAddUIVisible ? <TiPlus /> : <TiDelete /> }
-          <b style={styleAddLabel}>{translator.t('New layer')}</b>
-        </p>
-
-        {
-          this.state.layerAddUIVisible && this.state.editingLayer ?
-            <table style={layerInputTableStyle}>
-              <tbody>
-                <tr style={{marginTop: '1em'}}>
-                  <td style={firstTdStyle}>{translator.t('Name')}:</td>
-                  <td>
-                    <FormTextInput
-                      value={this.state.editingLayer.get('name')}
-                      onChange={e => this.setState({editingLayer: this.state.editingLayer.merge({name: e.target.value})})}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td style={firstTdStyle}>{translator.t('opacity')}:</td>
-                  <td>
-                    <FormSlider
-                      min={0}
-                      max={100}
-                      value={Math.round(this.state.editingLayer.get('opacity') * 100)}
-                      onChange={e => this.setState({editingLayer: this.state.editingLayer.merge({opacity: (e.target.value / 100)})})}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td style={firstTdStyle}>{translator.t('altitude')}:</td>
-                  <td>
-                    <FormNumberInput
-                      value={this.state.editingLayer.get('altitude')}
-                      onChange={e => this.setState({editingLayer: this.state.editingLayer.merge({altitude: e.target.value})})}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td style={firstTdStyle}>{translator.t('order')}:</td>
-                  <td>
-                    <FormNumberInput
-                      value={this.state.editingLayer.get('order')}
-                      onChange={e => this.setState({editingLayer: this.state.editingLayer.merge({order: e.target.value})})}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td colSpan="2">
-                    <table style={inputTableButtonStyle}>
-                      <tbody>
-                        <tr>
-                          <td><CancelButton size="small" onClick={ e => {
-                            this.resetLayerMod(e);
-                          } }>{translator.t('Reset')}</CancelButton></td>
-                          <td><FormSubmitButton size="small" onClick={ e => {
-                            this.updateLayer(e, this.state.editingLayer);
-                          } }>{translator.t('Save')}</FormSubmitButton></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            : null
-        }
-
-      </Panel>
-    )
+            {scene.layers.entrySeq().map(([layerID, layer]) => {
+              const isCurrentLayer = layerID === scene.selectedLayer;
+              return <LayerRow key={layerID} {...{layerID, layer, isCurrentLayer, isOnlyLayer, styles, actions, translator}}/>
+            })}
+          </div>
+          <div
+            onClick={this.addLayer}
+            style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}
+          >
+            <TiPlus />
+            <span>{translator.t('New layer')}</span>
+          </div>
+        </Panel>
+        <Panel name={translator.t('Current Layer') + ': ' + selectedLayer.name}>
+          <div style={{padding: '5px 15px'}}>
+            <PropertyString
+              value={selectedLayer.get('name')}
+              onUpdate={v => this.updateSelectedLayer({ name: v })}
+              configs={{label: translator.t('Name')}}
+              state={state}
+            />
+            <PropertyRange
+              value={Math.round(selectedLayer.get('opacity') * 100)}
+              onUpdate={v => this.updateSelectedLayer({ opacity: v / 100 })}
+              configs={{label: translator.t('Opacity'), min: 0, max: 100}}
+              state={state}
+            />
+            <PropertyNumber
+              value={selectedLayer.get('altitude')}
+              onUpdate={v => this.updateSelectedLayer({ altitude: v })}
+              configs={{label: translator.t('Altitude'), precision: 0}}
+              state={state}
+            />
+            <PropertyNumber
+              value={selectedLayer.get('order')}
+              onUpdate={v => this.updateSelectedLayer({ order: v })}
+              configs={{label: translator.t('Order'), precision: 0}}
+              state={state}
+            />
+          </div>
+        </Panel>
+      </Fragment>
+    );
   }
 
 }
@@ -276,4 +196,5 @@ PanelLayers.propTypes = {
   state: ContextPropTypes.state,
   actions: ContextPropTypes.actions,
   translator: ContextPropTypes.translator,
+  styles: ContextPropTypes.styles,
 };

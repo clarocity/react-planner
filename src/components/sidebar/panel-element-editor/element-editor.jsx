@@ -52,6 +52,8 @@ class ElementEditor extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     if(
       this.state.timestamp !== nextState.timestamp ||
+      this.props.state.scene.selectedLayer !== nextProps.state.scene.selectedLayer ||
+      this.props.element.hashCode() !== nextProps.element.hashCode() ||
       this.props.state.clipboardProperties.hashCode() !== nextProps.state.clipboardProperties.hashCode()
     ) return true;
 
@@ -62,13 +64,12 @@ class ElementEditor extends Component {
     const scene = this.props.state.get('scene');
     const selectedLayer = scene.getIn(['layers', scene.get('selectedLayer')]);
     const hashCode = selectedLayer.hashCode();
-    const ts = this.state.timestamp;
 
     const { element, layer } = this.props;
-    return this._derived(hashCode, ts, element, layer);
+    return this._derived(element, layer, hashCode, element.hashCode());
   }
 
-  _derived = memoize((hashCode, ts, element, layer) => ({
+  _derived = memoize((element, layer, hashCode, /* elementHash */) => ({
     hashCode,
     attributesFormData: this.initAttrData(element, layer),
     propertiesFormData: this.initPropData(element, layer)
@@ -360,7 +361,7 @@ class ElementEditor extends Component {
     const {state, element, catalog, translator} = this.props;
 
     return (
-      <div>
+      <div style={{padding: '5px 15px'}}>
         <AttributesEditor
           element={element}
           onUpdate={this.updateAttribute}

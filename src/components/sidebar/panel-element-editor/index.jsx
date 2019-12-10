@@ -14,9 +14,7 @@ import { ContextPropTypes, needsContext } from '../../context';
 function LayerPanel ({ element, layer, translator }) {
   return (
     <Panel name={translator.t('Properties: [{0}] {1}', element.type, element.id)} opened={true}>
-      <div style={{padding: '5px 15px'}}>
-        <ElementEditor element={element} layer={layer}/>
-      </div>
+      <ElementEditor element={element} layer={layer}/>
     </Panel>
   );
 }
@@ -54,7 +52,7 @@ function PanelElementEditor({state, translator}) {
     .map(element => <LayerPanel key={element.id} element={element} layer={layer} translator={translator} />)
     .valueSeq();
 
-  return <div>{scene.layers.valueSeq().map(layerRenderer)}</div>
+  return <div className='PanelElementEditor'>{scene.layers.valueSeq().map(layerRenderer)}</div>
 
 }
 

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 const STYLE_INPUT = {
   display: 'block',
   width: '100%',
-  padding: '0 2px',
+  padding: '0 5px',
   fontSize: '13px',
   lineHeight: '1.25',
   color: SharedStyle.PRIMARY_COLOR.input,

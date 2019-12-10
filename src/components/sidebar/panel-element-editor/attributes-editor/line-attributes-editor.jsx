@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import PropertyLengthMeasure from '../../../../catalog/properties/property-length-measure';
-import PropertyNumber from '../../../../catalog/properties/property-number';
+import PropertyMultiNumber from '../../../../catalog/properties/property-multi-number';
 import PropertyString from '../../../../catalog/properties/property-string';
 import { ContextPropTypes, needsContext } from '../../../context';
 
@@ -21,31 +21,29 @@ function LineAttributesEditor({element, onUpdate, attributeFormData, state, tran
         state={state}
         {...rest}
       />
-      <PropertyNumber
-        value={vertexOne.get('x')}
-        onUpdate={v => onUpdate('vertextOne', { x: v })}
-        configs={{label: 'X1', min: 0, max: Infinity, precision: 2}}
+      <PropertyMultiNumber
+        value={vertexOne}
+        onUpdate={(key, val) => onUpdate('vertexOne', { [key]: val })}
+        configs={{
+          labels: [ 'X1', 'Y1' ],
+          targets: [ 'x', 'y' ],
+          min: 0,
+          max: Infinity,
+          precision: 2
+        }}
         state={state}
         {...rest}
       />
-      <PropertyNumber
-        value={vertexOne.get('y')}
-        onUpdate={v => onUpdate('vertextOne', { y: v })}
-        configs={{label: 'Y1', min: 0, max: Infinity, precision: 2}}
-        state={state}
-        {...rest}
-      />
-      <PropertyNumber
-        value={vertexTwo.get('x')}
-        onUpdate={v => onUpdate('vertextTwo', { x: v })}
-        configs={{label: 'X2', min: 0, max: Infinity, precision: 2}}
-        state={state}
-        {...rest}
-      />
-      <PropertyNumber
-        value={vertexTwo.get('y')}
-        onUpdate={v => onUpdate('vertextTwo', { y: v })}
-        configs={{label: 'Y2', min: 0, max: Infinity, precision: 2}}
+      <PropertyMultiNumber
+        value={vertexTwo}
+        onUpdate={(key, val) => onUpdate('vertexTwo', { [key]: val })}
+        configs={{
+          labels: [ 'X2', 'Y2' ],
+          targets: [ 'x', 'y' ],
+          min: 0,
+          max: Infinity,
+          precision: 2
+        }}
         state={state}
         {...rest}
       />

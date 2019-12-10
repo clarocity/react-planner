@@ -555,12 +555,7 @@ class Line{
 
   static setAttributes( state, layerID, lineID, lineAttributes ) {
 
-    let lAttr = lineAttributes.toJS();
-    let {vertexOne, vertexTwo, lineLength} = lAttr;
-
-    delete lAttr['vertexOne'];
-    delete lAttr['vertexTwo'];
-    delete lAttr['lineLength'];
+    let {vertexOne, vertexTwo, lineLength, ...lAttr} = lineAttributes.toJS();
 
     state = state
       .mergeIn(['scene', 'layers', layerID, 'lines', lineID], fromJS(lAttr))

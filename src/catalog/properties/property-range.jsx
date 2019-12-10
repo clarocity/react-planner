@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormLabel, FormNumberInput } from '../../components/style/export';
+import { FormLabel, FormNumberInput, FormSlider } from '../../components/style/export';
 import { ContextPropTypes, needsContext } from '../../components/context';
 import {StyleMerge} from '../../themekit';
 
-function PropertyNumber({style, styles, value, onUpdate, onValid, configs, sourceElement, internalState, state, ...rest}) {
+function PropertyRange({styles, value, onUpdate, configs, sourceElement, internalState, state}) {
 
-  let update = (val) => {
-    let number = parseFloat(val);
+  function update (ev) {
+    let number = parseFloat(ev.target.value);
 
     if (isNaN(number)) {
       number = 0;
@@ -20,35 +20,42 @@ function PropertyNumber({style, styles, value, onUpdate, onValid, configs, sourc
     }
 
     return onUpdate(number);
-  };
+  }
 
   return (
-    <div style={styles.root} className="PropertyNumber">
+    <div style={styles.root} className="PropertyString">
       <div style={styles.label}><FormLabel style={{marginBottom: null}}>{configs.label}</FormLabel></div>
+      <div style={styles.slider}>
+        <FormSlider
+          value={value}
+          onChange={update}
+          min={configs.min}
+          max={configs.max}
+        />
+      </div>
       <div style={styles.input}>
         <FormNumberInput
           value={value}
-          onChange={event => update(event.target.value)}
-          onValid={onValid}
-          style={style}
-          {...configs}
+          onChange={update}
+          style={{ textAlign: 'center' }}
+          precision={0}
         />
       </div>
     </div>
   );
+
 }
 
-PropertyNumber.styles = {
+PropertyRange.styles = {
   root:  new StyleMerge('sidebar.property.row'),
   label: new StyleMerge('sidebar.property.label'),
-  input: new StyleMerge('sidebar.property.mainInput'),
+  slider: new StyleMerge('sidebar.property.mainInput'),
+  input:  new StyleMerge('sidebar.property.subInput'),
 }
 
-PropertyNumber.propTypes = {
-  style: PropTypes.object,
+PropertyRange.propTypes = {
   value: PropTypes.any.isRequired,
   onUpdate: PropTypes.func.isRequired,
-  onValid: PropTypes.func,
   configs: PropTypes.object.isRequired,
   sourceElement: PropTypes.object,
   internalState: PropTypes.object,
@@ -57,4 +64,4 @@ PropertyNumber.propTypes = {
   styles: ContextPropTypes.styles,
 };
 
-export default needsContext('styles')(PropertyNumber);
+export default needsContext('styles')(PropertyRange);

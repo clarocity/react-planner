@@ -1,5 +1,5 @@
 import Panel from './panel';
-import PanelElementEditor from './panel-element-editor/panel-element-editor';
+import PanelElementEditor from './panel-element-editor';
 import PanelGroupEditor from './panel-group-editor';
 import PanelLayers from './panel-layers';
 import PanelGuides from './panel-guides';

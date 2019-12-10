@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import PropertyMultiNumber from '../../../../catalog/properties/property-multi-number';
 import PropertyNumber from '../../../../catalog/properties/property-number';
 import PropertyString from '../../../../catalog/properties/property-string';
 import { ContextPropTypes, needsContext } from '../../../context';
@@ -19,17 +20,16 @@ function ItemAttributesEditor({element, onUpdate, attributeFormData, state, tran
         state={state}
         {...rest}
       />
-      <PropertyNumber
-        value={renderedX}
-        onUpdate={v => onUpdate('x', v)}
-        configs={{label: 'X', min: 0, max: Infinity, precision: 3}}
-        state={state}
-        {...rest}
-      />
-      <PropertyNumber
-        value={renderedY}
-        onUpdate={v => onUpdate('y', v)}
-        configs={{label: 'Y', min: 0, max: Infinity, precision: 3}}
+      <PropertyMultiNumber
+        value={{ x: renderedX, y: renderedY }}
+        onUpdate={(key, val) => onUpdate(key, val)}
+        configs={{
+          labels: [ 'X', 'Y' ],
+          targets: [ 'x', 'y' ],
+          min: 0,
+          max: Infinity,
+          precision: 2
+        }}
         state={state}
         {...rest}
       />

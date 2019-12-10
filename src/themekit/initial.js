@@ -50,6 +50,15 @@ const InitialVars = {
     select: '#FF9800',
   },
   sidebar: {
+    backgroundColor: new StyleAlias('chrome.backgroundColor'),
+    textColor: new StyleAlias('chrome.textColor'),
+    targetColor: new StyleAlias('chrome.target'),
+
+    panel: {
+      borderTopColor: '#222',
+      borderBottomColor: '#48494E',
+    },
+
     property: {
       row: {
         minHeight: '30px',
@@ -62,6 +71,13 @@ const InitialVars = {
         flexGrow: 0,
         flexShrink: 0,
         width: '6em',
+        textTransform:'capitalize',
+      },
+      subLabel: {
+        width: 'auto',
+        padding: '0 1em 0 3em',
+        flexGrow: 1,
+        flexShrink: 1,
         textTransform:'capitalize',
       },
       mainInput: {

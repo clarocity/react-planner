@@ -13,7 +13,7 @@ function PropertyLengthMeasure({styles, value, onUpdate, onValid, configs, sourc
   let length = value.get('length') || 0;
   let _length = value.get('_length') || length;
   let _unit = value.get('_unit') || state.getIn(['scene', 'unit']) || UNIT_CENTIMETER;
-  let { hook, label, ...configRest} = configs;
+  let { hook, label, style, ...configRest} = configs;
 
   let update = (lengthInput, unitInput) => {
 
@@ -41,6 +41,7 @@ function PropertyLengthMeasure({styles, value, onUpdate, onValid, configs, sourc
           value={_length}
           onChange={event => update(event.target.value, _unit)}
           onValid={onValid}
+          style={{textAlign: 'right', ...style}}
           {...configRest}
         />
       </div>
