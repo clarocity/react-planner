@@ -43,6 +43,11 @@ const STYLE_CONFIRM = {
   opacity: 0,
 };
 
+const STYLE_CONFIRM_RIGHT = {
+  left: STYLE_CONFIRM.right,
+  right: null,
+}
+
 const STYLE_CONFIRM_DIFFERENT = {
   visibility: 'visible',
   opacity: 1,
@@ -165,6 +170,7 @@ export default @needsContext('translator') class FormNumberInput extends Compone
       },
       confirm: {
         ...STYLE_CONFIRM,
+        ...(style.textAlign === 'right' ? STYLE_CONFIRM_RIGHT : null),
         ...(this.differs ? STYLE_CONFIRM_DIFFERENT : null)
       }
     }
