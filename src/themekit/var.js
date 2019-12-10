@@ -43,7 +43,7 @@ class StyleAlias extends StyleVar {
 class CompoundStyle extends StyleVar {
   constructor (template, def) {
     super();
-    this.template = Array.isArray(template) ? this.parseArray(template) : template;
+    this.template = template;
     this.default = def;
     this.delimiter = ' ';
   }
@@ -56,7 +56,9 @@ class CompoundStyle extends StyleVar {
   }
 
   resolve (tk, key) {
-    return this.template.replace(/\$\{([^}]+)\}/g, (match, address) => {
+    const template = Array.isArray(this.template) ? this.parseArray(this.template) : this.template;
+
+    return template.replace(/\$\{([^}]+)\}/g, (match, address) => {
       const sv = new StyleAlias(address);
       const result = sv.resolve(tk, key);
       if (result === undefined || result === null) return '';
