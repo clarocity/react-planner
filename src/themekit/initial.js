@@ -4,6 +4,7 @@ import { StyleAlias } from './var';
 const InitialVars = {
   chrome: {
     textColor: '#FFF',
+    altTextColor: '#EBEBEB',
     backgroundColor: '#28292D',
     alternateBackgroundColor: '#2E2F33',
     target: '#1CA6FC',
@@ -57,6 +58,9 @@ const InitialVars = {
     panel: {
       borderTopColor: '#222',
       borderBottomColor: '#48494E',
+      textColor: new StyleAlias('chrome.altTextColor'),
+      hoverColor: new StyleAlias('chrome.target'),
+      backgroundColor: new StyleAlias('chrome.alternateBackgroundColor'),
     },
 
     property: {

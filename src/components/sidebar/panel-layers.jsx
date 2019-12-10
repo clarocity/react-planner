@@ -159,7 +159,7 @@ export default @needsContext('styles', 'state', 'actions', 'translator') class P
           </div>
         </Panel>
         <Panel name={translator.t('Current Layer') + ': ' + selectedLayer.name}>
-          <div style={{padding: '5px 15px'}}>
+          <div style={{padding: '10px 15px 5px'}}>
             <PropertyString
               value={selectedLayer.get('name')}
               onUpdate={v => this.updateSelectedLayer({ name: v })}

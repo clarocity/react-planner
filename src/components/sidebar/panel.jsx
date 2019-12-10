@@ -2,36 +2,54 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
+import { ContextPropTypes, needsContext } from '../context';
+import {StyleAlias, BorderStyle} from '../../themekit';
 
-const STYLE = {
-  borderTop: '1px solid #222',
-  borderBottom: '1px solid #48494E',
-  userSelect: 'none'
-};
-const STYLE_TITLE = {
-  fontSize: '11px',
-  color: SharedStyle.PRIMARY_COLOR.text_alt,
-  padding: '5px 15px 8px 15px',
-  backgroundColor: SharedStyle.PRIMARY_COLOR.alt,
-  textShadow: '-1px -1px 2px rgba(0, 0, 0, 1)',
-  boxShadow: 'inset 0px -3px 19px 0px rgba(0,0,0,0.5)',
-  margin: '0px',
-  cursor: 'pointer'
-};
-const STYLE_CONTENT = {
-  fontSize: '11px',
-  color: SharedStyle.PRIMARY_COLOR.text_alt,
-  border: '1px solid #222',
-  padding: '0px',
-  backgroundColor: SharedStyle.PRIMARY_COLOR.alt,
-  textShadow: '-1px -1px 2px rgba(0, 0, 0, 1)',
-  boxShadow: 'inset 0px 3px 3px 0px rgba(0,0,0,0.5)',
-};
-const STYLE_ARROW = {
-  float: 'right'
-};
+export default
+@needsContext('styles')
+class Panel extends Component {
 
-export default class Panel extends Component {
+  static styles = {
+    root: {
+      borderTop: new BorderStyle({ color: '$sidebar.panel.borderTopColor'}),
+      borderBottom: new BorderStyle({ color: '$sidebar.panel.borderBottomColor'}),
+      userSelect: 'none',
+    },
+
+    title: {
+      fontSize: '11px',
+      color: new StyleAlias('sidebar.panel.textColor'),
+      padding: '5px 15px 8px 15px',
+      backgroundColor: new StyleAlias('sidebar.panel.backgroundColor'),
+      textShadow: '-1px -1px 2px rgba(0, 0, 0, 1)',
+      boxShadow: 'inset 0px -3px 19px 0px rgba(0,0,0,0.5)',
+      margin: '0px',
+      cursor: 'pointer',
+
+      '#hover': {
+        color: new StyleAlias('sidebar.panel.hoverColor'),
+      },
+    },
+
+    content: {
+      fontSize: '11px',
+      color: new StyleAlias('sidebar.panel.textColor'),
+      border: new BorderStyle({ color: '$sidebar.panel.borderTopColor'}),
+      padding: '0px',
+      backgroundColor: new StyleAlias('sidebar.panel.backgroundColor'),
+      textShadow: '-1px -1px 2px rgba(0, 0, 0, 1)',
+      boxShadow: 'inset 0px 3px 3px 0px rgba(0,0,0,0.5)',
+      display: 'none',
+
+      '#opened': {
+        display: 'block',
+      }
+    },
+
+    arrow: {
+      float: 'right'
+    }
+  }
 
   constructor(props) {
     super(props);
@@ -52,13 +70,13 @@ export default class Panel extends Component {
 
   render() {
 
-    let { name, headComponents, children } = this.props;
+    let { styles, name, headComponents, children } = this.props;
     let { opened, hover } = this.state;
 
     return (
-      <div style={STYLE}>
+      <div style={styles.root}>
         <h3
-          style={{...STYLE_TITLE, color: hover ? SharedStyle.SECONDARY_COLOR.main : SharedStyle.PRIMARY_COLOR.text_alt}}
+          style={styles.compile('title', hover && '#hover')}
           onMouseEnter={() => this.toggleHover()}
           onMouseLeave={() => this.toggleHover()}
           onClick={() => this.toggleOpen()}
@@ -67,12 +85,12 @@ export default class Panel extends Component {
           {headComponents}
           {
             opened ?
-              <FaAngleUp style={STYLE_ARROW} /> :
-              <FaAngleDown style={STYLE_ARROW} />
+              <FaAngleUp style={styles.arrow} /> :
+              <FaAngleDown style={styles.arrow} />
           }
         </h3>
 
-        <div style={{...STYLE_CONTENT, display: opened ? 'block' : 'none'}}>
+        <div style={styles.compile('content', opened && '#opened')}>
           {children}
         </div>
       </div>
@@ -84,5 +102,7 @@ Panel.propTypes = {
   children: PropTypes.node,
   name: PropTypes.string.isRequired,
   headComponents: PropTypes.array,
-  opened: PropTypes.bool
+  opened: PropTypes.bool,
+
+  styles: ContextPropTypes.styles,
 };
