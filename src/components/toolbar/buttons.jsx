@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
 import { ContextPropTypes, needsContext } from '../context';
+import {StyleAlias, BorderStyle} from '../../themekit';
 import { MdSettings, MdUndo, MdDirectionsRun } from 'react-icons/md';
 import { FaFile, FaMousePointer, FaPlus } from 'react-icons/fa';
 import {
@@ -32,35 +33,42 @@ export {
   Load,
 }
 
-export const Spacer = function Spacer ({ size = 10, label = '', style }) {
-  const LABEL_STYLE = {
-    marginBottom: 18,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: 9,
-    color: 'rgb(194, 194, 194)',
-    textAlign: 'center',
-    borderBottom: '2px solid',
-    lineHeight: 1
+@needsContext('styles')
+class Spacer extends React.PureComponent {
+  static styles = {
+    label: {
+      marginLeft: '4px',
+      marginRight: '4px',
+      marginBottom: '4px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: 9,
+      color: new StyleAlias('toolbar.iconColor'),
+      textAlign: 'center',
+      borderBottom: new BorderStyle({ width: '2px', color: '$toolbar.iconColor'}),
+      paddingBottom: '2px',
+      lineHeight: 1,
+    }
   }
 
-  const STYLE = {
-    ...(label ? LABEL_STYLE : null),
-    marginTop: size,
-    ...style,
-  }
+  render () {
+    const { styles, size = 10, label = '', style } = this.props;
 
-  return (
-    <label style={STYLE}>{label}</label>
-  );
+    return (
+      <label style={styles.compile('label', { marginTop: size}, style)}>{label}</label>
+    );
+  }
 }
 
 Spacer.propTypes = {
   size: PropTypes.number,
   label: PropTypes.string,
   style: PropTypes.object,
+  styles: ContextPropTypes.styles,
 };
+
+export { Spacer };
 
 export const New = needsContext('state', 'actions', 'translator')(function New ({ translator, actions }) {
   return (
@@ -101,16 +109,17 @@ Catalog.propTypes = {
 
 export const View2D = needsContext('state', 'actions', 'translator')(function View2D ({ translator, actions, state }) {
   let mode = state.get('mode');
-  let alternateColor = state.get('alternate') ? SharedStyle.MATERIAL_COLORS[500].orange : '';
+  let alternate = state.get('alternate');
   return (
     <ToolbarButton
       active={[MODE_IDLE].includes(mode)}
+      alternate={alternate}
       tooltip={translator.t('2D View')}
       onClick={() => actions.project.setMode( MODE_IDLE )}
     >
       {[MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode)
-        ? <Icon2D style={{color: alternateColor}} />
-        : <FaMousePointer style={{color: alternateColor}} />}
+        ? <Icon2D />
+        : <FaMousePointer />}
     </ToolbarButton>
   );
 });

@@ -8,6 +8,7 @@ const InitialVars = {
     backgroundColor: '#28292D',
     alternateBackgroundColor: '#2E2F33',
     target: '#1CA6FC',
+    alternate: '#FF9800',
   },
   footer: {
     textColor: '#CCC',
@@ -20,6 +21,12 @@ const InitialVars = {
     dividerColor: '#FFF',
     error: '#F44336',
     warning: '#FFEB3B',
+  },
+  toolbar: {
+    color: '#C2C2C2',
+    activeColor: new StyleAlias('chrome.target'),
+    hoverColor: new StyleAlias('chrome.target'),
+    altColor: new StyleAlias('chrome.alternate'),
   },
   rulers: {
     size: 15,
@@ -48,7 +55,7 @@ const InitialVars = {
     }
   },
   group: {
-    select: '#FF9800',
+    select: new StyleAlias('chrome.alternate'),
   },
   sidebar: {
     backgroundColor: new StyleAlias('chrome.backgroundColor'),
