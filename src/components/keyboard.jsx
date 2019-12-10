@@ -97,7 +97,7 @@ export default @needsContext('store', 'state', 'events') class Keyboard extends 
 
       case 'Control':
       case 'Meta':
-        store.dispatch(setAlternateState());
+        store.dispatch(setAlternateState(true));
         break;
     }
 
@@ -116,7 +116,7 @@ export default @needsContext('store', 'state', 'events') class Keyboard extends 
 
       case 'Control':
       case 'Meta':
-        store.dispatch(setAlternateState());
+        store.dispatch(setAlternateState(false));
         break;
     }
   }

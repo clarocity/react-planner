@@ -223,9 +223,10 @@ export function pushLastSelectedCatalogElementToHistory( element ) {
   };
 }
 
-export function setAlternateState() {
+export function setAlternateState(toggle) {
   return {
-    type: ALTERNATE_STATE
+    type: ALTERNATE_STATE,
+    toggle
   };
 }
 

@@ -17,7 +17,7 @@ class Group{
   static select( state, groupID ){
     let layerList = state.getIn([ 'scene', 'groups', groupID, 'elements' ]);
 
-    state = Project.setAlternate( state ).updatedState;
+    state = Project.setAlternate( state, true ).updatedState;
 
     layerList.entrySeq().forEach( ([groupLayerID, groupLayerElements]) => {
       state = Layer.unselectAll( state, groupLayerID ).updatedState;
@@ -33,7 +33,7 @@ class Group{
       if( areas ) areas.forEach( areaID => { state = Area.select( state, groupLayerID, areaID ).updatedState; });
     });
 
-    state = Project.setAlternate( state ).updatedState;
+    state = Project.setAlternate( state, false ).updatedState;
 
     let groups = state.getIn(['scene', 'groups']).map( g  => g.set('selected', false) );
 

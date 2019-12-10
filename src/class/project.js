@@ -20,8 +20,8 @@ import {
 
 class Project{
 
-  static setAlternate( state ){
-    return { updatedState: state.set('alternate', !state.alternate ) };
+  static setAlternate( state, toggle ){
+    return { updatedState: state.set('alternate', toggle === undefined ? !state.alternate : !!toggle ) };
   }
 
   static openCatalog( state ) {

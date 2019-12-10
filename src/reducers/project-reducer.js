@@ -125,7 +125,7 @@ export default function (state, action) {
       return Project.pushLastSelectedCatalogElementToHistory(state, action.element).updatedState;
 
     case ALTERNATE_STATE:
-      return Project.setAlternate( state ).updatedState;
+      return Project.setAlternate( state, action.toggle ).updatedState;
 
     case SET_MODE:
       return Project.setMode(state, action.mode).updatedState;
