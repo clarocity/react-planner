@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as SharedStyle from '../../shared-style';
 import { ContextPropTypes, needsContext } from '../context';
 import {StyleAlias, BorderStyle} from '../../themekit';
 import { MdSettings, MdUndo, MdDirectionsRun } from 'react-icons/md';

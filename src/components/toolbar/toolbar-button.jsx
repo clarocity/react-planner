@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import * as SharedStyle from '../../shared-style';
 import { ContextPropTypes, needsContext } from '../context';
-import {StyleAlias, BorderStyle} from '../../themekit';
+import {StyleAlias} from '../../themekit';
 
 export default
 @needsContext('styles')

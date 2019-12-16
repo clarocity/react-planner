@@ -4,7 +4,7 @@ import { FormLabel, FormNumberInput } from '../../components/style/export';
 import { ContextPropTypes, needsContext } from '../../components/context';
 import {StyleMerge} from '../../themekit';
 
-function PropertyNumber({style, styles, value, onUpdate, onValid, configs, sourceElement, internalState, state, ...rest}) {
+function PropertyNumber({style, styles, value, onUpdate, onValid, configs, sourceElement, internalState, state}) {
 
   let update = (val) => {
     let number = parseFloat(val);
