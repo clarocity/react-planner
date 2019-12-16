@@ -61,6 +61,7 @@ const InitialVars = {
     backgroundColor: new StyleAlias('chrome.backgroundColor'),
     textColor: new StyleAlias('chrome.textColor'),
     targetColor: new StyleAlias('chrome.target'),
+    borderColor: 'transparent',
 
     panel: {
       borderTopColor: '#222',

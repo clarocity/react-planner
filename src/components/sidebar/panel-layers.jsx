@@ -81,12 +81,15 @@ class LayerRow extends PureComponent {
 export default @needsContext('styles', 'state', 'actions', 'translator') class PanelLayers extends Component {
 
   static styles = {
+    root: {
+      padding: '10px 15px',
+    },
+
     list: {
       display: 'grid',
       gridTemplateColumns: '3em 2fr 1fr 3em',
       gridAutoRows: '20px',
       gridRowGap: '5px',
-      padding: '10px 15px',
     },
 
     rowCell: {
@@ -107,6 +110,27 @@ export default @needsContext('styles', 'state', 'actions', 'translator') class P
       background: 'none',
       fontSize: '14px',
       outline: '0px',
+    },
+
+    actionBar: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingTop: '10px',
+    },
+
+    actionBarItem: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      whitespace: 'nowrap',
+      margin: '0 2px',
+      cursor: 'pointer',
+    },
+
+    actionBarIcon: {
+      marginRight: '3px',
+      fontSize: '16px'
     }
   }
 
@@ -138,7 +162,7 @@ export default @needsContext('styles', 'state', 'actions', 'translator') class P
 
     return (
       <Fragment>
-        <Panel name={translator.t('Layers')}>
+        <Panel name={translator.t('Layers')} inlineStyle={styles.root}>
           <div style={styles.list}>
             <span></span>
             <span style={styles.rowCell}>{translator.t('Name')}</span>
@@ -150,12 +174,11 @@ export default @needsContext('styles', 'state', 'actions', 'translator') class P
               return <LayerRow key={layerID} {...{layerID, layer, isCurrentLayer, isOnlyLayer, styles, actions, translator}}/>
             })}
           </div>
-          <div
-            onClick={this.addLayer}
-            style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}
-          >
-            <TiPlus />
-            <span>{translator.t('New layer')}</span>
+          <div style={styles.actionBar}>
+            <span onClick={this.addLayer} style={styles.actionBarItem}>
+              <TiPlus style={styles.actionBarIcon} />
+              {translator.t('New layer')}
+            </span>
           </div>
         </Panel>
         <Panel name={translator.t('Current Layer') + ': ' + selectedLayer.name}>

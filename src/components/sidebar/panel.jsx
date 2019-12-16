@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
-import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
+import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
 import { ContextPropTypes, needsContext } from '../context';
 import {StyleAlias, BorderStyle} from '../../themekit';
 
@@ -17,14 +17,17 @@ class Panel extends Component {
     },
 
     title: {
+      height: '26px',
       fontSize: '11px',
       color: new StyleAlias('sidebar.panel.textColor'),
-      padding: '5px 15px 8px 15px',
+      padding: '0px 15px 1px',
       backgroundColor: new StyleAlias('sidebar.panel.backgroundColor'),
-      textShadow: '-1px -1px 2px rgba(0, 0, 0, 1)',
-      boxShadow: 'inset 0px -3px 19px 0px rgba(0,0,0,0.5)',
+      textShadow: '-1px -1px 2px rgba(0, 0, 0, 0.7)',
+      boxShadow: 'inset 0px 3px 3px 0px rgba(0,0,0,0.5)',
       margin: '0px',
       cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
 
       '#hover': {
         color: new StyleAlias('sidebar.panel.hoverColor'),
@@ -37,7 +40,7 @@ class Panel extends Component {
       border: new BorderStyle({ color: '$sidebar.panel.borderTopColor'}),
       padding: '0px',
       backgroundColor: new StyleAlias('sidebar.panel.backgroundColor'),
-      textShadow: '-1px -1px 2px rgba(0, 0, 0, 1)',
+      textShadow: '-1px -1px 2px rgba(0, 0, 0, 0.7)',
       boxShadow: 'inset 0px 3px 3px 0px rgba(0,0,0,0.5)',
       display: 'none',
 
@@ -45,52 +48,51 @@ class Panel extends Component {
         display: 'block',
       }
     },
-
-    arrow: {
-      float: 'right'
-    }
   }
 
   constructor(props) {
     super(props);
 
     this.state = {
-      opened: props.hasOwnProperty('opened') ? props.opened : false,
+      opened: !!props.opened,
       hover: false
     };
   }
 
-  toggleOpen() {
+  componentDidMount () {
+    this.setState({opened: !!this.props.opened});
+  }
+
+  onToggleOpen = () => {
     this.setState({opened: !this.state.opened});
   }
 
-  toggleHover() {
-    this.setState({hover: !this.state.hover});
+  onMouseEnter = () => {
+    this.setState({hover: true});
+  }
+
+  onMouseLeave = () => {
+    this.setState({hover: false});
   }
 
   render() {
 
-    let { styles, name, headComponents, children } = this.props;
+    let { styles, name, children, inlineStyle } = this.props;
     let { opened, hover } = this.state;
 
     return (
       <div style={styles.root}>
         <h3
           style={styles.compile('title', hover && '#hover')}
-          onMouseEnter={() => this.toggleHover()}
-          onMouseLeave={() => this.toggleHover()}
-          onClick={() => this.toggleOpen()}
+          onMouseEnter={this.onMouseEnter}
+          onMouseLeave={this.onMouseLeave}
+          onClick={this.onToggleOpen}
         >
-          {name}
-          {headComponents}
-          {
-            opened ?
-              <FaAngleUp style={styles.arrow} /> :
-              <FaAngleDown style={styles.arrow} />
-          }
+          <span style={{flexGrow: 1}}>{name}</span>
+          {opened ? <FaAngleDown /> : <FaAngleRight />}
         </h3>
 
-        <div style={styles.compile('content', opened && '#opened')}>
+        <div style={styles.compile('content', opened && '#opened', inlineStyle)}>
           {children}
         </div>
       </div>
@@ -103,6 +105,7 @@ Panel.propTypes = {
   name: PropTypes.string.isRequired,
   headComponents: PropTypes.array,
   opened: PropTypes.bool,
+  inlineStyle: PropTypes.object,
 
   styles: ContextPropTypes.styles,
 };

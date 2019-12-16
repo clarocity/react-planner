@@ -42,7 +42,7 @@ export default {
   "Mouse Y Coordinate": "Y-координата курсора",
   "Name": "Название",
   "New Empty Group":"Новая пустая группа",
-  "New Group from selected":"Новая группа из выбранных",
+  "New Group From Selection":"Новая группа из выбранных",
   "New layer": "Новый слой",
   "New project": "Новый проект",
   "Offset {0}": "Offset {0}",

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import Panel from './panel';
 import {
   MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON,
@@ -6,9 +6,9 @@ import {
   MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE, MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE,
   MODE_ROTATING_ITEM
 } from '../../constants';
-import * as SharedStyle from '../../shared-style';
 import {MdSearch} from 'react-icons/md';
 import { ContextPropTypes, needsContext } from '../context';
+import {StyleAlias} from '../../themekit';
 import memoize from 'memoize-one';
 
 
@@ -19,42 +19,56 @@ const VISIBILITY_MODE = {
   MODE_ROTATING_ITEM
 };
 
-const contentArea = {
-  height: 'auto',
-  maxHeight: '15em',
-  overflowY: 'auto',
-  padding: '0.25em 1.15em',
-  cursor: 'pointer',
-  userSelect: 'none'
-};
+export default
+@needsContext('styles', 'state', 'actions', 'translator')
+class PanelLayerElements extends Component {
 
-const elementStyle = {
-  width: 'auto',
-  height: '2.5em',
-  margin: '0.25em 0.25em 0 0',
-  padding: '0.5em',
-  textAlign: 'center',
-  display: 'inline-block',
-  border: '1px solid #CCC',
-  borderRadius: '0.2em'
-};
+  static styles = {
+    root: {
+      padding: '10px 15px',
+    },
 
-const elementSelectedStyle = {
-  ...elementStyle,
-  color: SharedStyle.SECONDARY_COLOR.main,
-  borderColor: SharedStyle.SECONDARY_COLOR.main,
-};
+    search: {
+      display: 'flex',
+      alignItems: 'center',
+    },
 
-const categoryDividerStyle = {
-  paddingBottom: '0.5em',
-  borderBottom: '1px solid #888',
-};
+    searchIcon: {
+      flexGrow: 0,
+      flexShrink: 0,
+      fontSize: '16px',
+      marginRight: '5px',
+    },
 
-const tableSearchStyle = {width: '100%', marginTop: '0.8em'};
-const searchIconStyle = {fontSize: '1.5em'};
-const searchInputStyle = {fontSize: '1em', width: '100%', height: '1em', padding: '1em 0.5em'};
+    searchInput: {
+      flexGrow: 1,
+      flexShrink: 0,
+    },
 
-export default @needsContext('state', 'actions', 'translator') class PanelLayerElements extends Component {
+    categoryHeader: {
+      paddingBottom: '0.5em',
+      borderBottom: '1px solid #888',
+    },
+
+    elements: {
+      display: 'flex',
+      flexWrap: 'wrap',
+    },
+
+    element: {
+      fontSize: '1.1em',
+      backgroundColor: new StyleAlias('sidebar.textColor'),
+      color: new StyleAlias('sidebar.backgroundColor'),
+      textShadow: null,
+      borderRadius: '0.2em',
+      margin: '0.15em 0.15em',
+      padding: '0.5em',
+
+      '#active': {
+        backgroundColor: new StyleAlias('sidebar.targetColor'),
+      }
+    }
+  }
 
   constructor(props) {
     super(props);
@@ -99,90 +113,73 @@ export default @needsContext('state', 'actions', 'translator') class PanelLayerE
   }
 
   render() {
-    const { state, translator, actions } = this.props;
+    const { styles, state, translator, actions } = this.props;
     const { layers, selectedLayer } = state.scene;
     if (!VISIBILITY_MODE[state.mode]) return null;
 
     let layer = layers.get(selectedLayer);
     const matchedElements = this.matchedElements(layer, this.state.matchString, selectedLayer, layers.hashCode());
 
+    const ELEMENT_STYLE = styles.element;
+    const ELEMENT_SELECTED_STYLE = styles.compile('element#active');
+
     return (
-      <Panel name={translator.t('Elements on layer {0}', layer.name)}>
-        <div style={contentArea} onWheel={(e) => e.stopPropagation()}>
-
-          <table style={tableSearchStyle}>
-            <tbody>
-            <tr>
-              <td><MdSearch style={searchIconStyle}/></td>
-              <td><input type="text" style={searchInputStyle} onChange={this.onMatchChange}/></td>
-            </tr>
-            </tbody>
-          </table>
-
-          {
-            matchedElements.lines.count() ?
-              <div>
-                <p style={categoryDividerStyle}>{translator.t('Lines')}</p>
-                {
-                  matchedElements.lines.entrySeq().map(([lineID, line]) => {
-                    return (
-                      <div
-                        key={lineID}
-                        onClick={() => actions.lines.selectLine(layer.id, line.id)}
-                        style={line.selected ? elementSelectedStyle : elementStyle}
-                      >
-                        {line.name}
-                      </div>
-                    )
-                  })
-                }
-              </div>
-              : null
-          }
-
-          {
-            matchedElements.holes.count() ?
-              <div>
-                <p style={categoryDividerStyle}>{translator.t('Holes')}</p>
-                {
-                  matchedElements.holes.entrySeq().map(([holeID, hole]) => {
-                    return (
-                      <div
-                        key={holeID}
-                        onClick={() => actions.holes.selectHole(layer.id, hole.id)}
-                        style={hole.selected ? elementSelectedStyle : elementStyle}
-                      >
-                        {hole.name}
-                      </div>
-                    )
-                  })
-                }
-              </div>
-              : null
-          }
-
-          {
-            matchedElements.items.count() ?
-              <div>
-                <p style={categoryDividerStyle}>{translator.t('Items')}</p>
-                {
-                  matchedElements.items.entrySeq().map(([itemID, item]) => {
-                    return (
-                      <div
-                        key={itemID}
-                        onClick={() => actions.items.selectItem(layer.id, item.id)}
-                        style={item.selected ? elementSelectedStyle : elementStyle}
-                      >
-                        {item.name}
-                      </div>
-                    )
-                  })
-                }
-              </div>
-              : null
-          }
-
+      <Panel name={translator.t('Elements on layer {0}', layer.name)} inlineStyle={styles.root}>
+        <div style={styles.search}>
+          <MdSearch style={styles.searchIcon} />
+          <input type="text" style={styles.searchInput} onChange={this.onMatchChange}/>
         </div>
+
+        {!!matchedElements.lines.count() && <Fragment>
+          <p style={styles.categoryHeader}>{translator.t('Lines')}</p>
+          <div style={styles.elements}>{
+            matchedElements.lines.entrySeq().map(([lineID, line]) => {
+              return (
+                <div
+                  key={lineID}
+                  onClick={() => actions.lines.selectLine(layer.id, line.id)}
+                  style={line.selected ? ELEMENT_SELECTED_STYLE : ELEMENT_STYLE}
+                >
+                  {line.name}
+                </div>
+              )
+            })
+          }</div>
+        </Fragment>}
+
+        {!!matchedElements.holes.count() && <Fragment>
+          <p style={styles.categoryHeader}>{translator.t('Holes')}</p>
+          <div style={styles.elements}>{
+            matchedElements.holes.entrySeq().map(([holeID, hole]) => {
+              return (
+                <div
+                  key={holeID}
+                  onClick={() => actions.holes.selectHole(layer.id, hole.id)}
+                  style={hole.selected ? ELEMENT_SELECTED_STYLE : ELEMENT_STYLE}
+                >
+                  {hole.name}
+                </div>
+              )
+            })
+          }</div>
+        </Fragment>}
+
+        {!!matchedElements.items.count() && <Fragment>
+          <p style={styles.categoryHeader}>{translator.t('Items')}</p>
+          <div style={styles.elements}>{
+            matchedElements.items.entrySeq().map(([itemID, item]) => {
+              return (
+                <div
+                  key={itemID}
+                  onClick={() => actions.items.selectItem(layer.id, item.id)}
+                  style={item.selected ? ELEMENT_SELECTED_STYLE : ELEMENT_STYLE}
+                >
+                  {item.name}
+                </div>
+              )
+            })
+          }</div>
+        </Fragment>}
       </Panel>
     );
   }
@@ -193,4 +190,5 @@ PanelLayerElements.propTypes = {
   state: ContextPropTypes.state,
   actions: ContextPropTypes.actions,
   translator: ContextPropTypes.translator,
+  styles: ContextPropTypes.styles,
 };

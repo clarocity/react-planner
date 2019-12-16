@@ -5,11 +5,11 @@ import { FaTrash, FaTimes } from 'react-icons/fa';
 import { FormNumberInput } from '../../components/style/export';
 import { ContextPropTypes, needsContext } from '../context';
 
-const tabStyle = { margin: '1em' };
+const tabStyle = { padding: '1em' };
 
 const iconStyle = {
   fontSize: '14px',
-  margin: '2px',
+  padding: '2px',
   cursor: 'pointer'
 };
 

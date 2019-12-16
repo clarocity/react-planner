@@ -42,7 +42,7 @@ export default {
   "Mouse Y Coordinate":"Mouse Y Coordinate",
   "Name": "Name",
   "New Empty Group":"New Empty Group",
-  "New Group from selected":"New Group from selected",
+  "New Group From Selection":"New Group From Selection",
   "New layer": "New layer",
   "New project": "New project",
   "Offset {0}": "Offset {0}",

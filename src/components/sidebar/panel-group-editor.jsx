@@ -1,7 +1,9 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import Panel from './panel';
 import * as SharedStyle from '../../shared-style';
-import { FormNumberInput, FormTextInput } from '../style/export';
+import PropertyNumber from '../../catalog/properties/property-number';
+import PropertyMultiNumber from '../../catalog/properties/property-multi-number';
+import PropertyString from '../../catalog/properties/property-string';
 import { Map } from 'immutable';
 import { ContextPropTypes, needsContext } from '../context';
 
@@ -21,31 +23,38 @@ const VISIBILITY_MODE = {
   MODE_ROTATING_ITEM
 };
 
-const tableStyle = { width: '100%' };
-const firstTdStyle = { width: '6em' };
-const inputStyle = { textAlign: 'left' };
-const styleEditButton = {
-  marginLeft: '5px',
-  border: '0px',
-  background: 'none',
-  color: SharedStyle.COLORS.white,
-  fontSize: '14px',
-  outline: '0px'
-};
-
-const tablegroupStyle = {
-  width: '100%',
-  cursor: 'pointer',
-  maxHeight: '20em',
-  marginLeft: '1px',
-  marginTop: '1em'
-};
-
-const iconColStyle = {width: '2em'};
-
 export default
-@needsContext('state', 'actions', 'translator')
+@needsContext('styles', 'state', 'actions', 'translator')
 class PanelGroupEditor extends Component {
+
+  static styles = {
+    root: {
+      padding: '10px 15px',
+    },
+
+    list: {
+      display: 'grid',
+      gridTemplateColumns: '3em 1fr 1fr 1fr',
+      gridAutoRows: '20px',
+      gridRowGap: '5px',
+    },
+
+    rowCell: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+    },
+
+    icon: {
+      cursor: 'pointer',
+      marginLeft: '5px',
+      border: '0px',
+      background: 'none',
+      fontSize: '14px',
+      outline: '0px',
+    },
+  }
 
   shouldComponentUpdate(nextProps /*, nextState */) {
 
@@ -59,117 +68,81 @@ class PanelGroupEditor extends Component {
 
   render() {
 
-    const { translator, actions, state } = this.props;
+    const { styles, translator, actions, state } = this.props;
     const [ groupID, group ] = state.getIn(['scene', 'groups']).findEntry( g => g.get('selected') ) || [];
 
     if (!groupID || !VISIBILITY_MODE[state.mode]) return null;
 
-    let elements = group.get('elements');
+    const elements = group.get('elements');
+    const hasElements = !!elements.size;
 
     return (
-      <Panel name={translator.t('Group [{0}]', group.get('name'))} opened={true}>
-        <div style={{padding: '5px 15px'}}>
-          <table style={tableStyle}>
-            <tbody>
-              <tr>
-                <td style={firstTdStyle}>{translator.t('Name')}</td>
-                <td>
-                  <FormTextInput
-                    value={group.get('name')}
-                    onChange={e => actions.group.setGroupAttributes( groupID, new Map({ 'name': e.target.value }) ) }
-                    style={inputStyle}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td style={firstTdStyle}>X</td>
-                <td>
-                  <FormNumberInput
-                    value={group.get('x')}
-                    onChange={e => actions.group.groupTranslate( groupID, e.target.value, group.get('y') ) }
-                    style={inputStyle}
-                    state={state}
-                    precision={2}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td style={firstTdStyle}>Y</td>
-                <td>
-                  <FormNumberInput
-                    value={group.get('y')}
-                    onChange={e => actions.group.groupTranslate( groupID, group.get('x'), e.target.value ) }
-                    style={inputStyle}
-                    state={state}
-                    precision={2}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td style={firstTdStyle}>{translator.t('Rotation')}</td>
-                <td>
-                  <FormNumberInput
-                    value={group.get('rotation')}
-                    onChange={e => actions.group.groupRotate( groupID, e.target.value ) }
-                    style={inputStyle}
-                    state={state}
-                    precision={2}
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          {
-            elements.size ?
-              <div>
-                <p style={{textAlign:'center', borderBottom:SharedStyle.PRIMARY_COLOR.border , paddingBottom:'1em'}}>{translator.t('Group\'s Elements')}</p>
-                <table style={tablegroupStyle}>
-                  <thead>
-                    <tr>
-                      <th style={iconColStyle}></th>
-                      <th>{translator.t('Layer')}</th>
-                      <th>{translator.t('Prototype')}</th>
-                      <th>{translator.t('Name')}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {
-                      elements.entrySeq().map(([ layerID, layerElements ]) => {
+      <Panel key={groupID} name={translator.t('Group [{0}]', group.get('name'))} opened={true} inlineStyle={styles.root}>
+        <PropertyString
+          value={group.get('name')}
+          onUpdate={v => actions.group.setGroupAttributes( groupID, new Map({ 'name': v }))}
+          configs={{label: translator.t('Name')}}
+          state={state}
+        />
+        <PropertyMultiNumber
+          value={{ x: group.get('x'), y: group.get('y') }}
+          onUpdate={(key, val) => {
+            switch (key) {
+            case 'x':
+              return actions.group.groupTranslate( groupID, val, group.get('y') )
+            case 'y':
+              return actions.group.groupTranslate( groupID, group.get('x'), val )
+            }
+          }}
+          configs={{
+            labels: [ 'X', 'Y' ],
+            targets: [ 'x', 'y' ],
+            min: 0,
+            max: Infinity,
+            precision: 2
+          }}
+          state={state}
+        />
+        <PropertyNumber
+          value={group.get('rotation')}
+          onUpdate={v => actions.group.groupRotate( groupID, v )}
+          configs={{label: translator.t('Rotation'), min: 0, max: Infinity, precision: 3}}
+          state={state}
+        />
+        {hasElements &&
+          <div>
+            <p style={{textAlign:'center', borderBottom:SharedStyle.PRIMARY_COLOR.border , paddingBottom:'1em'}}>{translator.t('Group\'s Elements')}</p>
+            <div style={styles.list}>
+              <span></span>
+              <span style={styles.rowCell}>{translator.t('Layer')}</span>
+              <span style={styles.rowCell}>{translator.t('Prototype')}</span>
+              <span style={styles.rowCell}>{translator.t('Name')}</span>
 
-                        return layerElements.entrySeq().map(([elementPrototype, ElementList]) => {
+              {elements.entrySeq().map(([layerID, layerElements]) =>
+                layerElements.entrySeq().map(([elementPrototype, ElementList]) =>
+                  ElementList.valueSeq().map( elementID => {
+                    let element = state.getIn(['scene', 'layers', layerID, elementPrototype, elementID]);
+                    const onUnlink = () => actions.group.removeFromGroup( groupID, layerID, elementPrototype, elementID );
 
-                          return ElementList.valueSeq().map( elementID => {
-                            let element = state.getIn(['scene', 'layers', layerID, elementPrototype, elementID]);
-
-                            return <tr
-                              key={elementID}
-                            >
-                              <td style={iconColStyle} title={translator.t('Un-chain Element from Group')}>
-                                <FaUnlink
-                                  onClick={ () => actions.group.removeFromGroup( groupID, layerID, elementPrototype, elementID ) }
-                                  style={styleEditButton}
-                                />
-                              </td>
-                              <td style={{textAlign:'center'}}>
-                                {layerID}
-                              </td>
-                              <td style={{textAlign:'center', textTransform:'capitalize'}}>
-                                {elementPrototype}
-                              </td>
-                              <td style={{textAlign:'center'}}>
-                                {element.name}
-                              </td>
-                            </tr>;
-                          });
-                        });
-                      })
-                    }
-                  </tbody>
-                </table>
-              </div> :
-              null
-          }
-        </div>
+                    return (
+                      <Fragment key={layerID + element.id}>
+                        <span style={styles.rowCell} title={translator.t('Un-chain Element from Group')}>
+                          <FaUnlink
+                            onClick={onUnlink}
+                            style={styles.icon}
+                          />
+                        </span>
+                        <span style={styles.rowCell}>{layerID}</span>
+                        <span style={styles.rowCell}>{elementPrototype}</span>
+                        <span style={styles.rowCell}>{element.name}</span>
+                      </Fragment>
+                    )
+                  })
+                )
+              )}
+            </div>
+          </div>
+        }
       </Panel>
     );
   }
@@ -180,5 +153,5 @@ PanelGroupEditor.propTypes = {
   state: ContextPropTypes.state,
   actions: ContextPropTypes.actions,
   translator: ContextPropTypes.translator,
-  // styles: ContextPropTypes.styles,
+  styles: ContextPropTypes.styles,
 };
