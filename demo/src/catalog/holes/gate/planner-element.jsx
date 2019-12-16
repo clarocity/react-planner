@@ -1,7 +1,6 @@
 import React from 'react';
 import * as Three from 'three';
 import path from 'path';
-import { Cursors } from 'react-planner';
 
 export default {
   name: 'gate',
@@ -45,16 +44,17 @@ export default {
     }
   },
 
-  render2D: function ({element, layer, scene}) {
+  render2D: function ({element, layer, scene, themekit}) {
+    const selectedColor = themekit.resolve('grid.target');
+
     const STYLE_HOLE_BASE = {stroke: '#000', strokeWidth: '3px', fill: '#000'};
-    const STYLE_HOLE_SELECTED = {stroke: '#0096fd', strokeWidth: '4px', fill: '#0096fd', cursor: Cursors.drag};
+    const STYLE_HOLE_SELECTED = {stroke: selectedColor, strokeWidth: '4px', fill: selectedColor};
     const STYLE_ARC_BASE = {stroke: '#000', strokeWidth: '3px', strokeDasharray: '5,5', fill: 'none'};
     const STYLE_ARC_SELECTED = {
-      stroke: '#0096fd',
+      stroke: selectedColor,
       strokeWidth: '4px',
       strokeDasharray: '5,5',
       fill: 'none',
-      cursor: Cursors.drag,
     };
 
     let epsilon = 3;

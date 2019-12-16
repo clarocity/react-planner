@@ -2,12 +2,9 @@ import React from 'react';
 import * as Three from 'three';
 import { loadObjWithMaterial } from '../../utils/load-obj';
 import path from 'path';
-import { Cursors } from 'react-planner';
 
 let cached3DWindow = null;
 
-const STYLE_HOLE_BASE = { stroke: '#000', strokeWidth: '3px', fill: '#000' };
-const STYLE_HOLE_SELECTED = { stroke: '#0096fd', strokeWidth: '3px', fill: '#0096fd', cursor: Cursors.drag };
 const EPSILON = 3;
 
 export default {
@@ -61,7 +58,11 @@ export default {
     },
   },
 
-  render2D: function ({element, layer, scene}) {
+  render2D: function ({element, layer, scene, themekit}) {
+    const selectedColor = themekit.resolve('grid.target');
+    const STYLE_HOLE_BASE = { stroke: '#000', strokeWidth: '3px', fill: '#000' };
+    const STYLE_HOLE_SELECTED = { stroke: selectedColor, strokeWidth: '3px', fill: selectedColor };
+
     let holeWidth = element.properties.get('width').get('length');
     let holePath = `M${0} ${-EPSILON}  L${holeWidth} ${-EPSILON}  L${holeWidth} ${EPSILON}  L${0} ${EPSILON}  z`;
     let holeStyle = element.selected ? STYLE_HOLE_SELECTED : STYLE_HOLE_BASE;

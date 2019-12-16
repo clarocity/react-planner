@@ -1,6 +1,5 @@
 import React from 'react';
 import * as Three from 'three';
-import { Cursors } from 'react-planner';
 
 const black = new Three.MeshLambertMaterial({color : 0x000000});
 const green = new Three.MeshLambertMaterial( {color : 0x348781});
@@ -318,11 +317,12 @@ export default {
   },
 
   render2D: function ({element, layer, scene}) {
+    const selectedColor = themekit.resolve('grid.target');
 
     const STYLE_HOLE_BASE = {stroke: '#ff0000', strokeWidth: '3px', fill: '#ff0000'};
-    const STYLE_HOLE_SELECTED = {stroke: '#ff0000', strokeWidth: '4px', fill: '#ff0000', cursor: Cursors.drag};
+    const STYLE_HOLE_SELECTED = {stroke: selectedColor, strokeWidth: '4px', fill: '#ff0000'};
     const STYLE_ARC_BASE = {stroke: '#ff0000', strokeWidth: '3px', strokeDasharray: '5,5', fill: 'none'};
-    const STYLE_ARC_SELECTED = {stroke: '#ff0000', strokeWidth: '4px', strokeDasharray: '5,5', fill: 'none', cursor: Cursors.drag};
+    const STYLE_ARC_SELECTED = {stroke: selectedColor, strokeWidth: '4px', strokeDasharray: '5,5', fill: 'none'};
 
     let epsilon = 3;
     let flip = element.properties.get('flip_horizontal');

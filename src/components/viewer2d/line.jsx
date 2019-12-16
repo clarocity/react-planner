@@ -38,7 +38,7 @@ function Line({line, layer, state, catalog, themekit}) {
         data-selected={hole.selected}
         data-layer={layer.id}
       >
-        <CatalogHole element={hole} layer={layer} scene={scene} />
+        <CatalogHole element={hole} layer={layer} scene={scene} themekit={themekit}/>
       </g>
     );
   });
