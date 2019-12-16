@@ -268,10 +268,11 @@ export default {
     }
   },
 
-  render2D: function ({element, layer, scene}) {
+  render2D: function ({element, layer, scene, themekit}) {
+    const colors = themekit.resolve('grid.item');
 
-    let rect_style ={stroke: element.selected ? '#0096fd' : '#000', strokeWidth: '2px', fill: '#84e1ce'};
-    let text_style ={textAnchor: 'middle', fontSize: '11px', fill: '#FF0000'};
+    let RECT_STYLE ={stroke: element.selected ? colors.targetBorder : colors.border, strokeWidth: '2px', fill: colors.fill};
+    let TEXT_STYLE ={textAnchor: 'middle', fontSize: '11px', fill: colors.text};
 
     let angle = element.rotation + 90;
 
@@ -289,14 +290,14 @@ export default {
 
     for (let ind = 0; ind < seats; ind++)
       seatsArray[ind]=<rect key={ind} x={WIDTH * ind} y={eps * ind }
-                            width={WIDTH} height={DEPTH} style={rect_style}/>
+                            width={WIDTH} height={DEPTH} style={RECT_STYLE}/>
 
     return (
       <g transform={`translate(${(flip?-1:1) * WIDTH * seats/2},${-DEPTH / 2}) scale(${flip?1:-1},1)`}>
         {seatsArray}
         <text x='0' y='0'
               transform={`translate(${WIDTH * seats/2}, ${DEPTH / 2 + eps * seats/2}) scale(${flip?1:-1},-1) rotate(${textRotation})`}
-              style={text_style}>
+              style={TEXT_STYLE}>
           {element.type}
         </text>
       </g>

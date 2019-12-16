@@ -8,6 +8,7 @@ const InitialVars = {
     backgroundColor: '#28292D',
     alternateBackgroundColor: '#2E2F33',
     target: '#1CA6FC',
+    lightTarget: '#99C3FB',
     alternate: '#FF9800',
   },
   footer: {
@@ -111,6 +112,22 @@ const InitialVars = {
   grid: {
     backgroundColor: '#fff',
     target: new StyleAlias('chrome.target'),
+    itemColor: '#84e1ce',
+
+    mesh: {
+      backgroundColor: '#F5F4F4',
+      target: '#99C3FB',
+    },
+
+    item: {
+      border: '#8E9BA2',
+      targetBorder: new StyleAlias('chrome.target'),
+
+      fill: '#84E1CE',
+      targetFill: new StyleAlias('chrome.lightTarget'),
+
+      text: '#000',
+    },
 
     lines: [
       '#ddd',

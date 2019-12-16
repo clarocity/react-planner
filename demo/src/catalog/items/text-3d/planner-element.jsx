@@ -45,9 +45,10 @@ export default {
     }
   },
 
-  render2D: function ({element, layer, scene}) {
+  render2D: function ({element, layer, scene, themekit}) {
+    const colors = themekit.resolve('grid.item');
 
-    let color = element.properties.get('color') || defaultColor;
+    let color = element.properties.get('color') || colors.text;
     let text = element.properties.get('text') || '';
     let fontSize = element.properties.get('fontSize') || defaultFontSize;
     let textHorizontalPadding = defaultFontSize;

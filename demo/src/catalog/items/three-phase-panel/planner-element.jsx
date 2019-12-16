@@ -566,7 +566,8 @@ export default {
     }
   },
 
-  render2D: function ({element, layer, scene}) {
+  render2D: function ({element, layer, scene, themekit}) {
+    const colors = themekit.resolve('grid.item');
 
     let newWidth = WIDTH;
     let newDepth = DEPTH;
@@ -579,10 +580,10 @@ export default {
     return (
       <g transform={`translate(${-newWidth / 2},${-newDepth / 2})`}>
         <rect key="1" x="0" y="0" width={newWidth} height={newDepth}
-              style={{stroke: element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: "#ff0000"}}/>
+              style={{stroke: element.selected ? colors.targetBorder : colors.border, strokeWidth: "2px", fill: colors.fill}}/>
         <text key="2" x="0" y="0"
               transform={`translate(${newWidth / 2}, ${newDepth / 2}) scale(1,-1) rotate(${textRotation})`}
-              style={{textAnchor: "middle", fontSize: "11px"}}>
+              style={{textAnchor: "middle", fontSize: "11px", fill: colors.text}}>
           {element.type}
         </text>
       </g>

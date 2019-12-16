@@ -111,15 +111,16 @@ export default {
     patternColor: {
       label: '2D color',
       type: 'color',
-      defaultValue: '#f5f4f4'
+      defaultValue: null
     }
   },
 
-  render2D: function ({element, layer, scene}) {
+  render2D: function ({element, layer, scene, themekit}) {
+    const colors = themekit.resolve('grid.item');
 
     let newWidth = element.properties.getIn(['width', 'length']);
     let newDepth = element.properties.getIn(['depth', 'length']);
-    let fillValue = element.selected ? '#99c3fb' : element.properties.get('patternColor');
+    let fillValue = element.selected ? colors.targetFill : element.properties.get('patternColor') || colors.fill;
     let angle = element.rotation + 90;
 
     let textRotation = 0;
@@ -130,10 +131,10 @@ export default {
     return (
       <g transform={`translate(${-newWidth / 2},${-newDepth / 2})`}>
         <rect key='1' x='0' y='0' width={newWidth} height={newDepth}
-          style={{ stroke: element.selected ? '#0096fd' : '#000', strokeWidth: '2px', fill: fillValue }} />
+          style={{ stroke: element.selected ? colors.targetBorder : colors.border, strokeWidth: '2px', fill: fillValue }} />
         <text key='2' x='0' y='0'
           transform={`translate(${newWidth / 2}, ${newDepth / 2}) scale(1,-1) rotate(${textRotation})`}
-          style={{ textAnchor: 'middle', fontSize: '11px' }}>
+          style={{ textAnchor: 'middle', fontSize: '11px', fill: colors.text }}>
           {element.name}
         </text>
       </g>

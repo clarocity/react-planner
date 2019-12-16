@@ -1,6 +1,6 @@
+/* eslint react/prop-types: 0 */
 import React from 'react';
 import { createArea, updatedArea } from './area-factory-3d';
-import * as SharedStyle from '../../shared-style';
 import Translator from '../../translator/translator';
 
 let translator = new Translator();
@@ -21,7 +21,7 @@ export default function AreaFactory(name, info, textures) {
       patternColor: {
         label: translator.t('color'),
         type: 'color',
-        defaultValue: SharedStyle.AREA_MESH_COLOR.unselected
+        defaultValue: '#8E9BA2',
       },
       thickness: {
         label: translator.t('thickness'),
@@ -31,7 +31,9 @@ export default function AreaFactory(name, info, textures) {
         }
       }
     },
-    render2D: function ({element, layer}) {
+    render2D: function ({element, layer, themekit}) {
+      const colors = themekit.resolve('grid.item');
+
       let path = '';
 
       ///print area path
@@ -51,7 +53,7 @@ export default function AreaFactory(name, info, textures) {
 
       });
 
-      let fill = element.selected ? SharedStyle.AREA_MESH_COLOR.selected : element.properties.get('patternColor');
+      let fill = element.selected ? colors.targetFill : element.properties.get('patternColor');
 
       return (<path d={path} fill={fill} />);
     },

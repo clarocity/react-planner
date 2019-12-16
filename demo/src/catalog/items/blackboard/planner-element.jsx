@@ -27,7 +27,8 @@ export default {
     }
   },
 
-  render2D: function ({element, layer, scene}) {
+  render2D: function ({element, layer, scene, themekit}) {
+    const colors = themekit.resolve('grid.item');
 
     let angle = element.rotation + 90;
 
@@ -36,18 +37,18 @@ export default {
       textRotation = 180;
     }
 
-    let rect_style = {stroke : element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: "#84e1ce"};
-    let arrow_style = {stroke: element.selected ? '#0096fd' : null, strokeWidth: "2px", fill: "#84e1ce"};
+    let RECT_STYLE = {stroke : element.selected ? colors.targetBorder : colors.border, strokeWidth: "2px", fill: colors.fill};
+    let ARROW_STYLE = {stroke: element.selected ? colors.targetBorder : null, strokeWidth: "2px", fill: colors.fill};
 
     return (
 
       <g transform={`translate(${-WIDTH / 2},${-DEPTH / 2})`}>
-        <rect key="1" x="0" y="0" width={WIDTH} height={DEPTH} style={rect_style}/>
-        <line key="2" x1={WIDTH/2} x2={WIDTH/2} y1={DEPTH}  y2={1.8*DEPTH} style={arrow_style}/>
-        <line key="3" x1={.45*WIDTH} x2={WIDTH/2} y1={1.2*DEPTH} y2={1.8*DEPTH} style={arrow_style} />
-        <line key="4" x1={WIDTH/2} x2={.55*WIDTH} y1={1.8*DEPTH} y2={1.2*DEPTH} style={arrow_style} />
+        <rect key="1" x="0" y="0" width={WIDTH} height={DEPTH} style={RECT_STYLE}/>
+        <line key="2" x1={WIDTH/2} x2={WIDTH/2} y1={DEPTH}  y2={1.8*DEPTH} style={ARROW_STYLE}/>
+        <line key="3" x1={.45*WIDTH} x2={WIDTH/2} y1={1.2*DEPTH} y2={1.8*DEPTH} style={ARROW_STYLE} />
+        <line key="4" x1={WIDTH/2} x2={.55*WIDTH} y1={1.8*DEPTH} y2={1.2*DEPTH} style={ARROW_STYLE} />
         <text key="5" x="0" y="0" transform={`translate(${WIDTH / 2}, ${DEPTH / 2}) scale(1,-1) rotate(${textRotation})`}
-              style={{textAnchor: "middle", fontSize: "11px"}}>
+              style={{textAnchor: "middle", fontSize: "11px", fill: colors.text}}>
           {element.type}
         </text>
       </g>

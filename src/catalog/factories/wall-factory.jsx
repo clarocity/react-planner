@@ -1,14 +1,10 @@
+/* eslint react/prop-types: 0 */
 import React from 'react';
 import { buildWall, updatedWall } from './wall-factory-3d';
-import * as SharedStyle from '../../shared-style';
 import * as Geometry from '../../utils/geometry';
 import Translator from '../../translator/translator';
 
 const epsilon = 20;
-const STYLE_TEXT = { textAnchor: 'middle' };
-const STYLE_LINE = { stroke: SharedStyle.LINE_MESH_COLOR.selected };
-const STYLE_RECT = { strokeWidth: 1, stroke: SharedStyle.LINE_MESH_COLOR.unselected, fill: 'url(#diagonalFill)' };
-const STYLE_RECT_SELECTED = { ...STYLE_RECT, stroke: SharedStyle.LINE_MESH_COLOR.selected };
 
 let translator = new Translator();
 
@@ -35,7 +31,14 @@ export default function WallFactory(name, info, textures, defaults = { height: 3
       }
     },
 
-    render2D: function ({element, layer}) {
+    render2D: function ({element, layer, themekit}) {
+      const colors = themekit.resolve('grid.item');
+
+      const STYLE_TEXT = { textAnchor: 'middle' };
+      const STYLE_LINE = { stroke: colors.targetFill };
+      const STYLE_RECT = { strokeWidth: 1, stroke: colors.border, fill: 'url(#diagonalFill)' };
+      const STYLE_RECT_SELECTED = { ...STYLE_RECT, stroke: colors.targetBorder };
+
       let { x: x1, y: y1 } = layer.vertices.get(element.vertices.get(0));
       let { x: x2, y: y2 } = layer.vertices.get(element.vertices.get(1));
 
