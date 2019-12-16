@@ -1,32 +1,63 @@
-import React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import * as SharedStyle from '../../shared-style';
 import { ContextPropTypes, needsContext } from '../context';
+import {StyleAlias} from '../../themekit';
+import {propCompare} from '../../utils';
 
-const STYLE_DEFAULT  = {fill: "#0096fd", stroke: SharedStyle.COLORS.white, cursor: SharedStyle.CURSORS.moveVertex};
-const STYLE_SELECTED = {fill: SharedStyle.COLORS.white, stroke: "#0096fd"};
-const STYLE_ALTERATIVE = {cursor: SharedStyle.CURSORS.moveAdd};
+export default
+@needsContext('styles', 'state')
+class Vertex extends Component {
 
-function Vertex({vertex, layer, state}) {
+  static styles = {
+    root: {
+      fill: new StyleAlias('grid.vertex.fill'),
+      stroke: new StyleAlias('grid.vertex.stroke'),
+      cursor: new StyleAlias('cursors.moveVertex'),
 
-  let {x, y} = vertex;
-  const STYLE = {
-    ...STYLE_DEFAULT,
-    ...(vertex.dragging && STYLE_SELECTED),
-    ...(state.alternate && STYLE_ALTERATIVE),
+      '#active': {
+        fill: new StyleAlias('grid.vertex.stroke'),
+        stroke: new StyleAlias('grid.vertex.fill'),
+      },
+
+      '#alt': {
+        cursor: new StyleAlias('cursors.moveAdd'),
+      },
+    }
   }
-  return (
-    <g
-      transform={`translate(${x}, ${y})`}
-      data-element-root
-      data-prototype={vertex.prototype}
-      data-id={vertex.id}
-      data-selected={vertex.selected}
-      data-layer={layer.id}
-    >
-      <circle cx="0" cy="0" r="7" style={STYLE}/>
-    </g>
-  );
+
+  shouldComponentUpdate(nextProps) {
+    return propCompare(this.props, nextProps, [
+      'vertex.x',
+      'vertex.y',
+      'vertex.dragging',
+      'state.alternate',
+    ]);
+  }
+
+
+  render () {
+    const {styles, vertex, layer, state} = this.props;
+    const {x, y, dragging} = vertex;
+
+    const STYLE = styles.compile(
+      'root',
+      dragging && '#active',
+      state.alternate && '#alt'
+    );
+
+    return (
+      <g
+        transform={`translate(${x}, ${y})`}
+        data-element-root
+        data-prototype={vertex.prototype}
+        data-id={vertex.id}
+        data-selected={vertex.selected}
+        data-layer={layer.id}
+      >
+        <circle cx="0" cy="0" r="7" style={STYLE}/>
+      </g>
+    );
+  }
 }
 
 Vertex.propTypes = {
@@ -34,6 +65,5 @@ Vertex.propTypes = {
   layer: PropTypes.object.isRequired,
 
   state: ContextPropTypes.state,
+  styles: ContextPropTypes.styles,
 };
-
-export default needsContext('state')(Vertex);
