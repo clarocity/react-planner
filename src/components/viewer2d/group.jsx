@@ -53,7 +53,6 @@ Group.styles = {
 Group.propTypes = {
   group: PropTypes.object.isRequired,
   layer: PropTypes.object.isRequired,
-  scene: PropTypes.object.isRequired,
   styles: ContextPropTypes.styles,
   translator: ContextPropTypes.translator
 };

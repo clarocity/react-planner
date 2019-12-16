@@ -10,7 +10,7 @@ export default class Scene extends Component {
   }
 
   render() {
-    let {scene, catalog} = this.props;
+    let {scene} = this.props;
     let {layers} = scene;
     let selectedLayer = layers.get(scene.selectedLayer);
 
@@ -23,11 +23,11 @@ export default class Scene extends Component {
             layers
             .entrySeq()
             .filter(([layerID, layer]) => layerID !== scene.selectedLayer && layer.visible)
-            .map(([layerID, layer]) => <Layer key={layerID} layer={layer} scene={scene} catalog={catalog}/>)
+            .map(([layerID, layer]) => <Layer key={layerID} layer={layer} scene={scene} />)
           }
         </g>
 
-        <Layer key={selectedLayer.id} layer={selectedLayer} scene={scene} catalog={catalog}/>
+        <Layer key={selectedLayer.id} layer={selectedLayer} scene={scene} />
       </g>
     );
   }
@@ -36,5 +36,4 @@ export default class Scene extends Component {
 
 Scene.propTypes = {
   scene: PropTypes.object.isRequired,
-  catalog: PropTypes.object.isRequired
 };

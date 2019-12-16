@@ -2,24 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import polylabel from 'polylabel';
 import areapolygon from 'area-polygon';
+import { ContextPropTypes, needsContext } from '../context';
 
-const STYLE_TEXT = {
-  textAnchor: 'middle',
-  fontSize: '12px',
-  fontFamily: '"Courier New", Courier, monospace',
-  pointerEvents: 'none',
-  fontWeight: 'bold',
-
-  //http://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting-using-css
-  WebkitTouchCallout: 'none', /* iOS Safari */
-  WebkitUserSelect: 'none', /* Chrome/Safari/Opera */
-  MozUserSelect: 'none', /* Firefox */
-  MsUserSelect: 'none', /* Internet Explorer/Edge */
-  userSelect: 'none'
-};
-
-
-export default function Area({layer, area, catalog}) {
+function Area({layer, area, catalog, styles, themekit}) {
 
   let CatalogArea = catalog.getElement(area.type).render2D
 
@@ -57,7 +42,7 @@ export default function Area({layer, area, catalog}) {
     });
 
     renderedAreaSize = (
-      <text x="0" y="0" transform={`translate(${center[0]} ${center[1]}) scale(1, -1)`} style={STYLE_TEXT}>
+      <text x="0" y="0" transform={`translate(${center[0]} ${center[1]}) scale(1, -1)`} style={styles.text}>
         {(areaSize / 10000).toFixed(2)} m{String.fromCharCode(0xb2)}
       </text>
     )
@@ -71,17 +56,37 @@ export default function Area({layer, area, catalog}) {
       data-selected={area.selected}
       data-layer={layer.id}
     >
-      <CatalogArea element={area} layer={layer} />
+      <CatalogArea element={area} layer={layer} themekit={themekit} />
       {renderedAreaSize}
     </g>
   )
 
 }
 
+Area.styles = {
+  text: {
+    textAnchor: 'middle',
+    fontSize: '12px',
+    fontFamily: '"Courier New", Courier, monospace',
+    pointerEvents: 'none',
+    fontWeight: 'bold',
+
+    //http://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting-using-css
+    WebkitTouchCallout: 'none', /* iOS Safari */
+    WebkitUserSelect: 'none', /* Chrome/Safari/Opera */
+    MozUserSelect: 'none', /* Firefox */
+    MsUserSelect: 'none', /* Internet Explorer/Edge */
+    userSelect: 'none'
+  }
+}
+
 Area.propTypes = {
   area: PropTypes.object.isRequired,
   layer: PropTypes.object.isRequired,
-  catalog: PropTypes.object.isRequired
+
+  catalog: ContextPropTypes.catalog,
+  styles: ContextPropTypes.styles,
+  themekit: ContextPropTypes.themekit,
 };
 
-
+export default needsContext('themekit', 'styles', 'catalog')(Area);

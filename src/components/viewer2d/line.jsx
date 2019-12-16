@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as Geometry from '../../utils/geometry';
 import Ruler from './ruler';
-import * as SharedStyle from '../../shared-style';
+import { ContextPropTypes, needsContext } from '../context';
 
-export default function Line({line, layer, scene, catalog}) {
+function Line({line, layer, state, catalog, themekit}) {
+  const {scene} = state;
 
   let vertex0 = layer.vertices.get(line.vertices.get(0));
   let vertex1 = layer.vertices.get(line.vertices.get(1));
@@ -55,12 +56,17 @@ export default function Line({line, layer, scene, catalog}) {
       data-id={line.id}
       data-selected={line.selected}
       data-layer={layer.id}
-      style={line.selected ? {cursor: SharedStyle.CURSORS.move} : {}}
+      style={line.selected ? {cursor: themekit.resolve('cursors.move')} : {}}
     >
       {line.selected &&
-        <Ruler unit={scene.unit} length={length} transform={`translate(0, ${half_thickness + 10} )`}/>
+        <Ruler
+          unit={scene.unit}
+          length={length}
+          transform={`translate(0, ${half_thickness + 10} )`}
+          themekit={themekit}
+        />
       }
-      <CatalogLine element={line} layer={layer} scene={scene} />
+      <CatalogLine element={line} layer={layer} scene={scene} themekit={themekit} />
       {renderedHoles}
     </g>
   );
@@ -70,6 +76,10 @@ export default function Line({line, layer, scene, catalog}) {
 Line.propTypes = {
   line: PropTypes.object.isRequired,
   layer: PropTypes.object.isRequired,
-  scene: PropTypes.object.isRequired,
-  catalog: PropTypes.object.isRequired,
+
+  catalog: ContextPropTypes.catalog,
+  themekit: ContextPropTypes.themekit,
+  state: ContextPropTypes.state,
 };
+
+export default needsContext('themekit', 'state', 'catalog')(Line);

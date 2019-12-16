@@ -122,6 +122,10 @@ const InitialVars = {
       textColor: 'rgba(0,0,0,0.5)',
     },
 
+    guide: {
+      color: new StyleAlias('grid.target'),
+    },
+
     vertex: {
       fill: new StyleAlias('grid.target'),
       stroke: '#fff',

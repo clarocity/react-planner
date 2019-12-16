@@ -5,7 +5,7 @@ import { ContextPropTypes, needsContext } from '../context';
 import {StyleAlias} from '../../themekit';
 
 export default
-@needsContext('styles', 'state')
+@needsContext('themekit', 'styles', 'state', 'catalog')
 class Item extends Component {
 
   static styles = {
@@ -30,10 +30,11 @@ class Item extends Component {
   }
 
   render () {
-    const {styles, layer, item, scene, catalog, state} = this.props;
+    const {styles, layer, item, catalog, state} = this.props;
+    const { scene, alternate } = state;
     const {x, y, rotation} = item;
 
-    const STYLE = styles.compile('root', state.alternate && '#alt');
+    const STYLE = styles.compile('root', alternate && '#alt');
     const CatalogItem = catalog.getElement(item.type).render2D;
 
     return (
@@ -47,7 +48,7 @@ class Item extends Component {
         style={STYLE}
         transform={`translate(${x},${y}) rotate(${rotation})`}>
 
-        <CatalogItem element={item} layer={layer} scene={scene} />
+        <CatalogItem element={item} layer={layer} scene={scene} themekit={this.props.themekit} />
 
         <If condition={item.selected}>
           <g data-element-root
@@ -69,9 +70,9 @@ class Item extends Component {
 Item.propTypes = {
   item: PropTypes.object.isRequired,
   layer: PropTypes.object.isRequired,
-  scene: PropTypes.object.isRequired,
-  catalog: PropTypes.object.isRequired,
 
   state: ContextPropTypes.state,
+  themekit: ContextPropTypes.themekit,
   styles: ContextPropTypes.styles,
+  catalog: ContextPropTypes.catalog,
 };

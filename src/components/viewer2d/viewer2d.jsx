@@ -77,6 +77,16 @@ class Viewer2D extends PureComponent {
       cursor: new StyleAlias('cursors.default'),
     },
 
+    canvas: {
+      fill: new StyleAlias('grid.backgroundColor'),
+    },
+
+    diagonalFill: {
+      backgroundColor: '#fff',
+      stroke: '#8E9BA2',
+      strokeWidth: 1,
+    },
+
     rulerCorner: {
       width: new CompoundStyle('${rulers.size}px'),
       height: new CompoundStyle('${rulers.size}px'),
@@ -104,7 +114,7 @@ class Viewer2D extends PureComponent {
 
   render () {
 
-    const { themekit, styles, state, catalog } = this.props;
+    const { themekit, styles, state, catalog, plugins } = this.props;
     let { viewer2D, mode, scene, alternate } = state;
 
     let { e, f, SVGWidth, SVGHeight } = state.get('viewer2D').toJS();
@@ -183,11 +193,12 @@ class Viewer2D extends PureComponent {
               <svg width={scene.width} height={scene.height}>
                 <defs>
                   <pattern id="diagonalFill" patternUnits="userSpaceOnUse" width="4" height="4" fill="#FFF">
-                    <rect x="0" y="0" width="4" height="4" fill="#FFF" />
-                    <path d="M-1,1 l2,-2 M0,4 l4,-4 M3,5 l2,-2" style={{ stroke: '#8E9BA2', strokeWidth: 1 }} />
+                    <rect x="0" y="0" width="4" height="4" fill={styles.diagonalFill.backgroundColor} />
+                    <path d="M-1,1 l2,-2 M0,4 l4,-4 M3,5 l2,-2" style={styles.diagonalFill} />
                   </pattern>
                 </defs>
                 <g style={cursor}>
+                  <rect x="0" y="0" width={scene.width} height={scene.height} style={styles.canvas}/>
                   <State state={state} catalog={catalog} />
                 </g>
                 {plugins}
