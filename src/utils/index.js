@@ -37,7 +37,7 @@ export function get (obj, path, defaultValue) {
   if (typeof path === 'number') path = [String(path)]
   else if (isString(path)) path = String.prototype.split.call(path, /[,[\].]+?/);
   const result = path
-    .filter(Boolean)
+    .filter((s) => s !== null && s !== undefined && s !== '')
     .reduce((res, key) => (res !== null && res !== undefined) ? res[key] : res, obj);
   return (result === undefined || result === obj) ? defaultValue : result;
 }
