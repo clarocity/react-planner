@@ -62,7 +62,7 @@ class ReactPlanner extends Component {
     const frames = children.reduce((result, child) => {
       let target;
       if (child.type.pluginTarget) {
-        target = result[child.type.pluginTarget];
+        target = child.type.pluginTarget;
       } else {
         target = 'root';
       }
