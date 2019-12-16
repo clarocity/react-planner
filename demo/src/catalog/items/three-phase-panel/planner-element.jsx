@@ -566,7 +566,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function ({element, layer, scene}) {
 
     let newWidth = WIDTH;
     let newDepth = DEPTH;

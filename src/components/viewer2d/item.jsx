@@ -1,61 +1,69 @@
-import React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import * as SharedStyle from '../../shared-style';
 import If from '../../utils/react-if';
 import { ContextPropTypes, needsContext } from '../context';
+import {StyleAlias} from '../../themekit';
 
-const STYLE_CIRCLE = {
-  fill: "#0096fd",
-  stroke: "#0096fd",
-  cursor: SharedStyle.CURSORS.rotate
-};
+export default
+@needsContext('styles', 'state')
+class Item extends Component {
 
-const STYLE_CIRCLE2 = {
-  fill: "none",
-  stroke: "#0096fd",
-  cursor: SharedStyle.CURSORS.rotate
-};
+  static styles = {
+    root: {
+      cursor: new StyleAlias('cursors.move'),
 
-function Item ({layer, item, scene, catalog, state}) {
+      '#alt': {
+        cursor: new StyleAlias('cursors.moveAdd'),
+      },
+    },
 
-  let {x, y, rotation} = item;
+    rotationAnchor: {
+      fill: new StyleAlias('grid.target'),
+      stroke: new StyleAlias('grid.target'),
+      cursor: new StyleAlias('cursors.rotate'),
+    },
 
-  let renderedItem = catalog.getElement(item.type).render2D(item, layer, scene);
-
-  const STYLE = {};
-  if (item.selected) {
-    if (state.alternate) {
-      STYLE.cursor = SharedStyle.CURSORS.moveAdd;
-    } else {
-      STYLE.cursor = SharedStyle.CURSORS.move;
+    rotationArc: {
+      fill: 'none',
+      stroke: new StyleAlias('grid.target'),
     }
   }
 
-  return (
-    <g
-      data-element-root
-      data-prototype={item.prototype}
-      data-id={item.id}
-      data-selected={item.selected}
-      data-layer={layer.id}
-      style={STYLE}
-      transform={`translate(${x},${y}) rotate(${rotation})`}>
+  render () {
+    const {styles, layer, item, scene, catalog, state} = this.props;
+    const {x, y, rotation} = item;
 
-      {renderedItem}
-      <If condition={item.selected}>
-        <g data-element-root
-           data-prototype={item.prototype}
-           data-id={item.id}
-           data-selected={item.selected}
-           data-layer={layer.id}
-           data-part="rotation-anchor"
-        >
-          <circle cx="0" cy="150" r="10" style={STYLE_CIRCLE}/>
-          <circle cx="0" cy="0" r="150" style={STYLE_CIRCLE2}/>
-        </g>
-      </If>
-    </g>
-  )
+    const STYLE = styles.compile('root', state.alternate && '#alt');
+    const CatalogItem = catalog.getElement(item.type).render2D;
+
+    return (
+      <g
+        key={item.id}
+        data-element-root
+        data-prototype={item.prototype}
+        data-id={item.id}
+        data-selected={item.selected}
+        data-layer={layer.id}
+        style={STYLE}
+        transform={`translate(${x},${y}) rotate(${rotation})`}>
+
+        <CatalogItem element={item} layer={layer} scene={scene} />
+
+        <If condition={item.selected}>
+          <g data-element-root
+             data-prototype={item.prototype}
+             data-id={item.id}
+             data-selected={item.selected}
+             data-layer={layer.id}
+             data-part="rotation-anchor"
+          >
+            <circle cx="0" cy="150" r="10" style={styles.rotationAnchor}/>
+            <circle cx="0" cy="0" r="150" strokeWidth="2" style={styles.rotationArc}/>
+          </g>
+        </If>
+      </g>
+    )
+  }
 }
 
 Item.propTypes = {
@@ -65,8 +73,5 @@ Item.propTypes = {
   catalog: PropTypes.object.isRequired,
 
   state: ContextPropTypes.state,
+  styles: ContextPropTypes.styles,
 };
-
-export default needsContext('state')(Item);
-
-

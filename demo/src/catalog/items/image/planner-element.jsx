@@ -58,7 +58,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function ({element, layer, scene}) {
 
     let {x1, y1, x2, y2, distance, width, height, imageUri} = element.properties.toJS();
 

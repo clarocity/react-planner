@@ -27,7 +27,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function ({element, layer, scene}) {
     let width = {length: 1.60, unit: 'ft'};
     let depth = {length: 0.59, unit: 'ft'};
 

@@ -49,7 +49,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function ({element, layer, scene}) {
 
     let newWidth = convert(element.properties.get('width').get('length'))
       .from(element.properties.get('width').get('unit'))

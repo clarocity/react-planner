@@ -88,7 +88,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function ({element, layer, scene}) {
 
     let fillValue = element.selected ? "#99c3fb" : element.properties.get('patternColor');
 

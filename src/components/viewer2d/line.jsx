@@ -25,7 +25,7 @@ export default function Line({line, layer, scene, catalog}) {
   let renderedHoles = line.holes.map(holeID => {
     let hole = layer.holes.get(holeID);
     let startAt = length * hole.offset;
-    let renderedHole = catalog.getElement(hole.type).render2D(hole, layer, scene);
+    const CatalogHole = catalog.getElement(hole.type).render2D;
 
     return (
       <g
@@ -37,7 +37,7 @@ export default function Line({line, layer, scene, catalog}) {
         data-selected={hole.selected}
         data-layer={layer.id}
       >
-        {renderedHole}
+        <CatalogHole element={hole} layer={layer} scene={scene} />
       </g>
     );
   });
@@ -45,9 +45,7 @@ export default function Line({line, layer, scene, catalog}) {
   let thickness = line.getIn(['properties', 'thickness', 'length']);
   let half_thickness = thickness / 2;
 
-  let renderedLine = catalog.getElement(line.type).render2D(line, layer);
-  let renderedRuler = line.selected ?
-    <Ruler unit={scene.unit} length={length} transform={`translate(0, ${half_thickness + 10} )`}/> : null;
+  let CatalogLine = catalog.getElement(line.type).render2D
 
   return (
     <g
@@ -59,8 +57,10 @@ export default function Line({line, layer, scene, catalog}) {
       data-layer={layer.id}
       style={line.selected ? {cursor: SharedStyle.CURSORS.move} : {}}
     >
-      {renderedRuler}
-      {renderedLine}
+      {line.selected &&
+        <Ruler unit={scene.unit} length={length} transform={`translate(0, ${half_thickness + 10} )`}/>
+      }
+      <CatalogLine element={line} layer={layer} scene={scene} />
       {renderedHoles}
     </g>
   );

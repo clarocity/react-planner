@@ -49,7 +49,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function ({element, layer, scene}) {
 
     let width = element.properties.get('width').get('length');
     let depth = element.properties.get('depth').get('length');

@@ -21,7 +21,7 @@ const STYLE_TEXT = {
 
 export default function Area({layer, area, catalog}) {
 
-  let rendered = catalog.getElement(area.type).render2D(area, layer);
+  let CatalogArea = catalog.getElement(area.type).render2D
 
   let renderedAreaSize = null;
 
@@ -71,7 +71,7 @@ export default function Area({layer, area, catalog}) {
       data-selected={area.selected}
       data-layer={layer.id}
     >
-      {rendered}
+      <CatalogArea element={area} layer={layer} />
       {renderedAreaSize}
     </g>
   )

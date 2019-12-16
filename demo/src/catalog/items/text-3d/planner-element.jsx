@@ -45,7 +45,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function ({element, layer, scene}) {
 
     let color = element.properties.get('color') || defaultColor;
     let text = element.properties.get('text') || '';

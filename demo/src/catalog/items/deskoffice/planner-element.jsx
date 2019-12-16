@@ -529,7 +529,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function ({element, layer, scene}) {
 
     let newWidthA = element.properties.get('widthA').get('length');
     let newWidthB = element.properties.get('widthB').get('length');

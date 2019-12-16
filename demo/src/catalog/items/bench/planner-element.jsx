@@ -131,7 +131,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function ({element, layer, scene}) {
 
     let angle = element.rotation + 90;
     let textRotation = Math.sin(angle * Math.PI / 180) < 0 ? 180 : 0;

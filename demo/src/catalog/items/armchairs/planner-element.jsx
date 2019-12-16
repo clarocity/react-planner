@@ -268,7 +268,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function ({element, layer, scene}) {
 
     let rect_style ={stroke: element.selected ? '#0096fd' : '#000', strokeWidth: '2px', fill: '#84e1ce'};
     let text_style ={textAnchor: 'middle', fontSize: '11px', fill: '#FF0000'};

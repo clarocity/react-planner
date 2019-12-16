@@ -102,7 +102,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function ({element, layer, scene}) {
 
 
     let RADIUS = element.properties.get('radius').get('length');

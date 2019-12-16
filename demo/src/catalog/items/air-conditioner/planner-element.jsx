@@ -260,7 +260,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function ({element, layer, scene}) {
 
     let angle = element.rotation + 90;
 

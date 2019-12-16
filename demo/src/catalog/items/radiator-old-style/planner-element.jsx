@@ -238,7 +238,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function ({element, layer, scene}) {
 
     let WIDTH = element.properties.get('width').get('length');
     let angle = element.rotation + 90;
