@@ -110,13 +110,20 @@ const InitialVars = {
   },
   grid: {
     backgroundColor: '#fff',
+    target: new StyleAlias('chrome.target'),
+
     lines: [
       '#ddd',
       '#808080',
     ],
 
+    ruler: {
+      color: new StyleAlias('grid.target'),
+      textColor: 'rgba(0,0,0,0.5)',
+    },
+
     vertex: {
-      fill: new StyleAlias('chrome.target'),
+      fill: new StyleAlias('grid.target'),
       stroke: '#fff',
     },
   },
