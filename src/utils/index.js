@@ -176,3 +176,13 @@ export function mapReduce (collection, cb) {
 
   return result;
 }
+
+export function propCompare (prev, next, paths) {
+  for (const path of paths) {
+    const v1 = get(prev, path);
+    const v2 = get(next, path);
+
+    if (v1 !== v2) return false;
+  }
+  return true;
+}

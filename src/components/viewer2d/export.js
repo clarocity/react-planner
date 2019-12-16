@@ -8,7 +8,7 @@ import Line from './line';
 import Layer from './layer';
 import Item from './item';
 import Area from './area';
-import Grids from './grids/grids';
+import Grid from './grid';
 import Group from './group';
 import RulerX from './rulerX';
 import RulerY from './rulerY';
@@ -24,7 +24,7 @@ export {
   Layer,
   Item,
   Area,
-  Grids,
+  Grid,
   Group,
   RulerX,
   RulerY
@@ -41,7 +41,7 @@ export default {
   Layer,
   Item,
   Area,
-  Grids,
+  Grid,
   Group,
   RulerX,
   RulerY
