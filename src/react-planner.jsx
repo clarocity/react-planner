@@ -91,7 +91,7 @@ class ReactPlanner extends Component {
             {frames.left}
             {show.toolbar && <Toolbar {...props} />}
             {frames.leftInside}
-            <Content {...props} mode={extractedState.get('mode')} />
+            <Content {...props} mode={extractedState.get('mode')} svgPlugins={frames.svg} />
             {frames.rightInside}
             {show.sidebar && <Sidebar {...props} />}
             {frames.right}

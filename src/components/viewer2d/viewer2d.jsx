@@ -1,4 +1,5 @@
 import React, {PureComponent} from 'react';
+import PropTypes from 'prop-types';
 import ContainerDimensions from 'react-container-dimensions';
 
 import { ReactSVGPanZoom, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT, TOOL_AUTO } from 'react-svg-pan-zoom';
@@ -189,6 +190,7 @@ class Viewer2D extends PureComponent {
                 <g style={cursor}>
                   <State state={state} catalog={catalog} />
                 </g>
+                {plugins}
               </svg>
 
             </ReactSVGPanZoom>
@@ -408,6 +410,8 @@ class Viewer2D extends PureComponent {
 }
 
 Viewer2D.propTypes = {
+  plugins: PropTypes.array,
+
   themekit: ContextPropTypes.themekit,
   styles: ContextPropTypes.styles,
   actions: ContextPropTypes.actions,

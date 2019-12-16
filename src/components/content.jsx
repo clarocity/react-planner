@@ -8,7 +8,7 @@ import ProjectConfigurator from './configurator/project-configurator';
 
 import * as constants from '../constants';
 
-function Picker({mode, customContents}) {
+function Picker({mode, svgPlugins}) {
   switch (mode) {
     case constants.MODE_3D_VIEW:
       return <Viewer3D />;
@@ -32,18 +32,13 @@ function Picker({mode, customContents}) {
     case constants.MODE_DRAWING_ITEM:
     case constants.MODE_DRAGGING_HOLE:
     case constants.MODE_ROTATING_ITEM:
-      return <Viewer2D />;
+      return <Viewer2D plugins={svgPlugins} />;
 
     case constants.MODE_CONFIGURING_PROJECT:
       return <ProjectConfigurator />;
 
     default:
-      if (customContents.hasOwnProperty(mode)) {
-        let CustomContent = customContents[mode];
-        return <CustomContent />
-      } else {
-        throw new Error(`Mode ${mode} doesn't have a mapped content`);
-      }
+      throw new Error(`Mode ${mode} doesn't have a mapped content`);
   }
 }
 
@@ -53,5 +48,5 @@ export default function Content (props) {
 
 Content.propTypes = {
   mode: PropTypes.string.isRequired,
-  customContents: PropTypes.object,
+  svgPlugins: PropTypes.array,
 };
