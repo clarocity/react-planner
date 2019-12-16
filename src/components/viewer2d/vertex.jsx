@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { ContextPropTypes, needsContext } from '../context';
 import {StyleAlias} from '../../themekit';
-import {propCompare} from '../../utils';
 
 export default
 @needsContext('styles', 'state')
@@ -24,16 +23,6 @@ class Vertex extends Component {
       },
     }
   }
-
-  shouldComponentUpdate(nextProps) {
-    return propCompare(this.props, nextProps, [
-      'vertex.x',
-      'vertex.y',
-      'vertex.dragging',
-      'state.alternate',
-    ]);
-  }
-
 
   render () {
     const {styles, vertex, layer, state} = this.props;
