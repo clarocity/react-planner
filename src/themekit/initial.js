@@ -6,7 +6,6 @@ const InitialVars = {
     textColor: '#FFF',
     altTextColor: '#EBEBEB',
     backgroundColor: '#28292D',
-    alternateBackgroundColor: '#2E2F33',
     target: '#1CA6FC',
     lightTarget: '#99C3FB',
     alternate: '#FF9800',
@@ -67,9 +66,10 @@ const InitialVars = {
     panel: {
       borderTopColor: '#222',
       borderBottomColor: '#48494E',
-      textColor: new StyleAlias('chrome.altTextColor'),
+      textColor: '#FFF',
       hoverColor: new StyleAlias('chrome.target'),
-      backgroundColor: new StyleAlias('chrome.alternateBackgroundColor'),
+      headerColor: '#303136',
+      backgroundColor: '#2E2F33',
     },
 
     property: {

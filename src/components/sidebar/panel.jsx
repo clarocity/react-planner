@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
 import { ContextPropTypes, needsContext } from '../context';
-import {StyleAlias, BorderStyle} from '../../themekit';
+import {StyleAlias, BorderStyle, CompoundStyle} from '../../themekit';
 
 export default
 @needsContext('styles')
@@ -20,9 +20,9 @@ class Panel extends Component {
       fontSize: '11px',
       color: new StyleAlias('sidebar.panel.textColor'),
       padding: '0px 15px 1px',
-      backgroundColor: new StyleAlias('sidebar.panel.backgroundColor'),
+      backgroundColor: new StyleAlias('sidebar.panel.headerColor'),
       textShadow: '-1px -1px 2px rgba(0, 0, 0, 0.7)',
-      boxShadow: 'inset 0px 3px 3px 0px rgba(0,0,0,0.5)',
+      boxShadow: new CompoundStyle('inset 0px -2px 1px ${sidebar.panel.borderTopColor}'),
       margin: '0px',
       cursor: 'pointer',
       display: 'flex',
@@ -40,7 +40,7 @@ class Panel extends Component {
       padding: '0px',
       backgroundColor: new StyleAlias('sidebar.panel.backgroundColor'),
       textShadow: '-1px -1px 2px rgba(0, 0, 0, 0.7)',
-      boxShadow: 'inset 0px 3px 3px 0px rgba(0,0,0,0.5)',
+      boxShadow: new CompoundStyle('inset 1px 3px 3px ${sidebar.panel.borderTopColor}, inset -2px -1px 2px ${sidebar.panel.borderBottomColor}'),
       display: 'none',
 
       '#opened': {

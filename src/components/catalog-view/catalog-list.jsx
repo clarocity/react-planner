@@ -72,7 +72,7 @@ class CatalogList extends Component {
       borderRadius: '1em',
       display: 'inline-block',
       cursor: 'pointer',
-      backgroundColor: new StyleAlias('chrome.alternateBackgroundColor'),
+      backgroundColor: new StyleAlias('chrome.backgroundColor'),
       color: new StyleAlias('chrome.textColor'),
       textTransform: 'capitalize',
       margin: '0.25em',

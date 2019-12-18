@@ -59,7 +59,7 @@ class PanelLayerElements extends Component {
       fontSize: '1.1em',
       backgroundColor: new StyleAlias('sidebar.textColor'),
       color: new StyleAlias('sidebar.backgroundColor'),
-      textShadow: null,
+      textShadow: 'none',
       borderRadius: '0.2em',
       margin: '0.15em 0.15em',
       padding: '0.5em',
