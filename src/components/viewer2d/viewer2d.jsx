@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import React, {PureComponent, Fragment} from 'react';
 import PropTypes from 'prop-types';
 import ContainerDimensions from 'react-container-dimensions';
 
@@ -112,6 +112,24 @@ class Viewer2D extends PureComponent {
     }
   }
 
+  constructor (props) {
+    super(props);
+    this.element = React.createRef();
+  }
+
+  componentDidMount() {
+    this.element.current.addEventListener('mousewheel', this.onWheel, { passive: false });
+  }
+
+  componentWillUnmount() {
+    this.element.current.removeEventListener('mousewheel', this.onWheel);
+  }
+
+  onWheel = (e) => {
+    e.preventDefault();
+    // e.stopPropagation();
+  }
+
   render () {
 
     const { themekit, styles, state, catalog, plugins } = this.props;
@@ -149,64 +167,63 @@ class Viewer2D extends PureComponent {
     }
 
     return (
-      <ContainerDimensions>{
-        ({ width, height }) =>
-        <div style={styles.root}>
-            <div style={styles.rulerCorner}></div>
-            <div style={styles.rulerXWrapper} id="rulerX">
-            { gridX && sceneWidth ? <RulerX
-                grid={gridX}
-                zoom={sceneZoom}
-                mouseX={state.mouse.get('x')}
-                sceneWidth={sceneWidth}
-                width={width - rulerSize}
-                zeroLeftPosition={e || 0}
-              /> : null }
-            </div>
-            <div style={styles.rulerYWrapper} id="rulerY">
-              { gridY && sceneHeight ? <RulerY
-                grid={gridY}
-                zoom={sceneZoom}
-                mouseY={state.mouse.get('y')}
-                height={height - rulerSize}
-                sceneHeight={sceneHeight}
-                zeroTopPosition={((sceneHeight * sceneZoom) + f) || 0}
-              /> : null }
-            </div>
-
-            <ReactSVGPanZoom
-              style={{ gridColumn: 2, gridRow: 2 }}
+      <div style={styles.root} ref={this.element}>
+        <ContainerDimensions>{({ width, height }) => <Fragment>
+          <div style={styles.rulerCorner}></div>
+          <div style={styles.rulerXWrapper} id="rulerX">
+          { gridX && sceneWidth ? <RulerX
+              grid={gridX}
+              zoom={sceneZoom}
+              mouseX={state.mouse.get('x')}
+              sceneWidth={sceneWidth}
               width={width - rulerSize}
+              zeroLeftPosition={e || 0}
+            /> : null }
+          </div>
+          <div style={styles.rulerYWrapper} id="rulerY">
+            { gridY && sceneHeight ? <RulerY
+              grid={gridY}
+              zoom={sceneZoom}
+              mouseY={state.mouse.get('y')}
               height={height - rulerSize}
-              value={/*viewer2D.isEmpty() ? null : */viewer2D.toJS()}
-              onChangeValue={this.onChangeValue}
-              tool={mode2Tool(mode)}
-              onChangeTool={this.onChangeTool}
-              detectAutoPan={mode2DetectAutopan(mode)}
-              onMouseDown={this.onMouseDown}
-              onMouseMove={this.onMouseMove}
-              onMouseUp={this.onMouseUp}
-              toolbarProps={{ position: "none" }}
-              miniatureProps={{ position: "none" }}
-            >
+              sceneHeight={sceneHeight}
+              zeroTopPosition={((sceneHeight * sceneZoom) + f) || 0}
+            /> : null }
+          </div>
 
-              <svg width={scene.width} height={scene.height}>
-                <defs>
-                  <pattern id="diagonalFill" patternUnits="userSpaceOnUse" width="4" height="4" fill="#FFF">
-                    <rect x="0" y="0" width="4" height="4" fill={styles.diagonalFill.backgroundColor} />
-                    <path d="M-1,1 l2,-2 M0,4 l4,-4 M3,5 l2,-2" style={styles.diagonalFill} />
-                  </pattern>
-                </defs>
-                <g style={cursor}>
-                  <rect x="0" y="0" width={scene.width} height={scene.height} style={styles.canvas}/>
-                  <State state={state} catalog={catalog} />
-                </g>
-                {plugins}
-              </svg>
+          <ReactSVGPanZoom
+            style={{ gridColumn: 2, gridRow: 2 }}
+            width={width - rulerSize}
+            height={height - rulerSize}
+            value={/*viewer2D.isEmpty() ? null : */viewer2D.toJS()}
+            onChangeValue={this.onChangeValue}
+            tool={mode2Tool(mode)}
+            onChangeTool={this.onChangeTool}
+            detectAutoPan={mode2DetectAutopan(mode)}
+            onMouseDown={this.onMouseDown}
+            onMouseMove={this.onMouseMove}
+            onMouseUp={this.onMouseUp}
+            toolbarProps={{ position: "none" }}
+            miniatureProps={{ position: "none" }}
+          >
 
-            </ReactSVGPanZoom>
-        </div>
-      }</ContainerDimensions>
+            <svg width={scene.width} height={scene.height}>
+              <defs>
+                <pattern id="diagonalFill" patternUnits="userSpaceOnUse" width="4" height="4" fill="#FFF">
+                  <rect x="0" y="0" width="4" height="4" fill={styles.diagonalFill.backgroundColor} />
+                  <path d="M-1,1 l2,-2 M0,4 l4,-4 M3,5 l2,-2" style={styles.diagonalFill} />
+                </pattern>
+              </defs>
+              <g style={cursor}>
+                <rect x="0" y="0" width={scene.width} height={scene.height} style={styles.canvas}/>
+                <State state={state} catalog={catalog} />
+              </g>
+              {plugins}
+            </svg>
+
+          </ReactSVGPanZoom>
+        </Fragment>}</ContainerDimensions>
+      </div>
     );
   }
 
