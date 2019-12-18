@@ -1,18 +1,18 @@
 import {isObject, isString, merge} from '../utils';
 
-class StyleVar {
+export class StyleVar {
   resolve () {
     throw new Error('StyleVar is an abstract class, you should not be using it directly.');
   }
 }
 
-function isStyleVar (input) {
+export function isStyleVar (input) {
   return input instanceof StyleVar;
 }
 
 StyleVar.isStyleVar = isStyleVar;
 
-class StyleAlias extends StyleVar {
+export class StyleAlias extends StyleVar {
   constructor (address, def) {
     super();
     this.address = address;
@@ -40,7 +40,7 @@ class StyleAlias extends StyleVar {
   }
 }
 
-class CompoundStyle extends StyleVar {
+export class CompoundStyle extends StyleVar {
   constructor (template, def) {
     super();
     this.template = template;
@@ -51,8 +51,8 @@ class CompoundStyle extends StyleVar {
   parseArray (input) {
     return input.map((part) => {
       if (part[0] === '$' && part[1] !== '{') return '${' + part.slice(1) + '}';
-      return part;
-    }).join(this.delimiter);
+      return String(part);
+    }).filter(Boolean).join(this.delimiter);
   }
 
   resolve (tk, key) {
@@ -67,14 +67,15 @@ class CompoundStyle extends StyleVar {
   }
 }
 
-function BorderStyle ({ width = '1px', style = 'solid', color = '#000'}) {
+export function BorderStyle ({ width = '1px', style = 'solid', color = '#000'}) {
   return new CompoundStyle([width, style, color]);
 }
 
-CompoundStyle.Border = BorderStyle;
+export function ShadowStyle ({ inset = false, x = '0px', y = '1px', blur = '1px', color = '#000'}) {
+  return new CompoundStyle([ !!inset && 'inset', x, y, blur, color]);
+}
 
-
-class StyleMerge extends StyleVar {
+export class StyleMerge extends StyleVar {
   constructor (...sources) {
     super();
     this.sources = sources;
@@ -111,13 +112,6 @@ export default {
   StyleAlias,
   CompoundStyle,
   BorderStyle,
-  StyleMerge,
-}
-
-export {
-  StyleVar,
-  StyleAlias,
-  CompoundStyle,
-  BorderStyle,
+  ShadowStyle,
   StyleMerge,
 }

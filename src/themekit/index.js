@@ -2,10 +2,9 @@
 import {isObject, isMappable, merge, get, has, map} from '../utils';
 import InitialVars from './initial';
 import Styles from './cstyles';
-import { StyleVar, StyleAlias, CompoundStyle, BorderStyle, StyleMerge } from './var';
-const { isStyleVar } = StyleVar;
-
-export { StyleVar, StyleAlias, CompoundStyle, BorderStyle, StyleMerge };
+import { isStyleVar } from './var';
+import * as Var from './var';
+export * from './var';
 
 export default class ThemeKit {
 
@@ -71,7 +70,7 @@ export default class ThemeKit {
   }
 
   _resolveVars (source) {
-    if (source instanceof StyleVar) {
+    if (isStyleVar(source)) {
       source = source.resolve(this);
     }
 
@@ -81,5 +80,6 @@ export default class ThemeKit {
   }
 }
 
-ThemeKit.StyleAlias = StyleAlias;
 ThemeKit.Styles = Styles;
+
+Object.assign(ThemeKit, Var);
