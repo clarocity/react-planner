@@ -10,21 +10,24 @@ import MyButtons from './ui/toolbar';
 
 import {
   Models as PlannerModels,
-  reducer as PlannerReducer,
+  reducer as plannerReducer,
   ReactPlanner,
   Plugins,
   Buttons,
 } from 'react-planner'; //react-planner
 
-//define state
-let AppState = Map({
-  'react-planner': new PlannerModels.State()
-});
+const rootElement = document.getElementById('react-planner');
+const inputElement = rootElement.getAttribute('data-input-selector');
+const storageKey = rootElement.getAttribute('data-storage-key') || 'react-planner_v0';
 
 //define reducer
 let reducer = (state, action) => {
-  state = state || AppState;
-  state = state.update('react-planner', plannerState => PlannerReducer(plannerState, action));
+  if (!state) {
+    state = Map({
+      'react-planner': new PlannerModels.State()
+    });
+  }
+  state = state.update('react-planner', plannerState => plannerReducer(plannerState, action));
   return state;
 };
 
@@ -44,8 +47,8 @@ if( !isProduction ) {
 let store = createStore(
   reducer,
   null,
-  !isProduction && window.devToolsExtension ?
-    window.devToolsExtension({
+  !isProduction && window.__REDUX_DEVTOOLS_EXTENSION__ ?
+    window.__REDUX_DEVTOOLS_EXTENSION__({
       features: {
         pause   : true,     // start/pause recording of dispatched actions
         lock    : true,     // lock/unlock dispatching actions and side effects
@@ -79,11 +82,11 @@ ReactDOM.render(
         stateExtractor={state => state.get('react-planner')}
         style={{ position: 'absolute', left: 0, top: 0, right: 0, bottom: 0 }}
       >
-        <Plugins.Autosave storageKey="react-planner_v0" />
+        <Plugins.Autosave storageKey={storageKey} inputElement={inputElement} />
         <Plugins.ConsoleDebugger />
       </ReactPlanner>
     </Provider>
   ),
-  document.getElementById('app')
+  rootElement
 );
 

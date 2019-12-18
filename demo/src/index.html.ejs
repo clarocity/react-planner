@@ -11,28 +11,35 @@
       html, body {
         width: 100%;
         height: 100%;
-        padding: 20px;
         margin: 0;
+        padding: 0;
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       }
 
 
-      #app {
-        width: 100%;
-        height: 100%;
-        outline: 2px solid red;
-        box-shadow: 0px 2px 10px rgba(0,0,0,0.7);
+      #react-planner {
         position: relative;
+        width: 90vw;
+        height: 90vh;
+        margin: 5vh 0 5vh 5vw;
+        box-shadow: 0px 2px 10px rgba(0,0,0,0.7);
+      }
+
+      #state {
+        width: 90vw;
+        height: 90vh;
+        margin: 20px 0 5vh 5vw;
       }
     </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="react-planner" data-input-selector='#state'></div>
     <a href="https://github.com/cvdlab/react-planner" target="_blank" style="display:<%= htmlWebpackPlugin.options.production ? 'block' : 'none' %>" >
       <img style="position: fixed;top: 0px; right: 0px; border: 0px; z-index: 9001"
       src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67"
       alt="Fork me on GitHub"
       data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"/>
     </a>
+    <textarea id="state" cols="120" rows="20"></textarea>
   </body>
 </html>
