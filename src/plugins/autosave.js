@@ -13,19 +13,18 @@ export default @needsContext('state', 'store') class AutoSave extends Component 
   hook = null;
 
   componentDidMount () {
-    const { store, storageKey, delay = TIMEOUT_DELAY } = this.props;
+    const { store, delay = TIMEOUT_DELAY } = this.props;
 
-    if (!localStorage) return;
-
-
-    if (localStorage.getItem(storageKey) !== null) {
-      let data = localStorage.getItem(storageKey);
-      let json = JSON.parse(data);
-      store.dispatch(loadProject(json));
+    let scene = this.loadFromInput();
+    if (scene === false) {
+      scene = this.loadFromLocalStorage();
     }
 
+    if (scene) store.dispatch(loadProject(scene));
+    if (scene === false) return;
+
     this.store = store;
-    this.hook = debounce(this.onChange.bind(this), delay);
+    this.hook = debounce(this.onChange, delay);
     store.subscribe(this.hook);
   }
 
@@ -33,19 +32,66 @@ export default @needsContext('state', 'store') class AutoSave extends Component 
     this.store.unsubscribe(this.hook);
   }
 
-  onChange () {
-    let { state, storageKey } = this.props;
+  onChange = () => {
+    const { state } = this.props;
+    const nextHashCode = state.hashCode();
+
+    // scene is unchanged
+    if ( nextHashCode === this.lastHashCode) return;
+
+    this.lastHashCode = nextHashCode;
     const scene = state.scene.toJS();
-    localStorage.setItem(storageKey, JSON.stringify(scene));
-    // console.log('Autosaved', scene);
+
+    this.saveToLocalStorage(scene);
+    this.saveToInput(scene);
   }
 
   render () { return null; }
+
+  saveToLocalStorage (sceneJson) {
+    if (!localStorage) return;
+    const { storageKey } = this.props;
+    localStorage.setItem(storageKey, JSON.stringify(sceneJson));
+  }
+
+  saveToInput (sceneJson) {
+    const { inputElement } = this.props;
+    const target = document.querySelector(inputElement);
+    if (!target) return;
+
+    target.value = JSON.stringify(sceneJson, null, 2);
+  }
+
+  loadFromLocalStorage () {
+    if (!localStorage) return false;
+    const { storageKey } = this.props;
+    const json = localStorage.getItem(storageKey);
+    if (!json) return null;
+
+    try {
+      return json && JSON.parse(json) || null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  loadFromInput () {
+    const { inputElement } = this.props;
+    const target = Array.from(document.querySelector(inputElement))[0];
+    if (!target) return false;
+
+    try {
+      return target.value && JSON.parse(target.value) || null;
+    } catch (e) {
+      return null;
+    }
+  }
 }
 
 
 AutoSave.propTypes = {
-  storageKey: PropTypes.string.isRequired,
+  storageKey: PropTypes.string,
+  inputElement: PropTypes.string,
   delay: PropTypes.number,
 
   state: ContextPropTypes.state,
