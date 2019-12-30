@@ -1,12 +1,15 @@
 import Autosave from './autosave';
 import ConsoleDebugger from './console-debugger';
+import ImageSaver from './imagesave';
 
 export {
   Autosave,
-  ConsoleDebugger
+  ImageSaver,
+  ConsoleDebugger,
 };
 
 export default {
   Autosave,
-  ConsoleDebugger
+  ImageSaver,
+  ConsoleDebugger,
 };

@@ -17,7 +17,9 @@ import {
 } from 'react-planner'; //react-planner
 
 const rootElement = document.getElementById('react-planner');
-const inputElement = rootElement.getAttribute('data-input-selector');
+const stateInputSelector = rootElement.getAttribute('data-input-selector');
+const svgInputSelector = rootElement.getAttribute('data-svg-selector');
+const svgImageSelector = rootElement.getAttribute('data-img-selector');
 const storageKey = rootElement.getAttribute('data-storage-key') || 'react-planner_v0';
 
 //define reducer
@@ -82,8 +84,9 @@ ReactDOM.render(
         stateExtractor={state => state.get('react-planner')}
         style={{ position: 'absolute', left: 0, top: 0, right: 0, bottom: 0 }}
       >
-        <Plugins.Autosave storageKey={storageKey} inputElement={inputElement} />
+        <Plugins.Autosave storageKey={storageKey} inputElement={stateInputSelector} />
         <Plugins.ConsoleDebugger />
+        <Plugins.ImageSaver imageElement={svgImageSelector} inputElement={svgInputSelector} />
       </ReactPlanner>
     </Provider>
   ),
