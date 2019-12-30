@@ -43,9 +43,9 @@ class Spacer extends React.PureComponent {
       alignItems: 'center',
       justifyContent: 'center',
       fontSize: 9,
-      color: new StyleAlias('toolbar.iconColor'),
+      color: new StyleAlias('toolbar.color'),
       textAlign: 'center',
-      borderBottom: new BorderStyle({ width: '2px', color: '$toolbar.iconColor'}),
+      borderBottom: new BorderStyle({ width: '2px', color: '$toolbar.color'}),
       paddingBottom: '2px',
       lineHeight: 1,
     }
