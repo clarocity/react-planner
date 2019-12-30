@@ -29,11 +29,12 @@ export default @needsContext('state', 'store') class AutoSave extends Component 
   }
 
   componentWillUnmount() {
+    if (!this.store) return;
     this.store.unsubscribe(this.hook);
   }
 
   onChange = () => {
-    const { state } = this.props;
+    const { state, onChange } = this.props;
     const nextHashCode = state.hashCode();
 
     // scene is unchanged
@@ -44,6 +45,8 @@ export default @needsContext('state', 'store') class AutoSave extends Component 
 
     this.saveToLocalStorage(scene);
     this.saveToInput(scene);
+    if (onChange) onChange(scene);
+
   }
 
   render () { return null; }
@@ -90,6 +93,7 @@ export default @needsContext('state', 'store') class AutoSave extends Component 
 
 
 AutoSave.propTypes = {
+  onChange: PropTypes.func,
   storageKey: PropTypes.string,
   inputElement: PropTypes.string,
   delay: PropTypes.number,
