@@ -17,10 +17,10 @@ import {
 } from 'react-planner'; //react-planner
 
 const rootElement = document.getElementById('react-planner');
-const stateInputSelector = rootElement.getAttribute('data-input-selector');
+const stateInputSelector = rootElement.getAttribute('data-state-selector');
 const svgInputSelector = rootElement.getAttribute('data-svg-selector');
 const svgImageSelector = rootElement.getAttribute('data-img-selector');
-const storageKey = rootElement.getAttribute('data-storage-key') || 'react-planner_v0';
+const storageKey = rootElement.getAttribute('data-storage-key');
 
 //define reducer
 let reducer = (state, action) => {
