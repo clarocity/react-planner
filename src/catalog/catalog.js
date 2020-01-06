@@ -9,6 +9,7 @@ import {
   PropertyHidden,
   PropertyReadOnly
 } from './properties/export';
+import Broken from './broken-item/planner-element';
 
 import {UNIT_CENTIMETER} from '../constants';
 
@@ -41,7 +42,8 @@ export default class Catalog {
     if (this.hasElement(type)) {
       return this.elements[type];
     }
-    throw new Error(`Element ${type} does not exist in catalog`);
+    console.warn(`Element ${type} does not exist in catalog`);
+    return Broken;
   }
 
   /** @description Get catalog category
