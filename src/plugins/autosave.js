@@ -80,7 +80,7 @@ export default @needsContext('state', 'store') class AutoSave extends Component 
 
   loadFromInput () {
     const { inputElement } = this.props;
-    const target = Array.from(document.querySelector(inputElement))[0];
+    const target = document.querySelector(inputElement);
     if (!target) return false;
 
     try {
