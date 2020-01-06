@@ -10,7 +10,7 @@ export default {
     title: "broken",
     tag: [],
     description: "Broken Item",
-    image: require('./image.png')
+    image: null,
   },
 
   properties: {},
