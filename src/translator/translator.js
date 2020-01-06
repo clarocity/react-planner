@@ -5,13 +5,19 @@ import RU from './ru'
 const DEFAULT_LOCALE = 'en'
 
 export default class Translator {
-  constructor() {
+  constructor(overrides = null) {
     this.locale = null
     this.translations = {}
 
     this.registerTranslation('en', EN)
     this.registerTranslation('it', IT)
     this.registerTranslation('ru', RU)
+
+    if (overrides) {
+      for (const [locale, translations] of Object.entries(overrides)) {
+        this.registerTranslation(locale, translations);
+      }
+    }
 
     let locale = null
     let languages = Translator.getBrowserLanguages()

@@ -18,7 +18,7 @@ export default {
   "Copy":"Copy",
   "Current Layer": "Current Layer",
   "Delete group and all Elements":"Delete group and all Elements",
-  "Delete layer": "Delete layer",
+  "Delete layer": "Delete Layer",
   "Delete": "Delete",
   "Elements on layer {0}": "Elements on layer {0}",
   "Elements":"Elements",
